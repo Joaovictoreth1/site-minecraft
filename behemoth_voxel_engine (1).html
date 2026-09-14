@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -66,13 +67,13 @@
         #damage-overlay { position: absolute; inset: 0; background: rgba(255, 0, 0, 0.4); opacity: 0; transition: opacity 0.1s ease; }
 
         #inventory-screen { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 40000; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .inv-wrapper { display: flex; flex-direction: column; gap: 15px; align-items: center; }
-        .inv-container { background: #c6c6c6; border: 4px solid #fff; border-bottom-color: #555; border-right-color: #555; padding: 16px; border-radius: 2px; }
-        .inv-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; background: #8b8b8b; padding: 4px; border: 2px solid #373737; border-bottom-color: #fff; border-right-color: #fff; }
-        .inv-slot { width: 44px; height: 44px; background: #8b8b8b; border: 2px solid #fff; border-top-color: #373737; border-left-color: #373737; cursor: pointer; transition: filter 0.1s; position: relative; }
-        .inv-slot:hover { filter: brightness(1.2); }
-        .inv-slot img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; padding: 2px;}
-
+        
+        /* Novos Estilos de Crafting */
+        .recipe-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; margin-bottom: 6px; border: 2px solid; transition: all 0.1s; }
+        .recipe-row.can-craft { border-color: #10b981; background: rgba(16, 185, 129, 0.2); cursor: pointer; }
+        .recipe-row.can-craft:hover { background: rgba(16, 185, 129, 0.4); transform: scale(1.01); }
+        .recipe-row.cannot-craft { border-color: #7f1d1d; background: rgba(127, 29, 29, 0.3); opacity: 0.6; pointer-events: none; }
+        
         #toast-container { position: fixed; bottom: 90px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast { background: rgba(0,0,0,0.85); border-left: 4px solid var(--mc-accent); color: white; padding: 12px 16px; border-radius: 4px; font-size: 13px; font-weight: bold; animation: slideIn 0.3s forwards, fadeOut 0.5s 2.5s forwards; opacity: 0; transform: translateX(100%); }
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
@@ -98,15 +99,15 @@
     <div id="main-menu" class="menu-overlay">
         <div class="menu-card">
             <h1 class="pixel-text text-4xl text-emerald-400 mb-2 drop-shadow-lg">MINECRAFT</h1>
-            <h2 class="text-sm text-gray-400 mb-8 font-light">Versão Survival - Florestas & Biomas</h2>
+            <h2 class="text-sm text-gray-400 mb-8 font-light">Versão Survival - Crafting Real</h2>
             <div class="text-left bg-black/40 p-5 rounded-xl border border-gray-700/50 mb-8">
                 <p class="text-gray-300 text-sm leading-relaxed">
                     <b class="text-emerald-400">Teclado:</b> [W A S D] Mover | [ESPAÇO] Saltar<br>
-                    <b class="text-emerald-400">Inventário:</b> [E] | <b class="text-emerald-400">Rato:</b> Minerar/Colocar<br>
-                    <b class="text-emerald-400">Atalhos:</b> [C] Zoom | [F5] Câmara 3ª Pessoa | [SHIFT] Esgueirar
+                    <b class="text-emerald-400">Crafting:</b> [E] | <b class="text-emerald-400">Rato:</b> Minerar/Colocar<br>
+                    <b class="text-emerald-400">Dica:</b> Parte árvores à mão para obteres madeira e construíres as tuas primeiras ferramentas!
                 </p>
             </div>
-            <button id="btn-start" class="btn-main">ENTRAR NO MUNDO</button>
+            <button id="btn-start" class="btn-main">GERAR MUNDO NOVO</button>
             <button id="btn-settings-open" class="btn-secondary">OPÇÕES</button>
         </div>
     </div>
@@ -154,11 +155,15 @@
 
     <div id="toast-container"></div>
 
+    <!-- Novo Ecrã de Crafting -->
     <div id="inventory-screen">
-        <div class="inv-wrapper">
-            <h2 class="pixel-text text-xl text-white mb-2">INVENTÁRIO E CRAFTING</h2>
-            <div class="inv-container"><div id="inv-grid" class="inv-grid"></div></div>
-            <button id="btn-save-inv" class="btn-main mt-4" style="background: #3b82f6;">FECHAR INVENTÁRIO</button>
+        <div class="w-11/12 max-w-2xl flex flex-col items-center">
+            <h2 class="pixel-text text-xl text-white mb-2 text-center drop-shadow-md">CONSTRUÇÃO (CRAFTING)</h2>
+            <div id="crafting-list" class="w-full bg-[#8b8b8b] p-3 border-[4px] border-[#373737] border-b-white border-r-white flex flex-col gap-1 max-h-[60vh] overflow-y-auto">
+                <!-- Receitas Injetadas pelo JavaScript -->
+            </div>
+            <p class="text-xs text-gray-300 mt-3 text-center bg-black/60 px-4 py-2 rounded">Clica numa receita verde para a construíres. Os materiais são retirados automaticamente.</p>
+            <button id="btn-save-inv" class="btn-main mt-4 w-64 mx-auto" style="background: #3b82f6;">FECHAR E VOLTAR</button>
         </div>
     </div>
 
@@ -190,16 +195,16 @@
             AIR: 0, GRASS: 1, DIRT: 2, STONE: 3, COBBLESTONE: 4, WOOD: 5, LEAVES: 6, SAND: 7, WATER: 8, GLASS: 9, 
             PLANKS: 10, GOLD: 11, SNOW: 12, BEDROCK: 13, COAL_ORE: 14, IRON_ORE: 15, DIAMOND_ORE: 16, BRICKS: 17, OBSIDIAN: 18,
             FENCE: 19, CACTUS: 20, TALL_GRASS: 21, TNT: 22, BOOKSHELF: 23, CRAFTING_TABLE: 24, RED_FLOWER: 25, YELLOW_FLOWER: 26,
-            PICKAXE: 100, AXE: 101, SWORD: 102
+            PICKAXE: 100, AXE: 101, SWORD: 102, STICK: 103
         };
 
         const BLOCK_PROPS = {
             [BLOCKS.AIR]:         { solid: false, trans: true,  liquid: false, hardness: 0 },
             [BLOCKS.GRASS]:       { solid: true,  trans: false, liquid: false, hardness: 0.6, name: "Bloco de Erva", tool: 'shovel' },
             [BLOCKS.DIRT]:        { solid: true,  trans: false, liquid: false, hardness: 0.5, name: "Terra", tool: 'shovel' },
-            [BLOCKS.STONE]:       { solid: true,  trans: false, liquid: false, hardness: 2.0, name: "Pedra", tool: 'pickaxe' },
-            [BLOCKS.COBBLESTONE]: { solid: true,  trans: false, liquid: false, hardness: 2.0, name: "Pedregulho", tool: 'pickaxe' },
-            [BLOCKS.WOOD]:        { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Tronco", tool: 'axe' },
+            [BLOCKS.STONE]:       { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Pedra", tool: 'pickaxe' },
+            [BLOCKS.COBBLESTONE]: { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Pedregulho", tool: 'pickaxe' },
+            [BLOCKS.WOOD]:        { solid: true,  trans: false, liquid: false, hardness: 2.0, name: "Tronco", tool: 'axe' },
             [BLOCKS.LEAVES]:      { solid: true,  trans: true,  liquid: false, hardness: 0.2, name: "Folhas", isFlora: true },
             [BLOCKS.SAND]:        { solid: true,  trans: false, liquid: false, hardness: 0.5, name: "Areia", tool: 'shovel' },
             [BLOCKS.WATER]:       { solid: false, trans: true,  liquid: true,  hardness: -1,  name: "Água" },
@@ -224,11 +229,26 @@
             
             [BLOCKS.PICKAXE]:     { isItem: true, name: "Picareta", multiplier: 8.0, toolType: 'pickaxe' },
             [BLOCKS.AXE]:         { isItem: true, name: "Machado", multiplier: 8.0, toolType: 'axe' },
-            [BLOCKS.SWORD]:       { isItem: true, name: "Espada", multiplier: 2.5, toolType: 'sword' }
+            [BLOCKS.SWORD]:       { isItem: true, name: "Espada", multiplier: 2.5, toolType: 'sword' },
+            [BLOCKS.STICK]:       { isItem: true, name: "Graveto" }
         };
 
+        // Receitas de Crafting do Survival
+        const RECIPES = [
+            { res: BLOCKS.PLANKS, count: 4, name: "Tábuas de Madeira", req: [[BLOCKS.WOOD, 1]] },
+            { res: BLOCKS.STICK, count: 4, name: "Gravetos", req: [[BLOCKS.PLANKS, 2]] },
+            { res: BLOCKS.CRAFTING_TABLE, count: 1, name: "Bancada de Trabalho", req: [[BLOCKS.PLANKS, 4]] },
+            { res: BLOCKS.AXE, count: 1, name: "Machado de Madeira", req: [[BLOCKS.PLANKS, 3], [BLOCKS.STICK, 2]] },
+            { res: BLOCKS.PICKAXE, count: 1, name: "Picareta de Madeira", req: [[BLOCKS.PLANKS, 3], [BLOCKS.STICK, 2]] },
+            { res: BLOCKS.SWORD, count: 1, name: "Espada de Madeira", req: [[BLOCKS.PLANKS, 2], [BLOCKS.STICK, 1]] },
+            { res: BLOCKS.FENCE, count: 3, name: "Cerca", req: [[BLOCKS.PLANKS, 4], [BLOCKS.STICK, 2]] },
+            { res: BLOCKS.BOOKSHELF, count: 1, name: "Estante", req: [[BLOCKS.PLANKS, 6]] }, // Versão simplificada
+            { res: BLOCKS.BRICKS, count: 4, name: "Tijolos de Pedra", req: [[BLOCKS.STONE, 4]] }
+        ];
+
         let CONFIG = { CHUNK_SIZE: 16, CHUNK_HEIGHT: 64, WATER_LEVEL: 20, RENDER_DISTANCE: 3, FOV: 80 };
-        const INIT_INV = [ BLOCKS.SWORD, BLOCKS.PICKAXE, BLOCKS.AXE, BLOCKS.WOOD, BLOCKS.CRAFTING_TABLE, BLOCKS.COBBLESTONE, BLOCKS.GLASS, BLOCKS.TNT, BLOCKS.CACTUS ];
+        // Começas de mãos vazias na versão Survival
+        const INIT_INV = [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
         class SimpleNoise {
             constructor() { this.p = new Uint8Array(256); for(let i=0;i<256;i++) this.p[i]=Math.floor(Math.random()*256); }
@@ -271,12 +291,13 @@
                 const cx = (idx % this.c) * this.s, cy = Math.floor(idx / this.c) * this.s, s = this.s;
                 let rb=0, gb=0, bb=0, v=0;
                 
-                if(['pickaxe','axe','sword','steve_face','tnt_side','tnt_top','bookshelf','crafting_table','red_flower','yellow_flower'].includes(t)) {
-                    let pal = { 's':"#6a401c",'i':"#ddd",'d':"#999",'w':"#fff",'h':"#422811",'k':"#cca482",'e':"#fff",'p':"#f2a9af",'n':"#d88a91",'b':"#111", 'r':"#e73030", 'g':"#4a9c3a", 'y':"#e7e730", 'x':"#333" };
+                if(['pickaxe','axe','sword','steve_face','tnt_side','tnt_top','bookshelf','crafting_table','red_flower','yellow_flower','stick'].includes(t)) {
+                    let pal = { 's':"#6a401c",'i':"#ddd",'d':"#999",'w':"#fff",'h':"#422811",'k':"#cca482",'e':"#fff",'p':"#f2a9af",'n':"#d88a91",'b':"#111", 'r':"#e73030", 'g':"#4a9c3a", 'y':"#e7e730", 'x':"#333", 'j':"#8a5c33" };
                     let art = [];
                     if(t==='pickaxe') art = ["  wiiiiiiiiw    ", " wdi      idw   ", " wdw      wsw   ", "  w       sw    ", "         sw     ", "        sw      ", "       sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                "];
                     else if(t==='axe') art = ["  wiwiw         ", "  wididw        ", "  widdiwsw      ", "   wdw sw       ", "    w  sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                ", "                ", "                "];
                     else if(t==='sword') art = ["             w  ", "            wiw ", "           widw ", "          widw  ", "         widw   ", "        widw    ", "       widw     ", "      widw      ", "     widw       ", "    widw        ", "  s widw        ", " sws w          ", "  ws            ", "   w            ", "                ", "                "];
+                    else if(t==='stick') art = ["                ", "       s        ", "      sjs       ", "      js        ", "     sjs        ", "     js         ", "    sjs         ", "    js          ", "   sjs          ", "   js           ", "  sjs           ", "  js            ", "   s            ", "                ", "                ", "                "];
                     else if(t==='steve_face') art = ["hhhhhhhhhhhhhhhh", "hhhhhhhhhhhhhhhh", "hhhhhhhhhhhhhhhh", "hhhhhhhhhhhhhhhh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh", "hkkepekkkkpeepkh", "hkkepekkkkpeepkh", "hkkkkkkkkkkkkkkh", "hkkkkhhhhhhkkkkh", "hkkkkhhhhhhkkkkh", "hkkkkkhhhhkkkkkh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh"];
                     else if(t==='tnt_side') art = ["rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rwwwwrwwrwwrwwww", "rwwrrrwwnwnrwwrr", "rwwrrrwwnwnrwwrr", "rwwrrrwwnnnrwwrr", "rrrrrrrrrrrrrrrr", "xwxwxwxwxwxwxwxw", "xwxwxwxwxwxwxwxw", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr"];
                     else if(t==='tnt_top') art = ["rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rwwwwwwwwwwwwwwr", "rwbbbbbbbbbbbbwr", "rwbbxxxxxxxxbbwr", "rwbbxbbbbbbxbbwr", "rwbbxbbbbbbxbbwr", "rwbbxxxxxxxxbbwr", "rwbbxbbbbbbxbbwr", "rwbbxbbbbbbxbbwr", "rwbbxxxxxxxxbbwr", "rwbbbbbbbbbbbbwr", "rwwwwwwwwwwwwwwr", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr", "rrrrrrrrrrrrrrrr"];
@@ -332,7 +353,7 @@
                     d('water'),d('glass'),d('planks'),d('gold'),d('snow'),d('bedrock'),d('cobblestone'),d('ore_coal'),d('ore_iron'),
                     d('ore_diamond'),d('bricks'),d('obsidian'),d('fence'),d('pickaxe'),d('axe'),d('sword'),d('steve_face'),
                     d('tnt_side'), d('tnt_top'), d('bookshelf'), d('crafting_table'), d('red_flower'), d('yellow_flower'),
-                    d('cactus_side'), d('cactus_top')
+                    d('cactus_side'), d('cactus_top'), d('stick')
                 ];
                 
                 const m=(id,r,l,t,b,f,bk)=>{this.map[id]=[r,l,t,b,f,bk];};
@@ -344,7 +365,7 @@
                 m(BLOCKS.OBSIDIAN,20,20,20,20,20,20); m(BLOCKS.FENCE,21,21,21,21,21,21); 
                 m(BLOCKS.TNT, 26,26,27,27,26,26); m(BLOCKS.BOOKSHELF, 28,28,11,11,28,28); m(BLOCKS.CRAFTING_TABLE, 29,29,11,11,29,29);
                 m(BLOCKS.RED_FLOWER, 30,30,30,30,30,30); m(BLOCKS.YELLOW_FLOWER, 31,31,31,31,31,31);
-                m(BLOCKS.CACTUS, 32,32,33,33,32,32);
+                m(BLOCKS.CACTUS, 32,32,33,33,32,32); m(BLOCKS.STICK, 34,34,34,34,34,34);
                 
                 m(BLOCKS.PICKAXE,22,22,22,22,22,22); m(BLOCKS.AXE,23,23,23,23,23,23); m(BLOCKS.SWORD,24,24,24,24,24,24); 
                 this.steveUV = 25;
@@ -444,7 +465,6 @@
                     for(let z=0; z<CONFIG.CHUNK_SIZE; z++) {
                         const wx = wxOff + x; const wz = wzOff + z;
                         
-                        // Ruído para Elevação e Biomas
                         let t = bGen.fBm(wx, wz, 2, 0.005), m = bGen.fBm(wx+1000, wz+1000, 2, 0.005);
                         let isDes = t>0.3 && m<-0.1, isSnow = t<-0.4, isMount = false;
                         let hn = bGen.fBm(wx, wz, 4, 0.015); if(hn>0.4) isMount = true;
@@ -456,7 +476,6 @@
                         this.set(x, 0, z, BLOCKS.BEDROCK); let surf = 0;
                         for(let y=1; y<=h; y++) {
                             let cb = BLOCKS.STONE;
-                            // Minérios Subterrâneos
                             if(y<h-5 && Math.random()<0.05) {
                                 let r = Math.random();
                                 if(y<15&&r<0.1) cb=BLOCKS.DIAMOND_ORE; else if(y<30&&r<0.3) cb=BLOCKS.GOLD; else if(r<0.5) cb=BLOCKS.IRON_ORE; else cb=BLOCKS.COAL_ORE;
@@ -471,13 +490,11 @@
                         
                         for(let y=h+1; y<=CONFIG.WATER_LEVEL; y++) this.set(x,y,z,BLOCKS.WATER);
 
-                        // Florestas e Flores
                         if(h>CONFIG.WATER_LEVEL && surf===BLOCKS.GRASS && !isMount) {
                             if(Math.random() < (m>0.2?0.04:0.005)) this.e.world.qTree(wx,h+1,wz);
                             else if (Math.random() < 0.05) this.set(x, h+1, z, Math.random()>0.5?BLOCKS.RED_FLOWER:BLOCKS.YELLOW_FLOWER);
                         }
                         
-                        // Catos no Deserto
                         if(h>CONFIG.WATER_LEVEL && surf===BLOCKS.SAND && isDes) {
                             if(Math.random() < 0.01) {
                                 let ch = 2 + Math.floor(Math.random()*2);
@@ -903,20 +920,75 @@
                         }
                     },
                     bInv: () => {
-                        let g=document.getElementById('inv-grid'); if(!g || g.innerHTML!=='')return;
-                        Object.keys(BLOCKS).forEach(k=>{
-                            let id=BLOCKS[k]; if(id!==0&&this.atlas.ui[id]){
-                                let s=document.createElement('div'); s.className='inv-slot'; s.innerHTML=`<img src="${this.atlas.ui[id]}">`; s.title=BLOCK_PROPS[id]?BLOCK_PROPS[id].name:'Block';
-                                s.onclick=()=>{ 
-                                    this.player.inv[this.player.slot]=id; 
-                                    this.player.invCount[this.player.slot]=64; 
+                        let cl = document.getElementById('crafting-list'); if(!cl) return;
+                        cl.innerHTML = '';
+                        
+                        RECIPES.forEach(r => {
+                            let canCraft = true;
+                            // Verifica se o jogador tem os requisitos
+                            r.req.forEach(req => {
+                                let has = 0;
+                                for(let i=0; i<36; i++) if(this.player.inv[i] === req[0]) has += this.player.invCount[i];
+                                if(has < req[1]) canCraft = false;
+                            });
+
+                            let d = document.createElement('div');
+                            d.className = `recipe-row ${canCraft ? 'can-craft' : 'cannot-craft'}`;
+                            
+                            let reqHtml = r.req.map(req => `
+                                <div class="flex items-center gap-1 bg-black/50 px-2 py-1 rounded">
+                                    <img src="${this.atlas.ui[req[0]]}" style="width:16px; height:16px; image-rendering:pixelated;">
+                                    <span class="text-white text-xs font-bold">${req[1]}</span>
+                                </div>
+                            `).join('');
+                            
+                            d.innerHTML = `
+                                <div class="flex items-center gap-3">
+                                    <img src="${this.atlas.ui[r.res]}" style="width:32px; height:32px; image-rendering:pixelated;">
+                                    <div class="flex flex-col">
+                                        <span class="text-white font-bold text-sm" style="text-shadow: 1px 1px 0 #000;">${r.name}</span>
+                                        <span class="text-gray-300 text-[10px] font-bold">Cria: x${r.count}</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">${reqHtml}</div>
+                            `;
+
+                            if(canCraft) {
+                                d.onclick = () => {
+                                    // Consome os ingredientes
+                                    r.req.forEach(req => {
+                                        let left = req[1];
+                                        for(let i=35; i>=0; i--) { 
+                                            if(this.player.inv[i] === req[0] && left > 0) {
+                                                let take = Math.min(this.player.invCount[i], left);
+                                                this.player.invCount[i] -= take; left -= take;
+                                                if(this.player.invCount[i] <= 0) { this.player.inv[i] = 0; this.player.invCount[i] = 0; }
+                                            }
+                                        }
+                                    });
+                                    // Adiciona o Resultado
+                                    let added = false;
+                                    for(let i=0; i<36; i++) {
+                                        if(this.player.inv[i] === r.res && this.player.invCount[i] + r.count <= 64) {
+                                            this.player.invCount[i] += r.count; added = true; break;
+                                        }
+                                    }
+                                    if(!added) {
+                                        for(let i=0; i<36; i++) {
+                                            if(!this.player.inv[i] || this.player.inv[i] === 0) {
+                                                this.player.inv[i] = r.res; this.player.invCount[i] = r.count; added = true; break;
+                                            }
+                                        }
+                                    }
+                                    toast('Construíste: ' + r.name);
                                     this.ui.renderHotbar();
-                                    this.player.updArm(); 
-                                    s.style.filter='brightness(1.5)'; setTimeout(()=>s.style.filter='none',150); 
-                                }; 
-                                g.appendChild(s);
+                                    this.ui.bInv(); // Atualiza as cores (verde/vermelho) após construir
+                                    this.player.updArm();
+                                };
                             }
+                            cl.appendChild(d);
                         });
+
                         let bin = document.getElementById('btn-save-inv');
                         if (bin) bin.onclick=()=>this.player.lockF();
                     }
