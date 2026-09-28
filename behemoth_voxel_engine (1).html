@@ -1,14 +1,13 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Behemoth Engine - Xbox 360 Masterpiece Edition (Ultimate)</title>
+    <title>Behemoth Engine - Minecraft Xbox 360 Edition</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <style>
         :root { 
@@ -18,10 +17,11 @@
             --xb-dark: #373737;
             --xb-darker: #1a1a1a;
             --xb-accent: #10b981;
+            --xb-gold: #facc15;
             --font-ui: 'Inter', sans-serif;
             --font-pixel: 'Press Start 2P', cursive;
-            --text-shadow-light: 1px 1px 0px rgba(255,255,255,0.7);
-            --text-shadow-dark: 1px 1px 0px rgba(0,0,0,0.8);
+            --text-shadow-light: 1px 1px 0px rgba(255,255,255,0.75);
+            --text-shadow-dark: 2px 2px 0px rgba(0,0,0,0.85);
         }
 
         body, html { 
@@ -34,18 +34,18 @@
         .pixelated { image-rendering: pixelated; }
 
         #loading-screen { 
-            position: fixed; inset: 0; background: radial-gradient(circle at center, #0f172a, #020617); z-index: 99999; 
+            position: fixed; inset: 0; background: radial-gradient(circle at center, #1e293b, #020617); z-index: 99999; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            color: white; transition: opacity 0.8s ease; 
+            color: white; transition: opacity 0.6s ease; 
         }
         .loader-bar-container { 
-            width: 70%; max-width: 500px; height: 20px; background: #111; 
-            border: 3px solid #555; border-radius: 8px; overflow: hidden;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+            width: 70%; max-width: 500px; height: 22px; background: #111; 
+            border: 4px solid #555; border-bottom-color: #fff; border-right-color: #fff;
+            overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.8);
         }
         #loader-fill { 
-            height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #3b82f6); 
-            transition: width 0.1s linear; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            height: 100%; width: 0%; background: linear-gradient(90deg, #22c55e, #10b981); 
+            transition: width 0.15s linear;
         }
         #error-log {
             margin-top: 20px; width: 80%; max-height: 200px; overflow-y: auto;
@@ -55,165 +55,326 @@
         }
 
         .menu-overlay { 
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); 
-            backdrop-filter: blur(5px); z-index: 50000; display: none; 
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); 
+            backdrop-filter: blur(4px); z-index: 50000; display: none; 
             flex-direction: column; justify-content: center; align-items: center; 
         }
 
-        #main-menu { background-color: #000; backdrop-filter: none; }
+        /* Menu Principal Autêntico Minecraft Xbox 360 */
+        #main-menu { 
+            background: radial-gradient(circle at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.82) 100%);
+            backdrop-filter: blur(1px);
+        }
+
+        .mc-logo-wrap {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 28px;
+            user-select: none;
+        }
+
+        .mc-logo-main {
+            font-family: var(--font-pixel);
+            font-size: clamp(2.2rem, 5vw, 4.2rem);
+            color: #d4d4d8;
+            letter-spacing: 3px;
+            text-shadow: 
+                0 4px 0 #52525b,
+                0 8px 0 #27272a,
+                0 12px 20px rgba(0,0,0,0.9),
+                -3px -3px 0 #ffffff;
+            transform: perspective(400px) rotateX(12deg);
+        }
+
+        .mc-logo-sub {
+            margin-top: -6px;
+            background: linear-gradient(180deg, #facc15 0%, #ca8a04 100%);
+            color: #111;
+            font-family: var(--font-pixel);
+            font-size: clamp(0.65rem, 1.5vw, 0.95rem);
+            padding: 6px 18px;
+            border: 3px solid #fef08a;
+            border-bottom-color: #713f12;
+            border-right-color: #713f12;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.75);
+            letter-spacing: 2px;
+        }
+
+        .splash-text {
+            position: absolute;
+            right: -30px;
+            bottom: -12px;
+            color: #fde047;
+            font-family: var(--font-pixel);
+            font-size: clamp(0.6rem, 1.2vw, 0.85rem);
+            text-shadow: 2px 2px 0 #000;
+            transform: rotate(-18deg);
+            animation: splashPulse 0.65s infinite alternate ease-in-out;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        @keyframes splashPulse {
+            from { transform: rotate(-18deg) scale(1); }
+            to { transform: rotate(-18deg) scale(1.12); }
+        }
         
         .xb-btn {
-            background: var(--xb-base); border: 4px solid var(--xb-light);
-            border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark);
-            color: #222; font-weight: 800; font-size: 1.2rem; padding: 15px 60px;
-            text-align: center; cursor: pointer; font-family: var(--font-ui);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.1);
-            transition: transform 0.1s, filter 0.1s;
+            width: 390px;
+            max-width: 88vw;
+            background: linear-gradient(180deg, #d4d4d4 0%, #9e9e9e 100%);
+            border: 4px solid #ffffff;
+            border-bottom-color: #373737;
+            border-right-color: #373737;
+            color: #1f2937;
+            font-weight: 900;
+            font-size: 1.05rem;
+            padding: 13px 24px;
+            text-align: center;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.65);
+            transition: transform 0.08s, filter 0.08s, border-color 0.08s;
+            margin-bottom: 10px;
+            position: relative;
         }
-        .xb-btn:hover { filter: brightness(1.1); transform: scale(1.02); }
+        .xb-btn:hover { 
+            background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+            color: #ffffff;
+            text-shadow: 2px 2px 0px #064e3b;
+            border-color: #bbf7d0;
+            border-bottom-color: #14532d;
+            border-right-color: #14532d;
+            transform: scale(1.03); 
+        }
         .xb-btn:active { 
-            border: 4px solid var(--xb-dark); border-bottom-color: var(--xb-light); border-right-color: var(--xb-light);
+            border: 4px solid #373737;
+            border-bottom-color: #ffffff;
+            border-right-color: #ffffff;
             transform: scale(0.98); 
         }
 
+        .xb-panel-box {
+            background: #c6c6c6;
+            border: 5px solid #ffffff;
+            border-bottom-color: #373737;
+            border-right-color: #373737;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.85);
+            padding: 18px;
+            color: #1f2937;
+        }
+
+        /* HUD & Crosshair */
         #hud { position: absolute; inset: 0; pointer-events: none; z-index: 10000; display: none; }
-        #crosshair { position: absolute; top: 50%; left: 50%; width: 24px; height: 24px; transform: translate(-50%, -50%); opacity: 0.85; }
+        #crosshair { position: absolute; top: 50%; left: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); opacity: 0.9; }
         #crosshair::before, #crosshair::after { content: ''; position: absolute; background: #fff; mix-blend-mode: difference; }
-        #crosshair::before { top: 10px; left: 0; width: 24px; height: 4px; } 
-        #crosshair::after { top: 0; left: 10px; width: 4px; height: 24px; }
+        #crosshair::before { top: 9px; left: 0; width: 22px; height: 4px; } 
+        #crosshair::after { top: 0; left: 9px; width: 4px; height: 22px; }
 
         #debug-info { 
-            position: absolute; top: 10px; left: 10px; color: white; 
-            text-shadow: var(--text-shadow-dark); font-size: 12px; font-family: monospace;
-            background: rgba(0,0,0,0.5); padding: 10px; border-radius: 6px; border: 1px solid #333;
+            position: absolute; top: 14px; left: 14px; color: white; 
+            text-shadow: var(--text-shadow-dark); font-size: 13px; font-family: monospace;
+            background: rgba(20, 20, 20, 0.78); padding: 10px 14px; 
+            border: 3px solid #8b8b8b; border-bottom-color: #222; border-right-color: #222;
         }
 
-        #damage-flash { position: absolute; inset: 0; background: rgba(255, 0, 0, 0.4); opacity: 0; transition: opacity 0.1s ease; }
-        #underwater-overlay { position: absolute; inset: 0; background: rgba(0, 40, 120, 0.6); opacity: 0; transition: opacity 0.3s ease; mix-blend-mode: multiply; }
-        #vignette { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.7) 100%); display: none; }
+        /* Caixa de Tutorial Guiado Xbox 360 */
+        #tutorial-box {
+            position: absolute; top: 14px; right: 14px; width: 350px; max-width: 46vw;
+            background: rgba(28, 28, 28, 0.92);
+            border: 4px solid #c6c6c6; border-bottom-color: #444; border-right-color: #444;
+            color: #fff; padding: 12px 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.75);
+            pointer-events: auto;
+        }
+        .tut-header {
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 2px solid #555; padding-bottom: 6px; margin-bottom: 8px;
+            font-weight: 900; color: #4ade80; font-size: 13px; text-transform: uppercase;
+        }
+        .tut-step-text { font-size: 13px; line-height: 1.45; color: #f3f4f6; text-shadow: 1px 1px 0 #000; }
+        .tut-progress { margin-top: 8px; height: 8px; background: #111; border: 1px solid #666; }
+        #tut-progress-bar { height: 100%; width: 20%; background: #4ade80; transition: width 0.3s ease; }
 
-        #hotbar-wrap { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; background: rgba(0,0,0,0.6); padding: 6px; border: 3px solid var(--xb-dark); border-top-color: var(--xb-mid); border-left-color: var(--xb-mid); border-radius: 6px; pointer-events: auto; }
-        .hotbar-slot { width: 52px; height: 52px; background: rgba(255,255,255,0.1); border: 3px solid var(--xb-mid); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); position: relative; cursor: pointer; transition: transform 0.1s; }
-        .hotbar-slot.active { border-color: #fff; outline: 3px solid #000; transform: scale(1.15) translateY(-5px); z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.8); background: rgba(255,255,255,0.3); }
-        .hotbar-slot img { width: 100%; height: 100%; object-fit: contain; padding: 4px; image-rendering: pixelated; }
-        .slot-qty { position: absolute; bottom: 2px; right: 4px; color: white; font-size: 13px; font-weight: bold; text-shadow: var(--text-shadow-dark); }
-        .slot-num { position: absolute; top: 2px; left: 4px; color: rgba(255,255,255,0.7); font-size: 10px; font-weight: bold; text-shadow: var(--text-shadow-dark); }
+        #damage-flash { position: absolute; inset: 0; background: rgba(255, 0, 0, 0.42); opacity: 0; transition: opacity 0.1s ease; }
+        #underwater-overlay { position: absolute; inset: 0; background: rgba(0, 50, 150, 0.55); opacity: 0; transition: opacity 0.3s ease; }
+        #vignette { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 35%, rgba(0,0,0,0.75) 100%); display: none; }
 
-        #mining-bar-container { position: absolute; top: calc(50% + 30px); left: 50%; transform: translateX(-50%); width: 80px; height: 8px; background: rgba(0,0,0,0.6); border: 2px solid #111; border-radius: 2px; display: none; overflow: hidden; }
-        #mining-bar-fill { height: 100%; width: 0%; background: #10b981; transition: width 0.05s linear; }
-        #health-bar { position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; }
-        .heart { font-size: 16px; line-height: 16px; text-shadow: 1px 1px 0 #000; filter: drop-shadow(1px 1px 1px #000); }
+        #hotbar-wrap { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; background: rgba(20,20,20,0.78); padding: 6px; border: 3px solid var(--xb-mid); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); pointer-events: auto; }
+        .hotbar-slot { width: 52px; height: 52px; background: rgba(139,139,139,0.35); border: 3px solid var(--xb-mid); border-top-color: #373737; border-left-color: #373737; position: relative; cursor: pointer; transition: transform 0.08s; }
+        .hotbar-slot.active { border: 4px solid #fff; outline: 2px solid #000; transform: scale(1.12) translateY(-4px); z-index: 10; background: rgba(255,255,255,0.28); }
+        .hotbar-slot img { width: 100%; height: 100%; object-fit: contain; padding: 5px; image-rendering: pixelated; }
+        .slot-qty { position: absolute; bottom: 1px; right: 4px; color: white; font-size: 13px; font-weight: 900; text-shadow: 2px 2px 0 #000; }
+        .slot-num { position: absolute; top: 2px; left: 4px; color: rgba(255,255,255,0.75); font-size: 10px; font-weight: bold; text-shadow: 1px 1px 0 #000; }
 
+        #item-name-banner {
+            position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%);
+            color: #fff; font-weight: 800; font-size: 15px; text-shadow: 2px 2px 0 #000;
+            opacity: 0; transition: opacity 0.25s; pointer-events: none;
+        }
+
+        #mining-bar-container { position: absolute; top: calc(50% + 26px); left: 50%; transform: translateX(-50%); width: 84px; height: 9px; background: rgba(0,0,0,0.75); border: 2px solid #fff; display: none; overflow: hidden; }
+        #mining-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #facc15, #10b981); transition: width 0.04s linear; }
+        #health-bar { position: absolute; bottom: 84px; left: 50%; transform: translateX(-35%); margin-left: -95px; display: flex; gap: 2px; }
+        .heart { font-size: 17px; line-height: 17px; filter: drop-shadow(2px 2px 0px #000); }
+
+        /* Interface de Crafting Xbox 360 */
         #ui-crafting { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 40000; display: none; flex-direction: column; justify-content: center; align-items: center; font-family: var(--font-ui); }
-        .xb-window { width: 900px; max-width: 95vw; background: var(--xb-base); border: 5px solid var(--xb-light); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 50px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .xb-tabs { display: flex; background: var(--xb-mid); padding: 10px 10px 0 10px; border-bottom: 3px solid var(--xb-dark); gap: 4px; overflow-x: auto; }
-        .xb-tab { width: 60px; height: 50px; background: var(--xb-mid); border: 3px solid var(--xb-light); border-bottom: none; border-right-color: var(--xb-dark); border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.1s; }
-        .xb-tab.active { background: var(--xb-base); height: 55px; transform: translateY(-5px); z-index: 2; box-shadow: 0 -5px 10px rgba(0,0,0,0.2); }
-        .xb-tab img { width: 32px; height: 32px; image-rendering: pixelated; }
-        .xb-content { display: flex; flex-direction: column; padding: 15px; gap: 15px; }
-        .xb-carousel-wrap { background: var(--xb-mid); border: 3px inset #666; padding: 10px; display: flex; align-items: center; overflow-x: auto; gap: 10px; min-height: 90px; }
-        .xb-carousel-item { min-width: 56px; height: 56px; background: var(--xb-mid); border: 3px solid var(--xb-light); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.1s; }
-        .xb-carousel-item.selected { border: 4px solid var(--xb-accent); background: var(--xb-base); transform: scale(1.15); z-index: 5; box-shadow: 0 0 15px rgba(16,185,129,0.5); }
-        .xb-carousel-item img { width: 40px; height: 40px; image-rendering: pixelated; }
-        .xb-split { display: flex; gap: 15px; }
+        .xb-window { width: 920px; max-width: 96vw; background: var(--xb-base); border: 5px solid var(--xb-light); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); box-shadow: 0 30px 60px rgba(0,0,0,0.9); display: flex; flex-direction: column; }
+        .xb-tabs { display: flex; background: var(--xb-mid); padding: 10px 10px 0 10px; border-bottom: 3px solid var(--xb-dark); gap: 6px; overflow-x: auto; }
+        .xb-tab { width: 68px; height: 52px; background: var(--xb-mid); border: 3px solid var(--xb-light); border-bottom: none; border-right-color: var(--xb-dark); border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.1s; }
+        .xb-tab.active { background: var(--xb-base); height: 56px; transform: translateY(-4px); z-index: 2; }
+        .xb-tab img { width: 34px; height: 34px; image-rendering: pixelated; }
+        .xb-content { display: flex; flex-direction: column; padding: 15px; gap: 14px; }
+        .xb-carousel-wrap { background: var(--xb-mid); border: 3px inset #666; padding: 10px; display: flex; align-items: center; overflow-x: auto; gap: 10px; min-height: 82px; }
+        .xb-carousel-item { min-width: 58px; height: 58px; background: var(--xb-mid); border: 3px solid var(--xb-light); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.1s; position: relative; }
+        .xb-carousel-item.selected { border: 4px solid #22c55e; background: var(--xb-base); transform: scale(1.14); z-index: 5; box-shadow: 0 0 12px rgba(34,197,94,0.6); }
+        .xb-carousel-item img { width: 42px; height: 42px; image-rendering: pixelated; }
+        .xb-split { display: flex; gap: 15px; flex-wrap: wrap; }
         
-        .xb-panel-left { flex: 1; background: var(--xb-mid); border: 3px inset #666; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        .xb-panel-title { color: #222; font-weight: 800; text-shadow: var(--text-shadow-light); text-align: center; margin-bottom: 15px; font-size: 16px; }
-        .xb-3x3-grid { display: grid; grid-template-columns: repeat(3, 48px); gap: 2px; background: #666; padding: 4px; border: 3px solid var(--xb-dark); border-right-color: var(--xb-light); border-bottom-color: var(--xb-light); margin-bottom: 20px; }
+        .xb-panel-left { flex: 1; min-width: 260px; background: var(--xb-mid); border: 3px inset #666; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .xb-panel-title { color: #222; font-weight: 900; text-shadow: var(--text-shadow-light); text-align: center; margin-bottom: 12px; font-size: 16px; }
+        .xb-3x3-grid { display: grid; grid-template-columns: repeat(3, 48px); gap: 2px; background: #555; padding: 4px; border: 3px solid var(--xb-dark); border-right-color: var(--xb-light); border-bottom-color: var(--xb-light); margin-bottom: 14px; }
         .xb-slot { width: 48px; height: 48px; background: var(--xb-mid); border: 3px inset #555; display: flex; justify-content: center; align-items: center; position: relative; }
         .xb-slot img { width: 36px; height: 36px; image-rendering: pixelated; }
-        .xb-reqs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 15px; width: 100%; }
-        .xb-req-badge { display: flex; align-items: center; gap: 6px; background: var(--xb-base); padding: 4px 8px; border: 2px solid var(--xb-light); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); font-weight: bold; font-size: 14px; }
-        .req-ok { color: #00aa00; } .req-fail { color: #dd0000; }
+        .xb-reqs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 12px; width: 100%; }
+        .xb-req-badge { display: flex; align-items: center; gap: 6px; background: var(--xb-base); padding: 4px 8px; border: 2px solid var(--xb-light); border-bottom-color: var(--xb-dark); border-right-color: var(--xb-dark); font-weight: bold; font-size: 13px; }
+        .xb-req-badge img { width: 22px; height: 22px; image-rendering: pixelated; }
+        .req-ok { color: #15803d; } .req-fail { color: #b91c1c; }
         
-        .btn-craft { width: 100%; background: #10b981; color: white; border: 3px solid #34d399; border-bottom-color: #059669; border-right-color: #059669; padding: 12px; font-weight: bold; font-size: 16px; text-shadow: var(--text-shadow-dark); cursor: pointer; transition: filter 0.1s; }
-        .btn-craft:active { border-color: #059669; border-bottom-color: #34d399; border-right-color: #34d399; }
-        .btn-craft.disabled { background: #555; border-color: #777; border-bottom-color: #333; border-right-color: #333; color: #888; cursor: not-allowed; text-shadow: none; }
+        .btn-craft { width: 100%; background: #16a34a; color: white; border: 3px solid #86efac; border-bottom-color: #14532d; border-right-color: #14532d; padding: 11px; font-weight: 900; font-size: 15px; text-shadow: var(--text-shadow-dark); cursor: pointer; }
+        .btn-craft:hover { filter: brightness(1.08); }
+        .btn-craft.disabled { background: #555; border-color: #777; border-bottom-color: #333; border-right-color: #333; color: #999; cursor: not-allowed; text-shadow: none; }
         
-        .xb-panel-right { flex: 1.2; background: var(--xb-mid); border: 3px inset #666; padding: 15px; }
+        .xb-panel-right { flex: 1.3; min-width: 300px; background: var(--xb-mid); border: 3px inset #666; padding: 15px; }
         .inv-grid-wrapper { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; }
-        .inv-grid-wrapper.hotbar { margin-top: 15px; }
+        .inv-grid-wrapper.hotbar { margin-top: 14px; padding-top: 10px; border-top: 2px solid #666; }
         .inv-cell { aspect-ratio: 1; background: var(--xb-mid); border: 3px inset #555; position: relative; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .inv-cell:hover { background: #9a9a9a; }
-        .inv-cell.selected { border: 3px solid #55ff55; background: #666; }
+        .inv-cell:hover { background: #a3a3a3; }
+        .inv-cell.selected { border: 3px solid #4ade80; background: #666; }
         .inv-cell img { width: 80%; height: 80%; image-rendering: pixelated; }
-        .xb-footer { background: var(--xb-darker); color: white; padding: 12px 20px; display: flex; justify-content: flex-end; gap: 20px; font-size: 14px; font-weight: bold; border-top: 2px solid #000; }
+        .xb-footer { background: var(--xb-darker); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; font-weight: bold; border-top: 2px solid #000; }
         .xb-hint { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .xb-btn-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 14px; text-shadow: var(--text-shadow-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .bg-green { background: #10b981; } .bg-red { background: #ef4444; }
+        .xb-btn-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 13px; color: #fff; text-shadow: 1px 1px 0 #000; box-shadow: inset 0 2px 3px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.6); }
+        .bg-green { background: #16a34a; } .bg-red { background: #dc2626; } .bg-yellow { background: #eab308; } .bg-blue { background: #2563eb; }
 
+        /* Pop-up Clássico de Conquista Xbox 360 */
         #achiev-popup {
-            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
-            width: 450px; background: linear-gradient(to bottom, #444, #222);
-            border: 3px solid #555; border-radius: 40px; display: flex; align-items: center;
-            padding: 8px 20px; z-index: 100000;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.2);
-            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: fixed; bottom: -120px; left: 50%; transform: translateX(-50%);
+            width: 440px; max-width: 92vw; background: linear-gradient(180deg, #3f3f46 0%, #18181b 100%);
+            border: 3px solid #71717a; border-radius: 50px; display: flex; align-items: center;
+            padding: 8px 22px 8px 10px; z-index: 100000;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.25);
+            transition: bottom 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
         }
-        #achiev-popup.show { bottom: 50px; }
+        #achiev-popup.show { bottom: 42px; }
         .achiev-logo {
-            width: 60px; height: 60px; background: radial-gradient(circle, #eee 0%, #aaa 100%);
-            border-radius: 50%; border: 3px solid #111; display: flex; justify-content: center; align-items: center;
-            margin-right: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.6); position: relative;
+            width: 58px; height: 58px; flex-shrink: 0;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #d4d4d8 55%, #71717a 100%);
+            border-radius: 50%; border: 3px solid #18181b; display: flex; justify-content: center; align-items: center;
+            margin-right: 16px; box-shadow: 0 0 15px #22c55e, inset 0 0 10px rgba(0,0,0,0.45); position: relative;
         }
         .achiev-logo::before {
-            content: 'X'; color: #10b981; font-size: 45px; font-weight: 900;
-            text-shadow: 0 0 10px #10b981; position: absolute; transform: scaleX(1.3);
+            content: 'X'; color: #16a34a; font-size: 36px; font-weight: 900;
+            text-shadow: 0 0 8px #4ade80; position: absolute; transform: scaleX(1.25);
         }
         .achiev-texts { display: flex; flex-direction: column; }
-        .achiev-t1 { color: #fff; font-size: 18px; font-weight: 800; text-shadow: 1px 1px 2px #000; }
-        .achiev-t2 { color: #ccc; font-size: 16px; font-weight: 600; text-shadow: 1px 1px 1px #000; margin-top: 2px; }
+        .achiev-t1 { color: #4ade80; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 1px 1px 2px #000; }
+        .achiev-t2 { color: #ffffff; font-size: 16px; font-weight: 800; text-shadow: 1px 1px 2px #000; margin-top: 1px; }
 
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { background: rgba(0,0,0,0.85); border-left: 4px solid var(--xb-accent); color: white; padding: 12px 16px; border-radius: 4px; font-size: 13px; font-weight: bold; animation: slideIn 0.3s forwards, fadeOut 0.5s 2.5s forwards; opacity: 0; transform: translateX(100%); }
-        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } } @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+        #toast-container { position: fixed; bottom: 155px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+        .toast { background: rgba(20, 20, 20, 0.92); border: 2px solid #fff; color: #fde047; padding: 8px 16px; font-size: 13px; font-weight: 800; text-shadow: 1px 1px 0 #000; animation: fadeToast 3.2s forwards; }
+        @keyframes fadeToast { 0% { opacity: 0; transform: translateY(10px); } 10% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; } 100% { opacity: 0; } }
     </style>
 </head>
 <body>
 
     <div id="loading-screen">
-        <h1 class="pixel-text text-5xl mb-4 text-white drop-shadow-md text-center" style="text-shadow: 4px 4px 0 #000;">BEHEMOTH ENGINE</h1>
-        <h2 class="text-xl text-emerald-400 mb-10 font-bold tracking-widest uppercase">Xbox 360 Masterpiece (Ultimate)</h2>
+        <div class="mc-logo-wrap">
+            <div class="mc-logo-main">MINECRAFT</div>
+            <div class="mc-logo-sub">XBOX 360 EDITION</div>
+        </div>
         <div class="loader-bar-container"><div id="loader-fill"></div></div>
-        <p id="loader-text" class="mt-6 text-gray-400 font-bold uppercase tracking-wider">A Inicializar Núcleo PBR...</p>
+        <p id="loader-text" class="mt-5 text-gray-300 font-bold uppercase tracking-wider text-sm">A Gerar Mundo e Biomas...</p>
         <pre id="error-log"></pre>
     </div>
 
-    <!-- O Menu Principal Idêntico à Referência com as Correções de UI -->
-    <div id="main-menu" class="menu-overlay" style="background-color: #000; z-index: 50000; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <div style="max-width: 850px; width: 90%; display: flex; flex-direction: column; align-items: flex-start;">
-            <h1 class="pixel-text" style="color: #55ff55; font-size: 3.5rem; text-shadow: 0px 5px 0px #555; margin-bottom: 0.5rem; letter-spacing: 4px;">MINECRAFT</h1>
-            <h2 style="color: #aaa; font-family: var(--font-ui); font-size: 1.1rem; font-weight: bold; margin-bottom: 2rem;">Edição Clássica de Consola</h2>
+    <!-- Menu Principal Estilo Consola Xbox 360 -->
+    <div id="main-menu" class="menu-overlay" style="display: none;">
+        <div class="mc-logo-wrap">
+            <div class="mc-logo-main">MINECRAFT</div>
+            <div class="mc-logo-sub">XBOX 360 EDITION</div>
+            <div class="splash-text" id="splash-text">Agora com Creepers!</div>
+        </div>
 
-            <div style="border: 1px solid #222; border-radius: 8px; padding: 25px; background: rgba(10, 10, 10, 0.8); width: 100%; margin-bottom: 2rem;">
-                <p style="color: #ddd; font-family: var(--font-ui); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                    <span style="color: #55ff55; font-weight: bold;">Construção Perfeita:</span> O Voxel Raycast (DDA) foi reescrito. Agora podes construir perfeitamente debaixo de ti (Pillar Jump), de lado e de cima.
-                </p>
-                <p style="color: #ddd; font-family: var(--font-ui); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                    <span style="color: #55ff55; font-weight: bold;">Crafting & Mobs:</span> Usa [E] para abrir a interface Xbox. Sobrevive contra Zombies agressivos e recolhe Maçãs de Porcos.
-                </p>
-                <p style="color: #ddd; font-family: var(--font-ui); font-size: 0.9rem; line-height: 1.6; margin: 0;">
-                    <span style="color: #55ff55; font-weight: bold;">Gráficos Ultra:</span> Skybox de Estrelas à noite, Água Simulada e Oclusão de Ambiente (Fake AO) em cada bloco para profundidade PBR real!
-                </p>
+        <div class="flex flex-col items-center">
+            <button id="btn-start" class="xb-btn">Jogar Tutorial & Mundo</button>
+            <button id="btn-open-achv" class="xb-btn">Conquistas Xbox 360 (<span id="menu-gamerscore">0/100G</span>)</button>
+            <button id="btn-how-to" class="xb-btn">Como Jogar & Controlos</button>
+        </div>
+
+        <!-- Rodapé Clássico Xbox 360 -->
+        <div class="fixed bottom-0 left-0 right-0 bg-black/80 text-white px-8 py-3 flex justify-between items-center border-t-2 border-zinc-700 text-sm font-bold">
+            <div class="text-emerald-400">Behemoth Voxel Engine • Xbox 360 Edition</div>
+            <div class="flex gap-6">
+                <div class="xb-hint" id="hint-play"><div class="xb-btn-icon bg-green">A</div> Selecionar</div>
+                <div class="xb-hint" id="hint-achv"><div class="xb-btn-icon bg-yellow">Y</div> Conquistas</div>
+                <div class="xb-hint" id="hint-help"><div class="xb-btn-icon bg-blue">X</div> Como Jogar</div>
             </div>
-            
-            <button id="btn-start" style="background: #c6c6c6; border: 4px solid; border-top-color: #ffffff; border-left-color: #ffffff; border-right-color: #555555; border-bottom-color: #555555; padding: 15px 100px; font-family: var(--font-ui); font-weight: bold; font-size: 1.2rem; color: #000; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">JOGAR</button>
         </div>
     </div>
 
-    <!-- Menu de Pausa Minimalista Escuro -->
-    <div id="pause-menu" class="menu-overlay" style="background-color: #000; backdrop-filter: none;">
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <h2 class="pixel-text text-white mb-8" style="font-size: 2.5rem; text-shadow: 2px 2px 0px #555, 4px 4px 0px #222;">PAUSA</h2>
-            <button id="btn-resume" class="xb-btn" style="border-radius: 0; padding: 20px 40px; font-size: 20px;">CONTINUAR JOGO</button>
+    <!-- Modal de Conquistas Xbox 360 -->
+    <div id="achv-modal" class="menu-overlay" style="display: none;">
+        <div class="xb-panel-box w-[650px] max-w-[94vw]">
+            <div class="flex justify-between items-center border-b-2 border-zinc-600 pb-3 mb-4">
+                <h2 class="font-black text-xl text-zinc-900">CONQUISTAS XBOX 360</h2>
+                <span id="modal-gamerscore" class="bg-emerald-700 text-white px-3 py-1 font-black text-sm border-2 border-emerald-400">0 / 100 G</span>
+            </div>
+            <div id="achv-list-container" class="flex flex-col gap-2 max-h-[55vh] overflow-y-auto pr-1"></div>
+            <div class="mt-4 flex justify-end">
+                <button id="btn-close-achv" class="xb-btn !w-auto !mb-0 !py-2 !px-8">Voltar (B)</button>
+            </div>
         </div>
     </div>
 
-    <div id="death-screen" class="menu-overlay" style="background: rgba(150,0,0,0.85);">
-        <div class="menu-card" style="background: transparent; border: none; box-shadow: none;">
-            <h1 class="pixel-text text-red-500 mb-8" style="font-size: 5rem; text-shadow: 4px 4px 0 #000;">MORRESTE</h1>
-            <button id="btn-respawn" class="xb-btn mx-auto" style="border-color: #ffaaaa; color: white; background: #aa0000;">RENASCER</button>
+    <!-- Modal Como Jogar -->
+    <div id="help-modal" class="menu-overlay" style="display: none;">
+        <div class="xb-panel-box w-[650px] max-w-[94vw]">
+            <h2 class="font-black text-xl text-zinc-900 border-b-2 border-zinc-600 pb-2 mb-3">COMO JOGAR - EDIÇÃO XBOX 360</h2>
+            <div class="space-y-2 text-sm font-semibold text-zinc-800 leading-relaxed">
+                <p>🎮 <b>Movimento:</b> Usa <b>[W, A, S, D]</b> para caminhar, <b>[Espaço]</b> para saltar e nadar, e <b>[Shift]</b> para agachar.</p>
+                <p>📦 <b>Baú Inicial & Interação (Botão Direito):</b> Clica com o Botão Direito no <b>Baú Inicial</b> à tua frente no forte para receberes os teus itens de sobrevivência, ou clica na Bancada de Trabalho.</p>
+                <p>⛏️ <b>Extrair & Atacar (Botão Esquerdo):</b> Segura para partir árvores, pedras e minérios com som característico de cada bloco, ou clica para atacar Zombies, Porcos e Creepers.</p>
+                <p>🛠️ <b>Menu de Fabricação Xbox 360 [Tecla E]:</b> Abre o menu clássico por abas da Xbox 360 para criar Tábuas, Bancada de Trabalho, Picareta, Machado, Espada e Tochas.</p>
+                <p>💥 <b>Mobs & Biomas:</b> Explora Planícies, Deserto com Cactos, Tundra Nevada e Montanhas Rochosas. Tem cuidado com o fusível (<i>ssssss</i>) dos Creepers!</p>
+            </div>
+            <div class="mt-5 flex justify-end">
+                <button id="btn-close-help" class="xb-btn !w-auto !mb-0 !py-2 !px-8">Entendido (A)</button>
+            </div>
         </div>
+    </div>
+
+    <!-- Menu de Pausa Estilo Xbox 360 -->
+    <div id="pause-menu" class="menu-overlay">
+        <div class="mc-logo-wrap !mb-6">
+            <div class="mc-logo-main !text-4xl">JOGO EM PAUSA</div>
+        </div>
+        <button id="btn-resume" class="xb-btn">Continuar Jogo</button>
+        <button id="btn-pause-achv" class="xb-btn">Ver Conquistas Xbox 360</button>
+        <button id="btn-toggle-time" class="xb-btn">Alternar Dia / Noite</button>
+        <button id="btn-spawn-creeper" class="xb-btn">Invocar Creeper & Zombie Perto</button>
+        <button id="btn-main-menu" class="xb-btn">Sair para o Menu Principal</button>
+    </div>
+
+    <div id="death-screen" class="menu-overlay" style="background: rgba(140,0,0,0.85);">
+        <h1 class="pixel-text text-red-400 mb-6 text-center" style="font-size: clamp(2.2rem, 5vw, 4rem); text-shadow: 4px 4px 0 #000;">MORRESTE!</h1>
+        <p class="text-white font-bold mb-6 text-lg drop-shadow">Os monstros ou alturas levaram a melhor.</p>
+        <button id="btn-respawn" class="xb-btn">Renascer no Forte Inicial</button>
     </div>
 
     <div id="hud">
@@ -224,17 +385,33 @@
         <div id="mining-bar-container"><div id="mining-bar-fill"></div></div>
         
         <div id="debug-info">
-            <div style="color: var(--xb-accent); font-size: 14px; margin-bottom: 4px; font-family: var(--font-ui); font-weight:bold;">Behemoth Xbox 360 Master</div>
-            <div id="fps-counter">FPS: 0</div>
-            <div id="pos-counter" style="color: #aaa;">XYZ: 0 / 0 / 0</div>
+            <div style="color: #4ade80; font-size: 14px; margin-bottom: 4px; font-family: var(--font-ui); font-weight:900;">MINECRAFT XBOX 360 TU1</div>
+            <div id="fps-counter">FPS: 60</div>
+            <div id="pos-counter" style="color: #e4e4e7;">XYZ: 8 / 25 / 8</div>
+            <div id="biome-counter" style="color: #fde047; font-weight: bold; margin-top: 2px;">Bioma: Planície & Floresta</div>
+            <div id="time-counter" style="color: #93c5fd; font-size: 11px; margin-top: 2px;">Hora: Dia ☀️ | [E] Crafting</div>
         </div>
 
+        <!-- Caixa de Tutorial Guiado Xbox 360 -->
+        <div id="tutorial-box">
+            <div class="tut-header">
+                <span>🎯 Tutorial Xbox 360</span>
+                <span id="tut-step-badge">Passo 1/5</span>
+            </div>
+            <div class="tut-step-text" id="tut-text">
+                Olha para o <b>Baú Inicial</b> à tua frente no forte e clica com o <b>Botão Direito</b> (ou parte-o) para recolher os teus suprimentos!
+            </div>
+            <div class="tut-progress"><div id="tut-progress-bar"></div></div>
+        </div>
+
+        <div id="item-name-banner">Espada de Madeira</div>
         <div id="health-bar"></div>
-        <div id="hotbar-wrap" id="hotbar-container"></div>
+        <div id="hotbar-wrap"></div>
     </div>
 
     <div id="toast-container"></div>
 
+    <!-- Popup de Conquista Xbox 360 -->
     <div id="achiev-popup">
         <div class="achiev-logo"></div>
         <div class="achiev-texts">
@@ -243,7 +420,7 @@
         </div>
     </div>
 
-    <!-- UI Xbox 360 Original -->
+    <!-- UI de Fabricação Original Xbox 360 -->
     <div id="ui-crafting">
         <div class="xb-window">
             <div class="xb-tabs" id="ui-tabs"></div>
@@ -253,14 +430,14 @@
                 
                 <div class="xb-split">
                     <div class="xb-panel-left">
-                        <div class="xb-panel-title" id="ui-recipe-name">Item Name</div>
+                        <div class="xb-panel-title" id="ui-recipe-name">Tábuas de Carvalho</div>
                         <div class="xb-3x3-grid" id="ui-grid-3x3"></div>
                         <div class="xb-reqs" id="ui-req-list"></div>
-                        <button id="ui-btn-craft" class="btn-craft">FABRICAR ITEM</button>
+                        <button id="ui-btn-craft" class="btn-craft">FABRICAR (A)</button>
                     </div>
                     
                     <div class="xb-panel-right">
-                        <div class="xb-panel-title text-left" style="color:#333;">O teu Inventário</div>
+                        <div class="xb-panel-title text-left" style="color:#222;">Inventário do Jogador (Clica para equipar na Hotbar)</div>
                         <div class="inv-grid-wrapper" id="ui-inv-main"></div>
                         <div class="inv-grid-wrapper hotbar" id="ui-inv-hotbar"></div>
                     </div>
@@ -268,8 +445,11 @@
             </div>
             
             <div class="xb-footer">
-                <div class="xb-hint"><div class="xb-btn-icon bg-green">A</div> Criar / Selecionar</div>
-                <div class="xb-hint" id="btn-close-inv"><div class="xb-btn-icon bg-red">B</div> Sair (ESC)</div>
+                <div class="text-zinc-300">Dica: Extrai Troncos de Árvore para fazer Tábuas, Bancada e Ferramentas!</div>
+                <div class="flex gap-5">
+                    <div class="xb-hint"><div class="xb-btn-icon bg-green">A</div> Criar / Selecionar</div>
+                    <div class="xb-hint" id="btn-close-inv"><div class="xb-btn-icon bg-red">B</div> Sair (E / ESC)</div>
+                </div>
             </div>
         </div>
     </div>
@@ -281,11 +461,10 @@
     <script type="module">
         import * as THREE from 'three';
         
-        // Error Handler Global e Seguro
         window.onerror = function(msg, src, lineno, colno, error) { 
             const el = document.getElementById('error-log'); 
-            if (el) { el.style.display = 'block'; el.innerHTML += `\n[ERRO CRÍTICO] ${msg} (Linha ${lineno})\nStack: ${error?.stack}`; } 
-            console.error("Behemoth Engine Crash:", msg, error);
+            if (el) { el.style.display = 'block'; el.innerHTML += `\n[ERRO] ${msg} (Linha ${lineno})`; } 
+            console.error("Behemoth Engine Error:", msg, error);
             return false; 
         };
 
@@ -296,83 +475,311 @@
         };
 
         const showToast = (msg) => { 
-            let c = document.getElementById('toast-container'), t = document.createElement('div'); 
+            let c = document.getElementById('toast-container');
+            if(!c) return;
+            let t = document.createElement('div'); 
             t.className = 'toast'; t.innerText = msg; c.appendChild(t); 
-            setTimeout(() => { if(t.parentNode) c.removeChild(t); }, 3500); 
+            setTimeout(() => { if(t.parentNode) c.removeChild(t); }, 3200); 
         };
 
+        const SPLASH_TEXTS = [
+            "Edição Clássica Xbox 360!",
+            "Agora com Creepers!",
+            "Cuidado com o Ssssss!",
+            "Abre o Baú Inicial!",
+            "4 Biomas para Explorar!",
+            "100G em Conquistas!",
+            "Texturas 16x16 Melhoradas!"
+        ];
+
+        const ACHIEVEMENTS_LIST = [
+            { id: 'Taking Inventory', title: 'Taking Inventory', desc: 'Abre o teu inventário ou menu de criação com [E].', score: 10, unlocked: false },
+            { id: 'Chest Hunter', title: 'Chest Hunter', desc: 'Abre ou recolhe o Baú Inicial no forte.', score: 10, unlocked: false },
+            { id: 'Getting Wood', title: 'Getting Wood', desc: 'Extrai um bloco de tronco de uma árvore.', score: 15, unlocked: false },
+            { id: 'Benchmarking', title: 'Benchmarking', desc: 'Fabrica uma Bancada de Trabalho.', score: 15, unlocked: false },
+            { id: 'Time to Strike', title: 'Time to Strike!', desc: 'Fabrica uma Picareta, Machado ou Espada.', score: 15, unlocked: false },
+            { id: 'Monster Hunter', title: 'Monster Hunter', desc: 'Ataca e derrota um Zombie ou Creeper.', score: 15, unlocked: false },
+            { id: 'Adventurer', title: 'Adventurer', desc: 'Descobre pelo menos 3 biomas diferentes.', score: 20, unlocked: false }
+        ];
+
         class XboxAchv {
-            static unlock(name) {
+            static unlock(id) {
+                let ach = ACHIEVEMENTS_LIST.find(a => a.id === id);
+                if (!ach || ach.unlocked) return;
+                ach.unlocked = true;
+
                 let el = document.getElementById('achiev-popup');
                 let title = document.getElementById('achiev-name');
                 if(el && title) {
-                    title.innerText = name;
+                    title.innerText = `${ach.score}G - ${ach.title}`;
                     el.classList.add('show');
                     if(window.App && window.App.audio) window.App.audio.playAchievement();
-                    setTimeout(() => el.classList.remove('show'), 4000);
+                    setTimeout(() => el.classList.remove('show'), 4400);
+                }
+                XboxAchv.updateUI();
+            }
+
+            static getTotalScore() {
+                return ACHIEVEMENTS_LIST.reduce((acc, a) => acc + (a.unlocked ? a.score : 0), 0);
+            }
+
+            static updateUI() {
+                let total = XboxAchv.getTotalScore();
+                let m1 = document.getElementById('menu-gamerscore');
+                let m2 = document.getElementById('modal-gamerscore');
+                if(m1) m1.innerText = `${total}/100G`;
+                if(m2) m2.innerText = `${total} / 100 G`;
+
+                let cont = document.getElementById('achv-list-container');
+                if(!cont) return;
+                cont.innerHTML = '';
+                ACHIEVEMENTS_LIST.forEach(a => {
+                    let row = document.createElement('div');
+                    row.className = `flex justify-between items-center p-3 border-2 ${a.unlocked ? 'bg-emerald-900/20 border-emerald-600' : 'bg-zinc-300 border-zinc-500 opacity-75'}`;
+                    row.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center font-black text-white ${a.unlocked ? 'bg-emerald-600 shadow' : 'bg-zinc-600'}">
+                                ${a.unlocked ? '✓' : '🔒'}
+                            </div>
+                            <div>
+                                <div class="font-black text-sm text-zinc-900">${a.title}</div>
+                                <div class="text-xs text-zinc-700 font-semibold">${a.desc}</div>
+                            </div>
+                        </div>
+                        <div class="font-black text-sm px-2 py-1 ${a.unlocked ? 'bg-emerald-600 text-white' : 'bg-zinc-400 text-zinc-800'}">${a.score}G</div>
+                    `;
+                    cont.appendChild(row);
+                });
+            }
+        }
+
+        class TutorialManager {
+            constructor() {
+                this.step = 1;
+                this.steps = [
+                    "",
+                    "Olha para o <b>Baú Inicial</b> à tua frente no forte e clica com o <b>Botão Direito</b> (ou parte-o) para recolher os suprimentos!",
+                    "Boa! Agora sai do forte, aproxima-te de uma <b>Árvore</b> e segura o <b>Botão Esquerdo</b> no tronco para extrair Madeira.",
+                    "Madeira recolhida! Pressiona <b>[E]</b> para abrir o Menu Xbox e fabrica <b>Tábuas de Carvalho</b>.",
+                    "Agora no menu <b>[E]</b>, fabrica uma <b>Bancada de Trabalho</b> para desbloquear o teu acampamento!",
+                    "Excelente! Vai à 2.ª aba (Ferramentas) no menu <b>[E]</b> e fabrica uma <b>Picareta</b>, <b>Machado</b> ou <b>Espada</b>.",
+                    "Tutorial Concluído! Explora os <b>4 Biomas</b> (Floresta, Deserto, Neve e Montanhas) e sobrevive aos <b>Zombies e Creepers</b>!"
+                ];
+            }
+            completeStep(targetStep) {
+                if (this.step === targetStep && this.step < 6) {
+                    this.step++;
+                    let badge = document.getElementById('tut-step-badge');
+                    let text = document.getElementById('tut-text');
+                    let bar = document.getElementById('tut-progress-bar');
+                    if (badge) badge.innerText = this.step === 6 ? "Completo!" : `Passo ${this.step}/5`;
+                    if (text) text.innerHTML = this.steps[this.step];
+                    if (bar) bar.style.width = `${Math.min(100, this.step * 20)}%`;
                 }
             }
         }
 
         class AudioManager {
-            constructor() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
-            
-            playTone(freq, type, duration, vol) {
-                if(this.ctx.state === 'suspended') this.ctx.resume();
-                let osc = this.ctx.createOscillator(); 
-                let gain = this.ctx.createGain(); 
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                let t = this.ctx.currentTime;
-                
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, t);
-                
-                gain.gain.setValueAtTime(vol, t);
-                gain.gain.exponentialRampToValueAtTime(0.01, t + duration);
-                
-                osc.start(t); osc.stop(t + duration);
+            constructor() { 
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                this.ctx = AudioCtx ? new AudioCtx() : null;
+                this.noiseBuffer = this.ctx ? this.createNoiseBuffer() : null;
             }
 
-            playUI() { this.playTone(600, 'sine', 0.1, 0.2); }
-            playCraft() { this.playTone(400, 'square', 0.15, 0.2); }
-            playHit() { this.playTone(200, 'sawtooth', 0.2, 0.3); }
-            playPop() { this.playTone(400, 'sine', 0.1, 0.2); setTimeout(()=>this.playTone(600, 'sine', 0.1, 0.2), 50); }
-            playZombie() { this.playTone(80, 'square', 0.3, 0.2); }
-            playPig() { this.playTone(150, 'triangle', 0.2, 0.1); }
-            
+            createNoiseBuffer() {
+                const sr = this.ctx.sampleRate;
+                const buffer = this.ctx.createBuffer(1, sr * 1.5, sr);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < data.length; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                return buffer;
+            }
+
+            resume() {
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume().catch(() => {});
+                }
+            }
+
+            playNoise(filterType, freq, duration, vol, pitchDrop = false) {
+                if (!this.ctx || !this.noiseBuffer) return;
+                this.resume();
+                const t = this.ctx.currentTime;
+                const src = this.ctx.createBufferSource();
+                src.buffer = this.noiseBuffer;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = filterType;
+                filter.frequency.setValueAtTime(freq, t);
+                if (pitchDrop) {
+                    filter.frequency.exponentialRampToValueAtTime(Math.max(40, freq * 0.25), t + duration);
+                }
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(vol, t);
+                gain.gain.exponentialRampToValueAtTime(0.005, t + duration);
+
+                src.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                src.start(t);
+                src.stop(t + duration);
+            }
+
+            playTone(freq, type, duration, vol, endFreq = null) {
+                if (!this.ctx) return;
+                this.resume();
+                const t = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, t);
+                if (endFreq) {
+                    osc.frequency.exponentialRampToValueAtTime(endFreq, t + duration);
+                }
+                gain.gain.setValueAtTime(vol, t);
+                gain.gain.exponentialRampToValueAtTime(0.005, t + duration);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(t);
+                osc.stop(t + duration);
+            }
+
+            playUI() {
+                this.playTone(740, 'sine', 0.06, 0.15, 880);
+            }
+
+            playCraft() {
+                this.playNoise('bandpass', 1100, 0.12, 0.25, true);
+                this.playTone(220, 'triangle', 0.1, 0.25, 440);
+                setTimeout(() => {
+                    this.playTone(330, 'triangle', 0.12, 0.25, 580);
+                }, 75);
+            }
+
+            playChestOpen() {
+                this.playTone(180, 'sawtooth', 0.18, 0.2, 320);
+                setTimeout(() => this.playTone(420, 'sine', 0.15, 0.2, 520), 120);
+            }
+
+            playMineStep(material) {
+                if (material === 'wood') {
+                    this.playTone(135, 'triangle', 0.06, 0.14, 95);
+                    this.playNoise('bandpass', 600, 0.05, 0.12);
+                } else if (material === 'stone') {
+                    this.playTone(420, 'square', 0.04, 0.08, 260);
+                    this.playNoise('highpass', 1800, 0.04, 0.1);
+                } else if (material === 'sand' || material === 'snow') {
+                    this.playNoise('bandpass', 2400, 0.06, 0.12);
+                } else {
+                    this.playNoise('bandpass', 950, 0.06, 0.14);
+                }
+            }
+
             playDig(material) {
-                let f = 100, t = 'square', d = 0.1, v = 0.1;
-                if(material === 'wood') { f = 150; t = 'triangle'; d = 0.15; }
-                else if(material === 'grass' || material === 'dirt') { f = 80; t = 'sawtooth'; d = 0.12; }
-                else if(material === 'glass') { f = 800; t = 'sine'; d = 0.05; v = 0.05; }
-                this.playTone(f, t, d, v);
+                if (material === 'wood') {
+                    this.playTone(165, 'triangle', 0.16, 0.3, 75);
+                    this.playNoise('bandpass', 750, 0.14, 0.28, true);
+                } else if (material === 'stone') {
+                    this.playTone(320, 'square', 0.12, 0.18, 120);
+                    this.playNoise('bandpass', 1400, 0.15, 0.3, true);
+                } else if (material === 'glass') {
+                    this.playTone(1400, 'sine', 0.09, 0.2, 600);
+                    setTimeout(() => this.playTone(1950, 'sine', 0.08, 0.18, 900), 40);
+                    this.playNoise('highpass', 3200, 0.12, 0.25);
+                } else if (material === 'sand' || material === 'snow') {
+                    this.playNoise('bandpass', 2100, 0.16, 0.26, true);
+                } else {
+                    this.playNoise('bandpass', 850, 0.16, 0.32, true);
+                    this.playTone(110, 'sawtooth', 0.1, 0.15, 65);
+                }
             }
 
             playPlace(material) {
-                let f = 120, t = 'triangle', d = 0.1, v = 0.15;
-                if(material === 'wood') { f = 180; }
-                else if(material === 'grass') { f = 100; t = 'sawtooth'; }
-                this.playTone(f, t, d, v);
+                if (material === 'wood') {
+                    this.playTone(190, 'triangle', 0.11, 0.26, 130);
+                    this.playNoise('bandpass', 700, 0.08, 0.15);
+                } else if (material === 'stone') {
+                    this.playTone(260, 'square', 0.09, 0.2, 170);
+                    this.playNoise('bandpass', 1200, 0.08, 0.2);
+                } else {
+                    this.playNoise('bandpass', 950, 0.11, 0.24, true);
+                    this.playTone(130, 'sine', 0.08, 0.18, 95);
+                }
+            }
+
+            playEat() {
+                this.playNoise('bandpass', 1100, 0.09, 0.25);
+                setTimeout(() => this.playNoise('bandpass', 1300, 0.09, 0.25), 110);
+                setTimeout(() => this.playTone(320, 'sine', 0.12, 0.2, 480), 220);
+            }
+
+            playHit() {
+                this.playNoise('lowpass', 600, 0.15, 0.35, true);
+                this.playTone(160, 'sawtooth', 0.15, 0.28, 70);
+            }
+
+            playPop() {
+                this.playTone(480, 'sine', 0.07, 0.22, 880);
+            }
+
+            playZombie() {
+                this.playTone(95, 'sawtooth', 0.32, 0.22, 65);
+                this.playNoise('lowpass', 350, 0.25, 0.15);
+            }
+
+            playPig() {
+                this.playTone(210, 'triangle', 0.14, 0.18, 290);
+                setTimeout(() => this.playTone(190, 'triangle', 0.12, 0.15, 250), 90);
+            }
+
+            playFuse() {
+                this.playNoise('highpass', 2600, 1.2, 0.32, false);
+            }
+
+            playExplosion() {
+                this.playNoise('lowpass', 380, 0.85, 0.65, true);
+                this.playTone(95, 'sawtooth', 0.6, 0.45, 28);
             }
 
             playAchievement() {
-                if(this.ctx.state === 'suspended') this.ctx.resume();
-                let osc = this.ctx.createOscillator(); let gain = this.ctx.createGain(); 
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                let t = this.ctx.currentTime;
-                
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(500, t);
-                osc.frequency.exponentialRampToValueAtTime(800, t + 0.1);
-                osc.frequency.setValueAtTime(800, t + 0.1);
-                osc.frequency.exponentialRampToValueAtTime(1200, t + 0.3);
-                
-                gain.gain.setValueAtTime(0, t);
-                gain.gain.linearRampToValueAtTime(0.3, t + 0.05);
-                gain.gain.setValueAtTime(0.3, t + 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
-                
-                osc.start(t); osc.stop(t + 0.5);
+                if (!this.ctx) return;
+                this.resume();
+                const t = this.ctx.currentTime;
+
+                const popOsc = this.ctx.createOscillator();
+                const popGain = this.ctx.createGain();
+                popOsc.type = 'sine';
+                popOsc.frequency.setValueAtTime(340, t);
+                popOsc.frequency.exponentialRampToValueAtTime(680, t + 0.08);
+                popGain.gain.setValueAtTime(0.25, t);
+                popGain.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+                popOsc.connect(popGain);
+                popGain.connect(this.ctx.destination);
+                popOsc.start(t);
+                popOsc.stop(t + 0.1);
+
+                const notes = [
+                    { f: 987.77, start: 0.07, dur: 0.38 },
+                    { f: 1318.51, start: 0.17, dur: 0.65 },
+                    { f: 1975.53, start: 0.17, dur: 0.55 }
+                ];
+                notes.forEach(n => {
+                    const osc = this.ctx.createOscillator();
+                    const g = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(n.f, t + n.start);
+                    g.gain.setValueAtTime(0.001, t + n.start);
+                    g.gain.linearRampToValueAtTime(0.22, t + n.start + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + n.start + n.dur);
+                    osc.connect(g);
+                    g.connect(this.ctx.destination);
+                    osc.start(t + n.start);
+                    osc.stop(t + n.start + n.dur);
+                });
             }
         }
 
@@ -381,141 +788,210 @@
             WOOD: 5, LEAVES: 6, SAND: 7, WATER: 8, GLASS: 9, 
             PLANKS: 10, GOLD: 11, SNOW: 12, BEDROCK: 13,
             COAL_ORE: 14, IRON_ORE: 15, DIAMOND_ORE: 16, BRICKS: 17, OBSIDIAN: 18,
-            FENCE: 19, CACTUS: 20, TALL_GRASS: 21,
-            TNT: 22, BOOKSHELF: 23, CRAFTING_TABLE: 24, RED_FLOWER: 25, YELLOW_FLOWER: 26,
-            TORCH: 27, 
+            CACTUS: 20, BOOKSHELF: 23, CRAFTING_TABLE: 24, RED_FLOWER: 25, YELLOW_FLOWER: 26,
+            TORCH: 27, CHEST: 28,
             PICKAXE: 100, AXE: 101, SWORD: 102, STICK: 103, APPLE: 104, ROTTEN_FLESH: 105 
         };
 
         const BLOCK_PROPS = {
-            [BLOCKS.AIR]:         { solid: false, trans: true,  liquid: false, hardness: 0 },
-            [BLOCKS.GRASS]:       { solid: true,  trans: false, liquid: false, hardness: 0.6, name: "Bloco de Erva", sound: 'grass' },
-            [BLOCKS.DIRT]:        { solid: true,  trans: false, liquid: false, hardness: 0.5, name: "Terra", sound: 'dirt' },
-            [BLOCKS.STONE]:       { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Pedra", sound: 'stone', tool: 'pickaxe' },
-            [BLOCKS.COBBLESTONE]: { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Pedregulho", sound: 'stone', tool: 'pickaxe' },
-            [BLOCKS.WOOD]:        { solid: true,  trans: false, liquid: false, hardness: 2.0, name: "Tronco", sound: 'wood', tool: 'axe' },
-            [BLOCKS.LEAVES]:      { solid: true,  trans: true,  liquid: false, hardness: 0.2, name: "Folhas", sound: 'grass', isFlora: true },
-            [BLOCKS.SAND]:        { solid: true,  trans: false, liquid: false, hardness: 0.5, name: "Areia", sound: 'dirt' },
-            [BLOCKS.WATER]:       { solid: false, trans: true,  liquid: true,  hardness: -1,  name: "Água" },
-            [BLOCKS.GLASS]:       { solid: true,  trans: true,  liquid: false, hardness: 0.3, name: "Vidro", sound: 'glass' },
-            [BLOCKS.PLANKS]:      { solid: true,  trans: false, liquid: false, hardness: 2.0, name: "Tábuas", sound: 'wood', tool: 'axe' },
-            [BLOCKS.BEDROCK]:     { solid: true,  trans: false, liquid: false, hardness: Infinity, name: "Rocha Matriz", sound: 'stone' },
-            [BLOCKS.COAL_ORE]:    { solid: true,  trans: false, liquid: false, hardness: 3.0, name: "Carvão", sound: 'stone', tool: 'pickaxe' },
-            [BLOCKS.IRON_ORE]:    { solid: true,  trans: false, liquid: false, hardness: 4.0, name: "Ferro", sound: 'stone', tool: 'pickaxe' },
-            [BLOCKS.DIAMOND_ORE]: { solid: true,  trans: false, liquid: false, hardness: 5.0, name: "Diamante", sound: 'stone', tool: 'pickaxe' },
-            [BLOCKS.CRAFTING_TABLE]:{ solid: true, trans: false, liquid: false, hardness: 1.5, name: "Bancada", sound: 'wood', tool: 'axe' },
-            [BLOCKS.BOOKSHELF]:   { solid: true,  trans: false, liquid: false, hardness: 1.5, name: "Estante", sound: 'wood', tool: 'axe' },
-            [BLOCKS.BRICKS]:      { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Tijolos", sound: 'stone', tool: 'pickaxe' },
-            [BLOCKS.RED_FLOWER]:  { solid: false, trans: true,  liquid: false, hardness: 0.1, name: "Papoila", sound: 'grass', isFlora: true },
-            [BLOCKS.YELLOW_FLOWER]:{ solid: false, trans: true, liquid: false, hardness: 0.1, name: "Dente de Leão", sound: 'grass', isFlora: true },
-            [BLOCKS.TORCH]:       { solid: false, trans: true,  liquid: false, hardness: 0.1, name: "Tocha", sound: 'wood', isFlora: true, light: true },
+            [BLOCKS.AIR]:           { solid: false, trans: true,  liquid: false, hardness: 0, name: "Ar" },
+            [BLOCKS.GRASS]:         { solid: true,  trans: false, liquid: false, hardness: 0.6, name: "Bloco de Erva", sound: 'grass' },
+            [BLOCKS.DIRT]:          { solid: true,  trans: false, liquid: false, hardness: 0.5, name: "Terra", sound: 'dirt' },
+            [BLOCKS.STONE]:         { solid: true,  trans: false, liquid: false, hardness: 2.2, name: "Pedra", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.COBBLESTONE]:   { solid: true,  trans: false, liquid: false, hardness: 2.2, name: "Pedregulho", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.WOOD]:          { solid: true,  trans: false, liquid: false, hardness: 1.6, name: "Tronco de Carvalho", sound: 'wood', tool: 'axe' },
+            [BLOCKS.LEAVES]:        { solid: true,  trans: true,  liquid: false, hardness: 0.25, name: "Folhas de Carvalho", sound: 'grass', isFlora: true },
+            [BLOCKS.SAND]:          { solid: true,  trans: false, liquid: false, hardness: 0.5, name: "Areia", sound: 'sand' },
+            [BLOCKS.WATER]:         { solid: false, trans: true,  liquid: true,  hardness: -1,  name: "Água" },
+            [BLOCKS.GLASS]:         { solid: true,  trans: true,  liquid: false, hardness: 0.3, name: "Vidro", sound: 'glass' },
+            [BLOCKS.PLANKS]:        { solid: true,  trans: false, liquid: false, hardness: 1.6, name: "Tábuas de Carvalho", sound: 'wood', tool: 'axe' },
+            [BLOCKS.GOLD]:          { solid: true,  trans: false, liquid: false, hardness: 3.0, name: "Minério de Ouro", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.SNOW]:          { solid: true,  trans: false, liquid: false, hardness: 0.4, name: "Bloco de Neve", sound: 'snow' },
+            [BLOCKS.BEDROCK]:       { solid: true,  trans: false, liquid: false, hardness: Infinity, name: "Rocha Matriz", sound: 'stone' },
+            [BLOCKS.COAL_ORE]:      { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Minério de Carvão", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.IRON_ORE]:      { solid: true,  trans: false, liquid: false, hardness: 3.0, name: "Minério de Ferro", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.DIAMOND_ORE]:   { solid: true,  trans: false, liquid: false, hardness: 4.0, name: "Minério de Diamante", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.BRICKS]:        { solid: true,  trans: false, liquid: false, hardness: 2.5, name: "Tijolos", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.OBSIDIAN]:      { solid: true,  trans: false, liquid: false, hardness: 8.0, name: "Obsidiana", sound: 'stone', tool: 'pickaxe' },
+            [BLOCKS.CACTUS]:        { solid: true,  trans: false, liquid: false, hardness: 0.4, name: "Cacto do Deserto", sound: 'wood' },
+            [BLOCKS.BOOKSHELF]:     { solid: true,  trans: false, liquid: false, hardness: 1.5, name: "Estante de Livros", sound: 'wood', tool: 'axe' },
+            [BLOCKS.CRAFTING_TABLE]:{ solid: true,  trans: false, liquid: false, hardness: 1.5, name: "Bancada de Trabalho", sound: 'wood', tool: 'axe' },
+            [BLOCKS.RED_FLOWER]:    { solid: false, trans: true,  liquid: false, hardness: 0.05, name: "Papoila Vermelha", sound: 'grass', isFlora: true },
+            [BLOCKS.YELLOW_FLOWER]: { solid: false, trans: true,  liquid: false, hardness: 0.05, name: "Dente-de-Leão", sound: 'grass', isFlora: true },
+            [BLOCKS.TORCH]:         { solid: false, trans: true,  liquid: false, hardness: 0.05, name: "Tocha", sound: 'wood', isFlora: true, light: true },
+            [BLOCKS.CHEST]:         { solid: true,  trans: false, liquid: false, hardness: 1.5, name: "Baú Inicial", sound: 'wood', tool: 'axe' },
             
-            [BLOCKS.PICKAXE]:     { isItem: true, name: "Picareta", toolType: 'pickaxe', multiplier: 6.0 },
-            [BLOCKS.AXE]:         { isItem: true, name: "Machado", toolType: 'axe', multiplier: 6.0 },
-            [BLOCKS.SWORD]:       { isItem: true, name: "Espada", toolType: 'sword', multiplier: 1.5, dmg: 5 },
-            [BLOCKS.STICK]:       { isItem: true, name: "Graveto" }, 
-            [BLOCKS.APPLE]:       { isItem: true, name: "Maçã", type: 'food' }, 
-            [BLOCKS.ROTTEN_FLESH]:{ isItem: true, name: "Carne Podre", type: 'food' }
+            [BLOCKS.PICKAXE]:       { isItem: true, name: "Picareta de Madeira", toolType: 'pickaxe', multiplier: 5.5, dmg: 3 },
+            [BLOCKS.AXE]:           { isItem: true, name: "Machado de Madeira", toolType: 'axe', multiplier: 5.5, dmg: 4 },
+            [BLOCKS.SWORD]:         { isItem: true, name: "Espada de Madeira", toolType: 'sword', multiplier: 1.5, dmg: 6 },
+            [BLOCKS.STICK]:         { isItem: true, name: "Graveto" }, 
+            [BLOCKS.APPLE]:         { isItem: true, name: "Maçã Vermelha (+2 ❤️)", type: 'food' }, 
+            [BLOCKS.ROTTEN_FLESH]:  { isItem: true, name: "Carne Podre", type: 'food' }
         };
 
         const RECIPE_CATEGORIES = [
-            { id: 'structures', icon: BLOCKS.BRICKS, name: 'Estruturas' },
-            { id: 'tools', icon: BLOCKS.PICKAXE, name: 'Ferramentas' },
-            { id: 'misc', icon: BLOCKS.APPLE, name: 'Diversos' }
+            { id: 'structures', icon: BLOCKS.CRAFTING_TABLE, name: 'Estruturas & Blocos' },
+            { id: 'tools', icon: BLOCKS.PICKAXE, name: 'Ferramentas & Armas' },
+            { id: 'misc', icon: BLOCKS.TORCH, name: 'Iluminação & Decoração' }
         ];
 
         const RECIPES = [ 
             { res: BLOCKS.PLANKS, count: 4, name: "Tábuas de Carvalho", cat: 'structures', req: [[BLOCKS.WOOD, 1]], grid: [BLOCKS.WOOD,0,0, 0,0,0, 0,0,0] }, 
-            { res: BLOCKS.STICK, count: 4, name: "Gravetos", cat: 'tools', req: [[BLOCKS.PLANKS, 2]], grid: [BLOCKS.PLANKS,0,0, BLOCKS.PLANKS,0,0, 0,0,0] }, 
             { res: BLOCKS.CRAFTING_TABLE, count: 1, name: "Bancada de Trabalho", cat: 'structures', req: [[BLOCKS.PLANKS, 4]], grid: [BLOCKS.PLANKS,BLOCKS.PLANKS,0, BLOCKS.PLANKS,BLOCKS.PLANKS,0, 0,0,0] }, 
-            { res: BLOCKS.AXE, count: 1, name: "Machado de Madeira", cat: 'tools', req: [[BLOCKS.PLANKS, 3], [BLOCKS.STICK, 2]], grid: [BLOCKS.PLANKS,BLOCKS.PLANKS,0, BLOCKS.PLANKS,BLOCKS.STICK,0, 0,BLOCKS.STICK,0] }, 
+            { res: BLOCKS.CHEST, count: 1, name: "Baú de Madeira", cat: 'structures', req: [[BLOCKS.PLANKS, 8]], grid: [BLOCKS.PLANKS,BLOCKS.PLANKS,BLOCKS.PLANKS, BLOCKS.PLANKS,0,BLOCKS.PLANKS, BLOCKS.PLANKS,BLOCKS.PLANKS,BLOCKS.PLANKS] },
+            { res: BLOCKS.BRICKS, count: 4, name: "Bloco de Tijolos", cat: 'structures', req: [[BLOCKS.COBBLESTONE, 4]], grid: [BLOCKS.COBBLESTONE,BLOCKS.COBBLESTONE,0, BLOCKS.COBBLESTONE,BLOCKS.COBBLESTONE,0, 0,0,0] },
+
+            { res: BLOCKS.STICK, count: 4, name: "Gravetos", cat: 'tools', req: [[BLOCKS.PLANKS, 2]], grid: [BLOCKS.PLANKS,0,0, BLOCKS.PLANKS,0,0, 0,0,0] }, 
             { res: BLOCKS.PICKAXE, count: 1, name: "Picareta de Madeira", cat: 'tools', req: [[BLOCKS.PLANKS, 3], [BLOCKS.STICK, 2]], grid: [BLOCKS.PLANKS,BLOCKS.PLANKS,BLOCKS.PLANKS, 0,BLOCKS.STICK,0, 0,BLOCKS.STICK,0] }, 
+            { res: BLOCKS.AXE, count: 1, name: "Machado de Madeira", cat: 'tools', req: [[BLOCKS.PLANKS, 3], [BLOCKS.STICK, 2]], grid: [BLOCKS.PLANKS,BLOCKS.PLANKS,0, BLOCKS.PLANKS,BLOCKS.STICK,0, 0,BLOCKS.STICK,0] }, 
             { res: BLOCKS.SWORD, count: 1, name: "Espada de Madeira", cat: 'tools', req: [[BLOCKS.PLANKS, 2], [BLOCKS.STICK, 1]], grid: [0,BLOCKS.PLANKS,0, 0,BLOCKS.PLANKS,0, 0,BLOCKS.STICK,0] },
-            { res: BLOCKS.TORCH, count: 4, name: "Tochas", cat: 'tools', req: [[BLOCKS.COAL_ORE, 1], [BLOCKS.STICK, 1]], grid: [0,0,0, BLOCKS.COAL_ORE,0,0, BLOCKS.STICK,0,0] },
-            { res: BLOCKS.GLASS, count: 1, name: "Vidro (Forja Auto)", cat: 'structures', req: [[BLOCKS.SAND, 1], [BLOCKS.COAL_ORE, 1]], grid: [BLOCKS.SAND,0,0, BLOCKS.COAL_ORE,0,0, 0,0,0] }
+
+            { res: BLOCKS.TORCH, count: 4, name: "Tochas", cat: 'misc', req: [[BLOCKS.COAL_ORE, 1], [BLOCKS.STICK, 1]], grid: [0,0,0, BLOCKS.COAL_ORE,0,0, BLOCKS.STICK,0,0] },
+            { res: BLOCKS.TORCH, count: 2, name: "Tochas de Madeira", cat: 'misc', req: [[BLOCKS.WOOD, 1], [BLOCKS.STICK, 1]], grid: [0,0,0, BLOCKS.WOOD,0,0, BLOCKS.STICK,0,0] },
+            { res: BLOCKS.GLASS, count: 2, name: "Vidro Cristalino", cat: 'misc', req: [[BLOCKS.SAND, 2]], grid: [BLOCKS.SAND,BLOCKS.SAND,0, 0,0,0, 0,0,0] },
+            { res: BLOCKS.BOOKSHELF, count: 1, name: "Estante de Livros", cat: 'misc', req: [[BLOCKS.PLANKS, 6]], grid: [BLOCKS.PLANKS,BLOCKS.PLANKS,BLOCKS.PLANKS, 0,0,0, BLOCKS.PLANKS,BLOCKS.PLANKS,BLOCKS.PLANKS] }
         ];
 
-        let CONFIG = { CHUNK_SIZE: 16, CHUNK_HEIGHT: 64, WATER_LEVEL: 20, RENDER_DISTANCE: 4, FOV: 80 };
-        const INIT_INV = [ BLOCKS.SWORD, BLOCKS.PICKAXE, BLOCKS.WOOD, BLOCKS.DIRT, BLOCKS.COBBLESTONE, BLOCKS.GLASS, BLOCKS.TORCH, BLOCKS.APPLE ];
+        let CONFIG = { CHUNK_SIZE: 16, CHUNK_HEIGHT: 64, WATER_LEVEL: 20, RENDER_DISTANCE: 4, FOV: 78 };
 
         class SimpleNoise {
-            constructor() { this.p = new Uint8Array(256); for(let i=0;i<256;i++) this.p[i]=Math.floor(Math.random()*256); }
-            fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); } lerp(t, a, b) { return a + t * (b - a); }
-            grad(h, x, z) { let h0 = h & 3; let u = h0<2?x:z, v = h0<2?z:x; return ((h0&1)===0?u:-u) + ((h0&2)===0?v:-v); }
+            constructor(seedOffset = 0) { 
+                this.p = new Uint8Array(256); 
+                for(let i=0;i<256;i++) this.p[i] = (i * 131 + seedOffset * 17 + 73) & 255; 
+            }
+            fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); } 
+            lerp(t, a, b) { return a + t * (b - a); }
+            grad(h, x, z) { let h0 = (h || 0) & 3; let u = h0<2?x:z, v = h0<2?z:x; return ((h0&1)===0?u:-u) + ((h0&2)===0?v:-v); }
             noise(x, z) { 
                 let X = Math.floor(x)&255, Z = Math.floor(z)&255; x -= Math.floor(x); z -= Math.floor(z); 
                 let u = this.fade(x), w = this.fade(z); 
-                let A = this.p[X]+Z, AA = this.p[A&255], AB = this.p[(A+1)&255]; 
-                let B = this.p[(X+1)&255]+Z, BA = this.p[B&255], BB = this.p[(B+1)&255]; 
+                let A = (this.p[X]+Z)&255, AA = this.p[A&255], AB = this.p[(A+1)&255]; 
+                let B = (this.p[(X+1)&255]+Z)&255, BA = this.p[B&255], BB = this.p[(B+1)&255]; 
                 return this.lerp(w, this.lerp(u, this.grad(AA,x,z), this.grad(BA,x-1,z)), this.lerp(u, this.grad(AB,x,z-1), this.grad(BB,x-1,z-1))); 
             }
             fBm(x, z, oct=3, sc=0.03) { let t=0, a=1, f=sc, m=0; for(let i=0;i<oct;i++){ t+=this.noise(x*f,z*f)*a; m+=a; a*=0.5; f*=2; } return t/m; }
             noise3D(x, y, z) {
                 let X = Math.floor(x)&255, Y = Math.floor(y)&255, Z = Math.floor(z)&255; x-=Math.floor(x); y-=Math.floor(y); z-=Math.floor(z);
                 let u=this.fade(x), v=this.fade(y), w=this.fade(z);
-                let A=this.p[X]+Y, AA=this.p[A]+Z, AB=this.p[A+1]+Z, B=this.p[X+1]+Y, BA=this.p[B]+Z, BB=this.p[B+1]+Z;
-                return this.lerp(w, this.lerp(v, this.lerp(u, this.grad(this.p[AA],x,y,z), this.grad(this.p[BA],x-1,y,z)), this.lerp(u, this.grad(this.p[AB],x,y-1,z), this.grad(this.p[BB],x-1,y-1,z))), this.lerp(v, this.lerp(u, this.grad(this.p[AA+1],x,y,z-1), this.grad(this.p[BA+1],x-1,y,z-1)), this.lerp(u, this.grad(this.p[AB+1],x,y-1,z-1), this.grad(this.p[BB+1],x-1,y-1,z-1))));
+                let A=(this.p[X]+Y)&255, AA=(this.p[A]+Z)&255, AB=(this.p[(A+1)&255]+Z)&255;
+                let B=(this.p[(X+1)&255]+Y)&255, BA=(this.p[B]+Z)&255, BB=(this.p[(B+1)&255]+Z)&255;
+                return this.lerp(w, this.lerp(v, this.lerp(u, this.grad(this.p[AA&255],x,z), this.grad(this.p[BA&255],x-1,z)), this.lerp(u, this.grad(this.p[AB&255],x,z), this.grad(this.p[BB&255],x-1,z))), this.lerp(v, this.lerp(u, this.grad(this.p[(AA+1)&255],x,z-1), this.grad(this.p[(BA+1)&255],x-1,z-1)), this.lerp(u, this.grad(this.p[(AB+1)&255],x,z-1), this.grad(this.p[(BB+1)&255],x-1,z-1))));
             }
         } 
-        const bGen = new SimpleNoise(); const nGen = new SimpleNoise();
+        const bGen = new SimpleNoise(12); 
+        const nGen = new SimpleNoise(99);
+        const tempGen = new SimpleNoise(245);
 
         class AtlasGen {
             constructor() { 
                 this.s = 32; this.c = 16; 
                 this.cv = document.createElement('canvas'); this.cv.width = this.s*this.c; this.cv.height = this.s*this.c; 
-                this.ctx = this.cv.getContext('2d', { alpha: true }); this.map = {}; this.ui = {}; this.gen(); 
+                this.ctx = this.cv.getContext('2d', { alpha: true }); 
+                this.map = {}; 
+                this.ui = {}; 
+                this.gen(); 
+            }
+
+            getMap(id) {
+                return this.map[id] || this.map[BLOCKS.STONE] || [4, 4, 4, 4, 4, 4];
             }
             
             drawPixelArt(cx, cy, s, art, pal) { 
-                if(!art) return; let ps=s/16; 
-                for(let y=0; y<16; y++) for(let x=0; x<16; x++) { 
-                    let c=art[y][x]; if(c!==' ' && pal[c]){ this.ctx.fillStyle=pal[c]; this.ctx.fillRect(cx+x*ps, cy+y*ps, ps, ps); } 
-                } 
+                if(!art || !Array.isArray(art)) return; 
+                let ps = s / 16; 
+                for(let y=0; y<16; y++) {
+                    const row = art[y];
+                    if(!row) continue;
+                    for(let x=0; x<16; x++) { 
+                        let c = row[x]; 
+                        if(c && c !== ' ' && pal[c]){ 
+                            this.ctx.fillStyle = pal[c]; 
+                            this.ctx.fillRect(cx + x*ps, cy + y*ps, ps, ps); 
+                        } 
+                    } 
+                }
             }
             
             draw(idx, t) {
                 const cx = (idx % this.c) * this.s, cy = Math.floor(idx / this.c) * this.s, s = this.s; 
-                let rb=0, gb=0, bb=0, v=0;
+                let rb=120, gb=120, bb=120, v=15;
                 
-                // Mapeamento Pixel Art Fiel e Corrigido (1 Character Keys)
-                if(['pickaxe','axe','sword','crafting_table','bookshelf','torch','red_flower','yellow_flower','stick','apple','rotten_flesh', 'wood_side', 'wood_top', 'leaves', 'steve_face', 'pig_face', 'zombie_shirt', 'zombie_pants'].includes(t)) {
+                const pixelTypes = [
+                    'pickaxe','axe','sword','crafting_table','bookshelf','torch','red_flower','yellow_flower',
+                    'stick','apple','rotten_flesh','wood_side','wood_top','leaves','chest_front','chest_top',
+                    'cactus','creeper_face','creeper_body','steve_face','pig_face','zombie_shirt','zombie_pants'
+                ];
+
+                if(pixelTypes.includes(t)) {
                     let pal = { 
-                        's':"#6a401c",'i':"#ddd",'d':"#999",'w':"#fff",'h':"#422811",'k':"#cca482",'e':"#fff",'p':"#f2a9af",'n':"#d88a91",'b':"#111", 'r':"#e73030", 'g':"#4a9c3a", 'y':"#e7e730", 'x':"#333", 'j':"#8a5c33", 'z':"#234216", 'f':"#49822a", 'o':"#ffaa00", 't':"#ffff00",
-                        'T': '#3c2813', 'v': '#5d4037', 'R': '#795548', 'L': '#33691E', 'l': '#558B2F', 'D': '#1b5e20', 'Z': '#009696', 'P': '#323296', 'F': '#285A28'
+                        's':"#6a401c",'i':"#d4d4d8",'d':"#71717a",'w':"#ffffff",'h':"#422811",'k':"#cca482",'e':"#ffffff",
+                        'p':"#f2a9af",'n':"#d88a91",'b':"#111111",'r':"#dc2626",'g':"#4d9e34",'y':"#facc15",'x':"#27272a",
+                        'j':"#8a5c33",'z':"#234216",'f':"#49822a",'o':"#ffaa00",'t':"#ffff55",
+                        'T':'#3e2723','v':'#5d4037','R':'#8d6e63','m':'#a1887f',
+                        'L':'#2e6b1e','l':'#48912a','D':'#1b4710','G':'#64ad42',
+                        'Z':'#009696','P':'#323296','F':'#285A28',
+                        'C':'#b47828','c':'#8f5b18','K':'#18181b','Y':'#fde047'
                     };
                     let art = [];
-                    if(t==='pickaxe') art = ["  wiiiiiiiiw    ", " wdi      idw   ", " wdw      wsw   ", "  w       sw    ", "         sw     ", "        sw      ", "       sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                "];
-                    else if(t==='axe') art = ["  wiwiw         ", "  wididw        ", "  widdiwsw      ", "   wdw sw       ", "    w  sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                ", "                ", "                "];
-                    else if(t==='sword') art = ["             w  ", "            wiw ", "           widw ", "          widw  ", "         widw   ", "        widw    ", "       widw     ", "      widw      ", "     widw       ", "    widw        ", "  s widw        ", " sws w          ", "  ws            ", "   w            ", "                ", "                "];
+                    if(t==='pickaxe') art = ["  wiiiiiiiiw    ", " wjj      jjw   ", " wjw      wsw   ", "  w       sw    ", "         sw     ", "        sw      ", "       sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                "];
+                    else if(t==='axe') art = ["  wjjjw         ", "  wjsjjw        ", "  wjssjwsw      ", "   wjw sw       ", "    w  sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                ", "                ", "                "];
+                    else if(t==='sword') art = ["             w  ", "            wjw ", "           wjsw ", "          wjsw  ", "         wjsw   ", "        wjsw    ", "       wjsw     ", "      wjsw      ", "     wjsw       ", "    wjsw        ", "  s wjsw        ", " sws w          ", "  ws            ", "   w            ", "                ", "                "];
                     else if(t==='stick') art = ["                ", "       s        ", "      sjs       ", "      js        ", "     sjs        ", "     js         ", "    sjs         ", "    js          ", "   sjs          ", "   js           ", "  sjs           ", "  js            ", "   s            ", "                ", "                ", "                "];
-                    else if(t==='apple') art = ["                ", "       j        ", "      j g       ", "     rrrr       ", "    rrrrrr      ", "   rrrrrrrr     ", "   rrrrrrrr     ", "   rrrrrrrr     ", "   rrrrrrrr     ", "    rrrrrr      ", "     rrrr       ", "                ", "                ", "                ", "                ", "                "];
-                    else if(t==='rotten_flesh') art = ["                ", "                ", "      FFFF      ", "     FZFFZF     ", "     FFFFFF     ", "    ZFZZFZF     ", "   FFFFFFFZ     ", "   ZFFFFFFZ     ", "    ZFZZFF      ", "     FFFF       ", "                ", "                ", "                ", "                ", "                ", "                "];
-                    else if(t==='red_flower') art = ["                ", "                ", "      rrrr      ", "     rrrrrr     ", "     rrxxrr     ", "      rrrr      ", "       gg       ", "      gggg      ", "     gg gg      ", "       gg       ", "       gg       ", "       gg       ", "      gggg      ", "       gg       ", "       gg       ", "      gggg      "];
-                    else if(t==='yellow_flower') art = ["                ", "                ", "      yyyy      ", "     yyyyyy     ", "     yyxxyy     ", "      yyyy      ", "       gg       ", "      gggg      ", "     gg gg      ", "       gg       ", "       gg       ", "       gg       ", "      gggg      ", "       gg       ", "       gg       ", "      gggg      "];
-                    else if(t==='crafting_table') art = ["ssssssssssssssss", "sssssiiissssssss", "sssssiiissssssss", "sswwsssssssswsss", "sswwsssssssswsss", "sssssssssssxxxss", "sssssssxxxsxxxss", "ssssssxxsxxsxxss", "ssssssxxsxxsssss", "ssssssssssssssss", "ssssssssssssssss", "ssxxxssssssxssss", "ssxxxssssxssxsss", "ssxxxsssxxssxsss", "ssssssssssssssss", "ssssssssssssssss"];
-                    else if(t==='bookshelf') art = ["ssssssssssssssss", "ssssssssssssssss", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "ssssssssssssssss", "ssssssssssssssss", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "ssssssssssssssss", "ssssssssssssssss", "ssssssssssssssss", "ssssssssssssssss"];
+                    else if(t==='apple') art = ["                ", "       j        ", "      j g       ", "     rrrr       ", "    rrrrrr      ", "   rrwrrrrr     ", "   rwrrrrrr     ", "   rrrrrrrr     ", "   rrrrrrrr     ", "    rrrrrr      ", "     rrrr       ", "                ", "                ", "                ", "                ", "                "];
+                    else if(t==='rotten_flesh') art = ["                ", "                ", "      FFFF      ", "     FZFFZF     ", "     FFFFFF     ", "    ZFZZFZF     ", "   FFFFFFFZ     ", "   ZFFFFFFZ     ", "    ZFZZFF      ", "     FFFF       ", "                ", "                ", "                ", "                ", "                "];
+                    else if(t==='red_flower') art = ["                ", "                ", "      rrrr      ", "     rrrrrr     ", "     rryyrr     ", "      rrrr      ", "       gg       ", "      gggg      ", "     gg gg      ", "       gg       ", "       gg       ", "       gg       ", "      gggg      ", "       gg       ", "       gg       ", "      gggg      "];
+                    else if(t==='yellow_flower') art = ["                ", "                ", "      yyyy      ", "     yyyyyy     ", "     yyooyy     ", "      yyyy      ", "       gg       ", "      gggg      ", "     gg gg      ", "       gg       ", "       gg       ", "       gg       ", "      gggg      ", "       gg       ", "       gg       ", "      gggg      "];
+                    else if(t==='crafting_table') art = ["CCCCCCCCCCCCCCCC", "CsssssiiissssssC", "CsssssiiissssssC", "CsswwsssssssswsC", "CsswwsssssssswsC", "CKKKKKKKKKKKKKKC", "CcjsssssxxxsxxxC", "CcjssssxxsxxsxxC", "CcjssssxxsxxsssC", "CcjssssssssssssC", "CcjssssssssssssC", "CcjssxxxssssssxC", "CcjssxxxssssxssC", "CcjssxxxsssxxssC", "CCCCCCCCCCCCCCCC", "KKKKKKKKKKKKKKKK"];
+                    else if(t==='bookshelf') art = ["CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC"];
                     else if(t==='torch') art = ["                ", "                ", "                ", "                ", "       t        ", "      tot       ", "      tot       ", "      sjs       ", "      sjs       ", "      sjs       ", "      sjs       ", "      sjs       ", "       s        ", "                ", "                ", "                "];
-                    
-                    // Fixed Tree Textures (Perfect 16x16 String Matrix)
                     else if(t==='wood_side') art = [
-                        "vTvTvRvRvTvTvRvR", "TvTvRvRvTvTvRvRv", "vTvRvRvTvTvRvRvT", "TvRvRvTvTvRvRvTv", 
-                        "vRvRvTvTvRvRvTvT", "RvRvTvTvRvRvTvTv", "vRvTvTvRvRvTvTvR", "RvTvTvRvRvTvTvRv", 
-                        "vTvTvRvRvTvTvRvR", "TvTvRvRvTvTvRvRv", "vTvRvRvTvTvRvRvT", "TvRvRvTvTvRvRvTv", 
-                        "vRvRvTvTvRvRvTvT", "RvRvTvTvRvRvTvTv", "vRvTvTvRvRvTvTvR", "RvTvTvRvRvTvTvRv"
+                        "TvTvRvTvTvRvTvTv", "vTvTvRvTvTvRvTvT", "TvRvTvTvRvTvTvRv", "vRvTvTvRvTvTvRvT", 
+                        "TvTvRvTvTvRvTvTv", "vTvRvTvTvTvRvTvT", "TvRvTvTvRvTvTvRv", "vTvTvRvTvTvRvTvT", 
+                        "TvTvRvTvTvRvTvTv", "vTvTvRvTvTvRvTvT", "TvRvTvTvRvTvTvRv", "vRvTvTvRvTvTvRvT", 
+                        "TvTvRvTvTvRvTvTv", "vTvRvTvTvTvRvTvT", "TvRvTvTvRvTvTvRv", "vTvTvRvTvTvRvTvT"
                     ];
                     else if(t==='wood_top') art = [
-                        "TvvRRRRRRRRRRvvT", "vRRvvvvvvvvvvRRv", "vRvvRRRRRRRRvvRv", "vRvvRvvvvvvRvvRv", 
-                        "vRvRvRRRRRRvRvRv", "vRvRvRvvvvRvRvRv", "vRvRvRvRRvRvRvRv", "vRvRvRvRRvRvRvRv", 
-                        "vRvRvRvRRvRvRvRv", "vRvRvRvRRvRvRvRv", "vRvRvRvvvvRvRvRv", "vRvRvRRRRRRvRvRv", 
-                        "vRvvRvvvvvvRvvRv", "vRvvRRRRRRRRvvRv", "vRRvvvvvvvvvvRRv", "TvvRRRRRRRRRRvvT"
+                        "TTTTvvvvvvvvTTTT", "TvvvRRRRRRRRvvvT", "TvRRmmmmmmmmRRvT", "TvRmRRRRRRRRmRvT", 
+                        "TvRmRmmmmmmRmRvT", "TvRmRmRRRRmRmRvT", "TvRmRmRvvRmRmRvT", "TvRmRmRvTRmRmRvT", 
+                        "TvRmRmRvvRmRmRvT", "TvRmRmRRRRmRmRvT", "TvRmRmmmmmmRmRvT", "TvRmRRRRRRRRmRvT", 
+                        "TvRRmmmmmmmmRRvT", "TvvvRRRRRRRRvvvT", "TTTTvvvvvvvvTTTT", "TTTTTTTTTTTTTTTT"
                     ];
                     else if(t==='leaves') art = [
-                        "LLlDlDlDlDLLlDlD", "lDlDLLlDlDlDLLlD", "DlDLLlDlDlDlDLLl", "lDLLlDlDlDlDlDLL", 
-                        "DLLlDlDlDLLlDlDl", "LLlDlDlDlDLLlDlD", "lDlDLLlDlDlDLLlD", "DlDLLlDlDlDlDLLl", 
-                        "lDLLlDlDlDlDlDLL", "DLLlDlDlDLLlDlDl", "LLlDlDlDlDLLlDlD", "lDlDLLlDlDlDLLlD", 
-                        "DlDLLlDlDlDlDLLl", "lDLLlDlDlDlDlDLL", "DLLlDlDlDLLlDlDl", "LLlDlDlDlDLLlDlD"
+                        "LLlDlGlDlDLLlDlG", "lDlGLLlDlDlGLLlD", "DlDLLlGlDlDlDLLl", "lGLLlDlDlGlDlDLL", 
+                        "DLLlGlDlDLLlGlDl", "LLlDlDlGlDLLlDlD", "lDlGLLlDlDlGLLlD", "DlDLLlGlDlDlDLLl", 
+                        "lDLLlDlDlGlDlGLL", "GLLlDlGlDLLlDlDl", "LLlGlDlDlDLLlGlD", "lDlDLLlGlDlDLLlD", 
+                        "DlGLLlDlDlGlDLLl", "lDLLlGlDlDlDlGLL", "DLLlDlDlGLLlDlDl", "LLlGlDlDlDLLlDlG"
                     ];
-
+                    else if(t==='chest_front') art = [
+                        "KKKKKKKKKKKKKKKK", "KCCCCCCCCCCCCCCK", "KCccccccccccccCK", "KCccccccccccccCK",
+                        "KCccccccccccccCK", "KCCCCCCCCCCCCCCK", "KKKKKKKYYKKKKKKK", "KCcccccYYcccccCK",
+                        "KCcccccYYcccccCK", "KCcccccKKcccccCK", "KCccccccccccccCK", "KCccccccccccccCK",
+                        "KCccccccccccccCK", "KCccccccccccccCK", "KCCCCCCCCCCCCCCK", "KKKKKKKKKKKKKKKK"
+                    ];
+                    else if(t==='chest_top') art = [
+                        "KKKKKKKKKKKKKKKK", "KCCCCCCCCCCCCCCK", "KCccccccccccccCK", "KCccccccccccccCK",
+                        "KCccccccccccccCK", "KCccccccccccccCK", "KCccccccccccccCK", "KCccccccccccccCK",
+                        "KCccccccccccccCK", "KCccccccccccccCK", "KCccccccccccccCK", "KCccccccccccccCK",
+                        "KCccccccccccccCK", "KCccccccccccccCK", "KCCCCCCCCCCCCCCK", "KKKKKKKKKKKKKKKK"
+                    ];
+                    else if(t==='cactus') art = [
+                        "DlLLLLLLLLLLLLlD", "lLbxLLLLLLLLxbLl", "LLbLLlLLLLlLLbLL", "LLLLLLLLLLLLLLLL",
+                        "DlLLLLLLLLLLLLlD", "lLLLLbxLLxbLLLLl", "LLLLLLbLLbLLLLLL", "LLLLLLLLLLLLLLLL",
+                        "DlLLLLLLLLLLLLlD", "lLbxLLLLLLLLxbLl", "LLbLLlLLLLlLLbLL", "LLLLLLLLLLLLLLLL",
+                        "DlLLLLLLLLLLLLlD", "lLLLLbxLLxbLLLLl", "LLLLLLbLLbLLLLLL", "DlLLLLLLLLLLLLlD"
+                    ];
+                    else if(t==='creeper_face') art = [
+                        "lGlGlDGllGDlGlGl", "GlGlGlGllGlGlGlG", "lGlGllGllGllGlGl", "GllBBBBllBBBBllG",
+                        "lGlBBBBllBBBBGlG", "GlGBBBBllBBBBllG", "lGlBBBBllBBBBlGl", "GlGllllBBllllGlG",
+                        "lGlllBBBBBBlllGl", "GlGllBBBBBBllGlG", "lGlllBBBBBBlllGl", "GlGllBBllBBllGlG",
+                        "lGlllBBllBBlllGl", "GlGllBBllBBllGlG", "lGlGlGllllGlGlGl", "GlGlGlGllGlGlGlG"
+                    ];
+                    else if(t==='creeper_body') art = [
+                        "lGlGlDGllGDlGlGl", "GlGlGlGllGlGlGlG", "lGlDGllGlGllGDlG", "GlGlGlGllGlGlGlG",
+                        "lGlGlDGllGDlGlGl", "GlGllGDllDGllGlG", "lGlGlGllllGlGlGl", "GlGDlGlGlGlGDlGl",
+                        "lGlGlDGllGDlGlGl", "GlGlGlGllGlGlGlG", "lGlDGllGlGllGDlG", "GlGlGlGllGlGlGlG",
+                        "lGlGlDGllGDlGlGl", "GlGllGDllDGllGlG", "lGlGlGllllGlGlGl", "GlGDlGlGlGlGDlGl"
+                    ];
                     else if(t==='steve_face') art = ["hhhhhhhhhhhhhhhh", "hhhhhhhhhhhhhhhh", "hhhhhhhhhhhhhhhh", "hhhhhhhhhhhhhhhh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh", "hkkepekkkkpeepkh", "hkkepekkkkpeepkh", "hkkkkkkkkkkkkkkh", "hkkkkhhhhhhkkkkh", "hkkkkhhhhhhkkkkh", "hkkkkkhhhhkkkkkh", "hkkkkkkkkkkkkkkh", "hkkkkkkkkkkkkkkh"];
                     else if(t==='pig_face') art = ["pppppppppppppppp", "pppppppppppppppp", "pppppppppppppppp", "pppppppppppppppp", "pppppppppppppppp", "pppppppppppppppp", "ppppbbppppbbpppp", "ppppbbppppbbpppp", "pppppppppppppppp", "ppppppnnnnpppppp", "ppppppnnnnpppppp", "ppppppnnnnpppppp", "pppppppppppppppp", "pppppppppppppppp", "pppppppppppppppp", "pppppppppppppppp"];
                     else if(t==='zombie_shirt') art = ["ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ", "ZZZZZZZZZZZZZZZZ"];
@@ -523,106 +999,224 @@
 
                     this.drawPixelArt(cx,cy,s,art,pal); 
                     
-                    // Capture pixel art for UI Inventory
                     let ic = document.createElement('canvas'); ic.width=64; ic.height=64; 
                     let ictx = ic.getContext('2d'); ictx.imageSmoothingEnabled=false; 
                     ictx.drawImage(this.cv, cx, cy, s, s, 0, 0, 64, 64); 
                     return ic.toDataURL();
                 }
 
-                // Generative procedural block textures
                 switch(t) {
-                    case 'grass_top': rb=94; gb=165; bb=52; v=25; break; case 'grass_side': rb=134; gb=96; bb=67; v=15; break; case 'dirt': rb=134; gb=96; bb=67; v=15; break;
-                    case 'stone': rb=120; gb=120; bb=120; v=20; break; case 'cobblestone': rb=100; gb=100; bb=100; v=35; break; 
-                    case 'sand': rb=218; gb=210; bb=158; v=15; break; case 'water': rb=40; gb=100; bb=220; v=0; break; 
-                    case 'planks': rb=160; gb=125; bb=80; v=15; break; case 'bedrock': rb=30; gb=30; bb=30; v=20; break;
-                    case 'glass': rb=230; gb=245; bb=255; v=0; break; case 'ore_coal': rb=120; gb=120; bb=120; v=15; break; 
-                    case 'ore_iron': rb=120; gb=120; bb=120; v=15; break; case 'ore_diamond': rb=120; gb=120; bb=120; v=15; break; 
-                    case 'bricks': rb=170; gb=70; bb=50; v=10; break; case 'obsidian': rb=20; gb=10; bb=40; v=15; break;
-                    case 'zombie_face': rb=40; gb=90; bb=40; v=15; break; 
+                    case 'grass_top': rb=88; gb=175; bb=48; v=28; break;
+                    case 'grass_side': rb=134; gb=96; bb=67; v=18; break;
+                    case 'dirt': rb=134; gb=96; bb=67; v=20; break;
+                    case 'stone': rb=125; gb=125; bb=128; v=22; break;
+                    case 'cobblestone': rb=105; gb=105; bb=108; v=42; break; 
+                    case 'sand': rb=228; gb=216; bb=162; v=16; break;
+                    case 'snow': rb=242; gb=248; bb=255; v=10; break;
+                    case 'water': rb=38; gb=105; bb=228; v=0; break; 
+                    case 'planks': rb=168; gb=132; bb=84; v=16; break;
+                    case 'bedrock': rb=35; gb=35; bb=38; v=35; break;
+                    case 'glass': rb=230; gb=248; bb=255; v=0; break;
+                    case 'ore_coal': rb=125; gb=125; bb=128; v=18; break; 
+                    case 'ore_iron': rb=125; gb=125; bb=128; v=18; break; 
+                    case 'ore_diamond': rb=125; gb=125; bb=128; v=18; break;
+                    case 'ore_gold': rb=125; gb=125; bb=128; v=18; break; 
+                    case 'bricks': rb=175; gb=72; bb=54; v=12; break;
+                    case 'obsidian': rb=24; gb=14; bb=44; v=18; break;
+                    case 'zombie_face': rb=48; gb=105; bb=45; v=18; break; 
                 }
 
-                if(!['water', 'glass'].includes(t)) { this.ctx.fillStyle = `rgb(${rb},${gb},${bb})`; this.ctx.fillRect(cx, cy, s, s); }
-                
-                for(let x=0; x<s; x+=2) for(let y=0; y<s; y+=2) {
-                    let r=rb, g=gb, b=bb, a=1.0, nz=(Math.random()-0.5)*v;
-                    if(t==='grass_side'){ if(y<s*0.35+(Math.random()*8)){ r=94;g=165;b=52;nz=(Math.random()-0.5)*25; } }
-                    else if(t==='planks'){ if(x%8<2){ r-=30;g-=30;b-=30; } }
-                    else if(t==='water'){ a=0.75; }
-                    else if(t==='glass'){ if(x<2||x>s-4||y<2||y>s-4){r=255;g=255;b=255;a=0.9;}else a=Math.random()>0.95?0.5:0.05; }
-                    else if(t.startsWith('ore_')){ if(Math.random()>0.85){ if(t==='ore_coal'){r=20;g=20;b=20;} else if(t==='ore_iron'){r=230;g=200;b=180;} else if(t==='ore_diamond'){r=50;g=200;b=255;} } }
-                    else if(t==='bricks'){ if(y%8<2 || (x+(Math.floor(y/8)%2==0?0:16))%16<2) { r=210; g=210; b=210; } }
-                    
-                    let dx=x-s/2, dy=y-s/2, dist=Math.sqrt(dx*dx+dy*dy)/(s/2);
-                    let ao = 1.0 - (dist>0.8?(dist-0.8)*1.2:0); // Ambient Occlusion pseudo shader
-                    
-                    r=Math.min(255,Math.max(0,(r+nz)*ao)); g=Math.min(255,Math.max(0,(g+nz)*ao)); b=Math.min(255,Math.max(0,(b+nz)*ao));
-                    if(a>0){ this.ctx.fillStyle=`rgba(${r},${g},${b},${a})`; this.ctx.fillRect(cx+x, cy+y, 2, 2); }
+                if(!['water', 'glass'].includes(t)) {
+                    this.ctx.fillStyle = `rgb(${rb},${gb},${bb})`;
+                    this.ctx.fillRect(cx, cy, s, s);
                 }
                 
-                let ic=document.createElement('canvas'); ic.width=64; ic.height=64; let ictx=ic.getContext('2d'); ictx.imageSmoothingEnabled=false; ictx.drawImage(this.cv, cx, cy, s, s, 0, 0, 64, 64); return ic.toDataURL();
+                const grassBlades = [5, 7, 9, 6, 4, 8, 10, 7, 5, 6, 9, 11, 7, 5, 8, 6];
+
+                for(let x=0; x<s; x+=2) for(let y=0; y<s; y+=2) {
+                    let r=rb, g=gb, b=bb, a=1.0, nz=(Math.random()-0.5)*v;
+                    let bladeH = grassBlades[Math.floor(x/2) % 16] * 2;
+
+                    if(t==='grass_top') {
+                        if ((x + y) % 6 === 0 && Math.random() > 0.4) { g += 14; r += 6; }
+                    }
+                    else if(t==='grass_side'){ 
+                        if(y < bladeH){ r=88; g=175; b=48; nz=(Math.random()-0.5)*24; }
+                        else if(y === bladeH) { r=62; g=130; b=32; }
+                    }
+                    else if(t==='planks'){
+                        if(y % 8 === 0 || (x === 16 && y < 16) || (x === 8 && y >= 16)){ r-=28; g-=28; b-=25; }
+                    }
+                    else if(t==='water'){ a=0.76; }
+                    else if(t==='glass'){
+                        if(x<2||x>=s-2||y<2||y>=s-2 || (x===y && x>6 && x<16)){ r=255; g=255; b=255; a=0.92; }
+                        else a=0.06;
+                    }
+                    else if(t.startsWith('ore_')){
+                        if(x>4 && x<s-4 && y>4 && y<s-4 && Math.random()>0.78){
+                            if(t==='ore_coal'){r=22;g=22;b=25;}
+                            else if(t==='ore_iron'){r=225;g=190;b=165;}
+                            else if(t==='ore_gold'){r=250;g=215;b=45;}
+                            else if(t==='ore_diamond'){r=65;g=235;b=255;}
+                        }
+                    }
+                    else if(t==='bricks'){
+                        if(y%8<2 || (x+(Math.floor(y/8)%2===0?0:16))%16<2) { r=215; g=210; b=205; }
+                    }
+                    
+                    let dx=x-s/2, dy=y-s/2, dist=Math.sqrt(dx*dx+dy*dy)/(s/2);
+                    let ao = 1.0 - (dist>0.82?(dist-0.82)*1.1:0);
+                    
+                    r=Math.min(255,Math.max(0,(r+nz)*ao));
+                    g=Math.min(255,Math.max(0,(g+nz)*ao));
+                    b=Math.min(255,Math.max(0,(b+nz)*ao));
+                    if(a>0){
+                        this.ctx.fillStyle=`rgba(${r},${g},${b},${a})`;
+                        this.ctx.fillRect(cx+x, cy+y, 2, 2);
+                    }
+                }
+                
+                let ic=document.createElement('canvas'); ic.width=64; ic.height=64;
+                let ictx=ic.getContext('2d'); ictx.imageSmoothingEnabled=false;
+                ictx.drawImage(this.cv, cx, cy, s, s, 0, 0, 64, 64);
+                return ic.toDataURL();
             }
             
             gen() {
                 let i=1; const d=(t)=>this.draw(i++,t);
-                const tex = [null, d('grass_top'),d('grass_side'),d('dirt'),d('stone'),d('wood_side'),d('wood_top'),d('leaves'),d('sand'), d('water'),d('planks'),d('bedrock'),d('cobblestone'),d('crafting_table'),d('red_flower'),d('yellow_flower'),d('stick'),d('apple'),d('rotten_flesh'),d('pickaxe'),d('sword'),d('torch'),d('glass'),d('ore_coal'),d('ore_iron'),d('ore_diamond'),d('bricks'),d('obsidian'),d('bookshelf'), d('steve_face'), d('pig_face'), d('zombie_face'), d('zombie_shirt'), d('zombie_pants')];
+                const tex = [
+                    null,
+                    d('grass_top'), d('grass_side'), d('dirt'), d('stone'),
+                    d('wood_side'), d('wood_top'), d('leaves'), d('sand'),
+                    d('water'), d('planks'), d('bedrock'), d('cobblestone'),
+                    d('crafting_table'), d('red_flower'), d('yellow_flower'), d('stick'),
+                    d('apple'), d('rotten_flesh'), d('pickaxe'), d('sword'),
+                    d('torch'), d('glass'), d('ore_coal'), d('ore_iron'),
+                    d('ore_diamond'), d('bricks'), d('obsidian'), d('bookshelf'),
+                    d('steve_face'), d('pig_face'), d('zombie_face'), d('zombie_shirt'),
+                    d('zombie_pants'), d('axe'), d('snow'), d('cactus'),
+                    d('chest_front'), d('chest_top'), d('creeper_face'), d('creeper_body'),
+                    d('ore_gold')
+                ];
                 const m=(id,r,l,t,b,f,bk)=>{this.map[id]=[r,l,t,b,f,bk];};
-                m(BLOCKS.GRASS,2,2,1,3,2,2); m(BLOCKS.DIRT,3,3,3,3,3,3); m(BLOCKS.STONE,4,4,4,4,4,4); m(BLOCKS.WOOD,5,5,6,6,5,5); m(BLOCKS.LEAVES,7,7,7,7,7,7); m(BLOCKS.SAND,8,8,8,8,8,8); m(BLOCKS.WATER,9,9,9,9,9,9); m(BLOCKS.PLANKS,10,10,10,10,10,10); m(BLOCKS.BEDROCK,11,11,11,11,11,11); m(BLOCKS.COBBLESTONE,12,12,12,12,12,12); m(BLOCKS.CRAFTING_TABLE,13,13,10,10,13,13); m(BLOCKS.RED_FLOWER,14,14,14,14,14,14); m(BLOCKS.YELLOW_FLOWER,15,15,15,15,15,15); m(BLOCKS.STICK,16,16,16,16,16,16); m(BLOCKS.APPLE,17,17,17,17,17,17); m(BLOCKS.ROTTEN_FLESH,18,18,18,18,18,18); m(BLOCKS.PICKAXE,19,19,19,19,19,19); m(BLOCKS.SWORD,20,20,20,20,20,20); m(BLOCKS.TORCH,21,21,21,21,21,21); m(BLOCKS.GLASS,22,22,22,22,22,22); m(BLOCKS.COAL_ORE,23,23,23,23,23,23); m(BLOCKS.IRON_ORE,24,24,24,24,24,24); m(BLOCKS.DIAMOND_ORE,25,25,25,25,25,25); m(BLOCKS.BRICKS,26,26,26,26,26,26); m(BLOCKS.OBSIDIAN,27,27,27,27,27,27); m(BLOCKS.BOOKSHELF,28,28,10,10,28,28);
+                m(BLOCKS.GRASS,2,2,1,3,2,2);
+                m(BLOCKS.DIRT,3,3,3,3,3,3);
+                m(BLOCKS.STONE,4,4,4,4,4,4);
+                m(BLOCKS.WOOD,5,5,6,6,5,5);
+                m(BLOCKS.LEAVES,7,7,7,7,7,7);
+                m(BLOCKS.SAND,8,8,8,8,8,8);
+                m(BLOCKS.WATER,9,9,9,9,9,9);
+                m(BLOCKS.PLANKS,10,10,10,10,10,10);
+                m(BLOCKS.BEDROCK,11,11,11,11,11,11);
+                m(BLOCKS.COBBLESTONE,12,12,12,12,12,12);
+                m(BLOCKS.CRAFTING_TABLE,13,13,10,10,13,13);
+                m(BLOCKS.RED_FLOWER,14,14,14,14,14,14);
+                m(BLOCKS.YELLOW_FLOWER,15,15,15,15,15,15);
+                m(BLOCKS.STICK,16,16,16,16,16,16);
+                m(BLOCKS.APPLE,17,17,17,17,17,17);
+                m(BLOCKS.ROTTEN_FLESH,18,18,18,18,18,18);
+                m(BLOCKS.PICKAXE,19,19,19,19,19,19);
+                m(BLOCKS.SWORD,20,20,20,20,20,20);
+                m(BLOCKS.TORCH,21,21,21,21,21,21);
+                m(BLOCKS.GLASS,22,22,22,22,22,22);
+                m(BLOCKS.COAL_ORE,23,23,23,23,23,23);
+                m(BLOCKS.IRON_ORE,24,24,24,24,24,24);
+                m(BLOCKS.DIAMOND_ORE,25,25,25,25,25,25);
+                m(BLOCKS.BRICKS,26,26,26,26,26,26);
+                m(BLOCKS.OBSIDIAN,27,27,27,27,27,27);
+                m(BLOCKS.BOOKSHELF,28,28,10,10,28,28);
+                m(BLOCKS.AXE,34,34,34,34,34,34);
+                m(BLOCKS.SNOW,35,35,35,3,35,35);
+                m(BLOCKS.CACTUS,36,36,36,36,36,36);
+                m(BLOCKS.CHEST,37,37,38,38,37,37);
+                m(BLOCKS.GOLD,41,41,41,41,41,41);
                 
                 this.steveUV = 29; this.pigUV = 30; this.zFace = 31; this.zShirt = 32; this.zPants = 33;
-                Object.keys(BLOCKS).forEach(k=>{let id=BLOCKS[k]; if(id!==0&&this.map[id])this.ui[id]=tex[this.map[id][0]];});
-                this.tex = new THREE.CanvasTexture(this.cv); this.tex.magFilter=THREE.NearestFilter; this.tex.minFilter=THREE.NearestFilter; this.tex.colorSpace=THREE.SRGBColorSpace; 
+                this.creeperFaceUV = 39; this.creeperBodyUV = 40;
+
+                Object.keys(BLOCKS).forEach(k=>{
+                    let id = BLOCKS[k];
+                    if(id !== 0) {
+                        const mapped = this.getMap(id);
+                        this.ui[id] = tex[mapped[0]] || tex[4];
+                    }
+                });
+                this.tex = new THREE.CanvasTexture(this.cv);
+                this.tex.magFilter = THREE.NearestFilter;
+                this.tex.minFilter = THREE.NearestFilter;
             }
             applyUV(geo, tIdx) { 
-                let ts=1/this.c, tu=(tIdx%this.c)*ts, tv=1-(Math.floor(tIdx/this.c)*ts)-ts; let uv=geo.attributes.uv; 
-                for(let i=0;i<uv.count;i++) uv.setXY(i, tu+(uv.getX(i)*ts), tv+(uv.getY(i)*ts)); uv.needsUpdate=true; 
+                let safeIdx = tIdx || 4;
+                let ts=1/this.c, tu=(safeIdx%this.c)*ts, tv=1-(Math.floor(safeIdx/this.c)*ts)-ts; 
+                let uv=geo.attributes.uv; 
+                for(let i=0;i<uv.count;i++) uv.setXY(i, tu+(uv.getX(i)*ts), tv+(uv.getY(i)*ts)); 
+                uv.needsUpdate=true; 
             }
         }
 
         class Particles {
-            constructor(e) { this.e=e; this.p=[]; this.geo=new THREE.BoxGeometry(0.12,0.12,0.12); }
-            spawn(pos, id) {
+            constructor(e) { this.e=e; this.p=[]; this.geo=new THREE.BoxGeometry(0.14,0.14,0.14); }
+            spawn(pos, id, count = 7) {
                 if(id===0||id===8||(BLOCK_PROPS[id]&&BLOCK_PROPS[id].isItem)) return;
-                let ti=this.e.atlas.map[id]?this.e.atlas.map[id][0]:0; let ts=1/16, tu=(ti%16)*ts, tv=1-(Math.floor(ti/16)*ts)-ts;
+                let ti = this.e.atlas.getMap(id)[0]; 
+                let ts=1/16, tu=(ti%16)*ts, tv=1-(Math.floor(ti/16)*ts)-ts;
                 let mat = new THREE.MeshBasicMaterial({ map: this.e.atlas.tex });
-                for(let i=0;i<6;i++) {
-                    let m=new THREE.Mesh(this.geo,mat); let u=m.geometry.attributes.uv;
+                for(let i=0;i<count;i++) {
+                    let m=new THREE.Mesh(this.geo.clone(),mat); let u=m.geometry.attributes.uv;
                     for(let j=0;j<u.count;j++)u.setXY(j,tu+(Math.random()*ts*0.5),tv+(Math.random()*ts*0.5));
-                    u.needsUpdate=true; m.position.copy(pos).add(new THREE.Vector3(Math.random()*0.5, Math.random()*0.5, Math.random()*0.5));
-                    m.vel = new THREE.Vector3((Math.random()-0.5)*4, Math.random()*3+2, (Math.random()-0.5)*4);
-                    m.life = 0.4+Math.random()*0.3; this.e.scene.add(m); this.p.push(m);
+                    u.needsUpdate=true; m.position.copy(pos).add(new THREE.Vector3(Math.random()*0.6, Math.random()*0.6, Math.random()*0.6));
+                    m.vel = new THREE.Vector3((Math.random()-0.5)*5, Math.random()*4+2, (Math.random()-0.5)*5);
+                    m.life = 0.45+Math.random()*0.35; this.e.scene.add(m); this.p.push(m);
                 }
             }
             update(dt) {
                 for(let i=this.p.length-1; i>=0; i--) {
                     let p=this.p[i]; p.life-=dt;
-                    if(p.life<=0){ this.e.scene.remove(p); p.material.dispose(); this.p.splice(i,1); continue; }
-                    p.vel.y-=20*dt; p.position.addScaledVector(p.vel,dt); p.scale.setScalar(p.life*2.5);
+                    if(p.life<=0){ this.e.scene.remove(p); p.geometry.dispose(); p.material.dispose(); this.p.splice(i,1); continue; }
+                    p.vel.y-=20*dt; p.position.addScaledVector(p.vel,dt); p.scale.setScalar(p.life*2.2);
                 }
             }
         }
 
         class DroppedItems { 
             constructor(e) { this.e = e; this.items = []; } 
-            getDrop(id) { if(id === BLOCKS.STONE) return BLOCKS.COBBLESTONE; if(id === BLOCKS.GRASS) return BLOCKS.DIRT; if(id === BLOCKS.LEAVES) return Math.random() < 0.08 ? BLOCKS.APPLE : (Math.random() < 0.1 ? BLOCKS.WOOD : BLOCKS.AIR); return id; } 
-            spawn(pos, originId) { 
-                let id = this.getDrop(originId); if(id === 0 || id === 8) return; 
-                let isItem = BLOCK_PROPS[id] && BLOCK_PROPS[id].isItem; let geo = isItem ? new THREE.PlaneGeometry(0.3, 0.3) : new THREE.BoxGeometry(0.25, 0.25, 0.25); let tIdx = this.e.atlas.map[id] ? this.e.atlas.map[id][0] : 0; this.e.atlas.applyUV(geo, tIdx); let mat = new THREE.MeshStandardMaterial({ map: this.e.atlas.tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide }); let mesh = new THREE.Mesh(geo, mat); mesh.castShadow = true; let spawnPos = pos.clone().add(new THREE.Vector3(0.5, 0.5, 0.5)); mesh.position.copy(spawnPos); this.e.scene.add(mesh); this.items.push({ mesh: mesh, id: id, pos: spawnPos, vel: new THREE.Vector3((Math.random()-0.5)*3, 4, (Math.random()-0.5)*3), life: 300, bob: Math.random() * 6 }); 
+            getDrop(id) { 
+                if(id === BLOCKS.STONE) return BLOCKS.COBBLESTONE; 
+                if(id === BLOCKS.GRASS) return BLOCKS.DIRT; 
+                if(id === BLOCKS.LEAVES) return Math.random() < 0.15 ? BLOCKS.APPLE : (Math.random() < 0.15 ? BLOCKS.STICK : BLOCKS.AIR); 
+                return id; 
+            } 
+            spawn(pos, originId, directId = false) { 
+                let id = directId ? originId : this.getDrop(originId); 
+                if(!id || id === 0 || id === 8) return; 
+                let isItem = Boolean(BLOCK_PROPS[id] && BLOCK_PROPS[id].isItem); 
+                let geo = isItem ? new THREE.PlaneGeometry(0.35, 0.35) : new THREE.BoxGeometry(0.28, 0.28, 0.28); 
+                let tIdx = this.e.atlas.getMap(id)[0]; 
+                this.e.atlas.applyUV(geo, tIdx); 
+                let mat = new THREE.MeshStandardMaterial({ map: this.e.atlas.tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide }); 
+                let mesh = new THREE.Mesh(geo, mat); mesh.castShadow = true; 
+                let spawnPos = pos.clone().add(new THREE.Vector3(0.5, 0.5, 0.5)); 
+                mesh.position.copy(spawnPos); 
+                this.e.scene.add(mesh); 
+                this.items.push({ mesh: mesh, id: id, pos: spawnPos, vel: new THREE.Vector3((Math.random()-0.5)*3, 4, (Math.random()-0.5)*3), life: 300, bob: Math.random() * 6 }); 
             } 
             update(dt) { 
                 let pPos = this.e.player.pos; 
                 for(let i = this.items.length - 1; i >= 0; i--) { 
                     let it = this.items[i]; it.life -= dt; 
                     if(it.life <= 0) { this.e.scene.remove(it.mesh); it.mesh.geometry.dispose(); it.mesh.material.dispose(); this.items.splice(i, 1); continue; } 
-                    it.vel.y -= 25 * dt; it.pos.addScaledVector(it.vel, dt); let bX = Math.floor(it.pos.x), bY = Math.floor(it.pos.y - 0.1), bZ = Math.floor(it.pos.z); let v = this.e.world.getG(bX, bY, bZ); 
-                    if(v !== 0 && v !== 8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) { it.pos.y = bY + 1.1; it.vel.y = 0; it.vel.x *= 0.8; it.vel.z *= 0.8; } 
-                    it.bob += dt * 3; it.mesh.position.set(it.pos.x, it.pos.y + Math.sin(it.bob)*0.05, it.pos.z); it.mesh.rotation.y += dt; 
+                    it.vel.y -= 25 * dt; it.pos.addScaledVector(it.vel, dt); 
+                    let bX = Math.floor(it.pos.x), bY = Math.floor(it.pos.y - 0.1), bZ = Math.floor(it.pos.z); 
+                    let v = this.e.world.getG(bX, bY, bZ); 
+                    if(v !== 0 && v !== 8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) { it.pos.y = bY + 1.15; it.vel.y = 0; it.vel.x *= 0.8; it.vel.z *= 0.8; } 
+                    it.bob += dt * 3; it.mesh.position.set(it.pos.x, it.pos.y + Math.sin(it.bob)*0.06, it.pos.z); it.mesh.rotation.y += dt * 1.5; 
                     
                     if(it.pos.distanceTo(pPos) < 2.8) { 
-                        let added = false; 
-                        for(let slot = 0; slot < 36; slot++) { if(this.e.player.inv[slot] === it.id && this.e.player.invCount[slot] < 64) { this.e.player.invCount[slot]++; added = true; break; } } 
-                        if(!added) { for(let slot = 0; slot < 36; slot++) { if(!this.e.player.inv[slot] || this.e.player.inv[slot] === 0) { this.e.player.inv[slot] = it.id; this.e.player.invCount[slot] = 1; added = true; break; } } } 
-                        if(added) { this.e.scene.remove(it.mesh); it.mesh.geometry.dispose(); it.mesh.material.dispose(); this.items.splice(i, 1); this.e.audio.playPop(); if(this.e.ui) this.e.ui.updateHotbar(); this.e.player.updArm(); } 
+                        if(this.e.player.giveItem(it.id, 1)) {
+                            this.e.scene.remove(it.mesh); it.mesh.geometry.dispose(); it.mesh.material.dispose(); 
+                            this.items.splice(i, 1); 
+                            this.e.audio.playPop(); 
+                        }
                     } 
                 } 
             } 
@@ -630,7 +1224,7 @@
 
         class Zombie {
             constructor(e, pos) {
-                this.e = e; this.pos = pos.clone(); this.vel = new THREE.Vector3(); this.hp = 15; this.life = 0; this.dead = false; this.box = new THREE.Box3(); this.w = 0.3; this.h = 1.6;
+                this.e = e; this.pos = pos.clone(); this.vel = new THREE.Vector3(); this.hp = 14; this.life = 0; this.dead = false; this.box = new THREE.Box3(); this.w = 0.3; this.h = 1.6;
                 this.group = new THREE.Group();
                 const mF = new THREE.MeshStandardMaterial({map:this.e.atlas.tex}), mS = new THREE.MeshStandardMaterial({map:this.e.atlas.tex}), mP = new THREE.MeshStandardMaterial({map:this.e.atlas.tex});
                 this.head = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.5,0.5), mF); this.e.atlas.applyUV(this.head.geometry, this.e.atlas.zFace); this.head.position.y=0.25; this.group.add(this.head);
@@ -644,17 +1238,174 @@
             chkCol(box) { let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z); for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){ let v=this.e.world.getG(x,y,z); if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true; } return false; }
             dmg(a) { 
                 if(this.dead) return; this.hp-=a; this.e.audio.playZombie();
-                this.group.children.forEach(c => c.material.color.setHex(0xffaaaa));
-                let knock = this.e.player.cam.getWorldDirection(new THREE.Vector3()); this.vel.x = knock.x * 6; this.vel.z = knock.z * 6; this.vel.y = 5;
+                this.group.children.forEach(c => c.material.color.setHex(0xff7777));
+                let knock = this.e.player.cam.getWorldDirection(new THREE.Vector3()); this.vel.x = knock.x * 7; this.vel.z = knock.z * 7; this.vel.y = 5;
                 setTimeout(()=>{ if(!this.dead) this.group.children.forEach(c => c.material.color.setHex(0xffffff)); }, 200);
-                if(this.hp<=0) { this.dead=true; this.group.rotation.z = Math.PI/2; this.group.position.y -= 0.5; setTimeout(()=>{ this.e.scene.remove(this.group); this.e.mobs.remove(this); }, 2000); if(Math.random()<0.5 && this.e.drops) this.e.drops.spawn(this.pos, BLOCKS.ROTTEN_FLESH); }
+                if(this.hp<=0) { 
+                    this.dead=true; this.group.rotation.z = Math.PI/2; this.group.position.y -= 0.5; 
+                    XboxAchv.unlock('Monster Hunter');
+                    setTimeout(()=>{ this.e.scene.remove(this.group); this.e.mobs.remove(this); }, 1500); 
+                    if(this.e.drops) this.e.drops.spawn(this.pos, BLOCKS.ROTTEN_FLESH, true); 
+                }
             }
             update(dt) {
                 if(this.dead) return; this.life += dt; let dP = this.e.player.pos.clone().sub(this.pos); let dist = dP.length(); this.vel.y -= 30 * dt;
-                if(dist < 16 && dist > 1.0) { dP.y = 0; dP.normalize(); this.vel.x += (dP.x * 2.5 - this.vel.x) * 5 * dt; this.vel.z += (dP.z * 2.5 - this.vel.z) * 5 * dt; this.group.rotation.y = Math.atan2(dP.x, dP.z); } else { this.vel.x *= 0.9; this.vel.z *= 0.9; }
-                if(dist < 1.2 && this.life > 1.0) { this.e.player.dmg(2); this.life = 0; }
-                let pVY = this.vel.y; const rA=(ax)=>{ this.pos[ax]+=this.vel[ax]*dt; this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w)); if(this.chkCol(this.box)){ this.pos[ax]-=this.vel[ax]*dt; if(ax==='y'&&this.vel.y<0){ this.vel.y=0; if(dist<16 && this.vel.x===0 && this.vel.z===0) this.vel.y=8; } else this.vel[ax]=0; } }; rA('x');rA('z');rA('y');
+                if(dist < 18 && dist > 1.0) { dP.y = 0; dP.normalize(); this.vel.x += (dP.x * 2.6 - this.vel.x) * 5 * dt; this.vel.z += (dP.z * 2.6 - this.vel.z) * 5 * dt; this.group.rotation.y = Math.atan2(dP.x, dP.z); } else { this.vel.x *= 0.9; this.vel.z *= 0.9; }
+                if(dist < 1.3 && this.life > 1.0) { this.e.player.dmg(2); this.life = 0; }
+                const rA=(ax)=>{ this.pos[ax]+=this.vel[ax]*dt; this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w)); if(this.chkCol(this.box)){ this.pos[ax]-=this.vel[ax]*dt; if(ax==='y'&&this.vel.y<0){ this.vel.y=0; if(dist<18 && (Math.abs(this.vel.x)<0.2 || Math.abs(this.vel.z)<0.2)) this.vel.y=8; } else this.vel[ax]=0; } }; rA('x');rA('z');rA('y');
                 if(Math.abs(this.vel.x)>0.1 || Math.abs(this.vel.z)>0.1) { let wc=this.life*8; this.lL.rotation.x=Math.sin(wc)*0.5; this.lR.rotation.x=-Math.sin(wc)*0.5; } this.group.position.copy(this.pos);
+            }
+        }
+
+        class Creeper {
+            constructor(e, pos) {
+                this.e = e; this.pos = pos.clone(); this.vel = new THREE.Vector3(); this.hp = 12; this.dead = false;
+                this.box = new THREE.Box3(); this.w = 0.3; this.h = 1.5;
+                this.fuse = 0; this.fusing = false;
+                this.group = new THREE.Group();
+
+                const mFace = new THREE.MeshStandardMaterial({map:this.e.atlas.tex});
+                const mBody = new THREE.MeshStandardMaterial({map:this.e.atlas.tex});
+
+                this.head = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.5,0.5), mFace);
+                this.e.atlas.applyUV(this.head.geometry, this.e.atlas.creeperFaceUV);
+                this.head.position.y = 0.25;
+                this.group.add(this.head);
+
+                this.body = new THREE.Mesh(new THREE.BoxGeometry(0.45,0.75,0.28), mBody);
+                this.e.atlas.applyUV(this.body.geometry, this.e.atlas.creeperBodyUV);
+                this.body.position.y = -0.375;
+                this.group.add(this.body);
+
+                this.l1 = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.38,0.22), mBody);
+                this.e.atlas.applyUV(this.l1.geometry, this.e.atlas.creeperBodyUV);
+                this.l1.position.set(0.14,-0.95,0.2); this.group.add(this.l1);
+
+                this.l2 = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.38,0.22), mBody);
+                this.e.atlas.applyUV(this.l2.geometry, this.e.atlas.creeperBodyUV);
+                this.l2.position.set(-0.14,-0.95,0.2); this.group.add(this.l2);
+
+                this.l3 = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.38,0.22), mBody);
+                this.e.atlas.applyUV(this.l3.geometry, this.e.atlas.creeperBodyUV);
+                this.l3.position.set(0.14,-0.95,-0.2); this.group.add(this.l3);
+
+                this.l4 = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.38,0.22), mBody);
+                this.e.atlas.applyUV(this.l4.geometry, this.e.atlas.creeperBodyUV);
+                this.l4.position.set(-0.14,-0.95,-0.2); this.group.add(this.l4);
+
+                this.group.children.forEach(c => { c.castShadow=true; });
+                this.e.scene.add(this.group);
+            }
+
+            chkCol(box) {
+                let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z);
+                for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){
+                    let v=this.e.world.getG(x,y,z);
+                    if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true;
+                }
+                return false;
+            }
+
+            dmg(a) {
+                if(this.dead) return;
+                this.hp -= a;
+                this.e.audio.playHit();
+                this.group.children.forEach(c => c.material.color.setHex(0xff7777));
+                let knock = this.e.player.cam.getWorldDirection(new THREE.Vector3());
+                this.vel.x = knock.x * 7; this.vel.z = knock.z * 7; this.vel.y = 5;
+                setTimeout(()=>{ if(!this.dead) this.group.children.forEach(c => c.material.color.setHex(0xffffff)); }, 200);
+                if(this.hp <= 0) {
+                    this.dead = true;
+                    this.group.rotation.z = Math.PI/2;
+                    XboxAchv.unlock('Monster Hunter');
+                    setTimeout(()=>{ this.e.scene.remove(this.group); this.e.mobs.remove(this); }, 1200);
+                    if(this.e.drops) this.e.drops.spawn(this.pos, BLOCKS.COAL_ORE, true);
+                }
+            }
+
+            explode() {
+                if(this.dead) return;
+                this.dead = true;
+                this.e.audio.playExplosion();
+
+                let cx = Math.floor(this.pos.x), cy = Math.floor(this.pos.y - 0.5), cz = Math.floor(this.pos.z);
+                for(let dx=-2; dx<=2; dx++) {
+                    for(let dy=-2; dy<=2; dy++) {
+                        for(let dz=-2; dz<=2; dz++) {
+                            if(dx*dx + dy*dy + dz*dz <= 5) {
+                                let b = this.e.world.getG(cx+dx, cy+dy, cz+dz);
+                                if(b !== 0 && b !== BLOCKS.BEDROCK && b !== BLOCKS.WATER) {
+                                    if(Math.random() < 0.35) this.e.parts.spawn(new THREE.Vector3(cx+dx, cy+dy, cz+dz), b, 3);
+                                    this.e.world.setG(cx+dx, cy+dy, cz+dz, 0);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                let dist = this.pos.distanceTo(this.e.player.pos);
+                if(dist < 4.5) {
+                    this.e.player.dmg(Math.max(2, Math.floor((4.8 - dist) * 3)));
+                }
+                this.e.scene.remove(this.group);
+                this.e.mobs.remove(this);
+            }
+
+            update(dt) {
+                if(this.dead) return;
+                let dP = this.e.player.pos.clone().sub(this.pos);
+                let dist = dP.length();
+                this.vel.y -= 30 * dt;
+
+                if(dist < 3.0) {
+                    if(!this.fusing) {
+                        this.fusing = true;
+                        this.e.audio.playFuse();
+                    }
+                    this.fuse += dt;
+                    let flash = Math.floor(this.fuse * 12) % 2 === 0;
+                    this.group.children.forEach(c => c.material.color.setHex(flash ? 0xffffff : 0x88ff88));
+                    this.group.scale.setScalar(1 + this.fuse * 0.18);
+                    this.vel.x *= 0.5; this.vel.z *= 0.5;
+                    if(this.fuse >= 1.45) {
+                        this.explode();
+                        return;
+                    }
+                } else {
+                    if(this.fusing) {
+                        this.fusing = false;
+                        this.fuse = Math.max(0, this.fuse - dt * 2);
+                        this.group.scale.setScalar(1);
+                        this.group.children.forEach(c => c.material.color.setHex(0xffffff));
+                    }
+                    if(dist < 18) {
+                        dP.y = 0; dP.normalize();
+                        this.vel.x += (dP.x * 2.4 - this.vel.x) * 5 * dt;
+                        this.vel.z += (dP.z * 2.4 - this.vel.z) * 5 * dt;
+                        this.group.rotation.y = Math.atan2(dP.x, dP.z);
+                    } else {
+                        this.vel.x *= 0.9; this.vel.z *= 0.9;
+                    }
+                }
+
+                const rA=(ax)=>{
+                    this.pos[ax]+=this.vel[ax]*dt;
+                    this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w));
+                    if(this.chkCol(this.box)){
+                        this.pos[ax]-=this.vel[ax]*dt;
+                        if(ax==='y'&&this.vel.y<0){
+                            this.vel.y=0;
+                            if(dist<18 && !this.fusing && (Math.abs(this.vel.x)<0.2 || Math.abs(this.vel.z)<0.2)) this.vel.y=8;
+                        } else this.vel[ax]=0;
+                    }
+                };
+                rA('x'); rA('z'); rA('y');
+                if(Math.abs(this.vel.x)>0.1 || Math.abs(this.vel.z)>0.1) {
+                    let wc = this.e.time * 10;
+                    this.l1.rotation.x = Math.sin(wc)*0.5; this.l2.rotation.x = -Math.sin(wc)*0.5;
+                    this.l3.rotation.x = -Math.sin(wc)*0.5; this.l4.rotation.x = Math.sin(wc)*0.5;
+                }
+                this.group.position.copy(this.pos);
             }
         }
 
@@ -672,13 +1423,13 @@
                 this.group.children.forEach(c => { c.castShadow=true; }); this.e.scene.add(this.group);
                 this.dir = new THREE.Vector3(Math.random()-0.5, 0, Math.random()-0.5).normalize(); this.timer = 0;
             }
-            chkCol(box) { let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z); for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){ let v=this.e.world.getG(x,y,z); if(v!==0 && v!==8 && BLOCK_PROPS[v].solid) return true; } return false; }
+            chkCol(box) { let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z); for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){ let v=this.e.world.getG(x,y,z); if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true; } return false; }
             dmg(a) { 
                 if(this.dead) return; this.hp-=a; this.e.audio.playPig();
                 this.group.children.forEach(c => c.material.color.setHex(0xffaaaa));
                 setTimeout(()=>{ if(!this.dead) this.group.children.forEach(c => c.material.color.setHex(0xffffff)); }, 200);
                 this.vel.y = 5; this.dir.set((Math.random()-0.5)*2, 0, (Math.random()-0.5)*2).normalize(); 
-                if(this.hp<=0) { this.dead=true; this.group.rotation.z = Math.PI/2; this.group.position.y -= 0.3; setTimeout(()=>{ this.e.scene.remove(this.group); this.e.mobs.remove(this); }, 2000); if(this.e.drops) this.e.drops.spawn(this.pos, BLOCKS.APPLE); }
+                if(this.hp<=0) { this.dead=true; this.group.rotation.z = Math.PI/2; this.group.position.y -= 0.3; setTimeout(()=>{ this.e.scene.remove(this.group); this.e.mobs.remove(this); }, 1500); if(this.e.drops) this.e.drops.spawn(this.pos, BLOCKS.APPLE, true); }
             }
             update(dt) {
                 if(this.dead) return; this.vel.y -= 30 * dt; this.timer -= dt;
@@ -692,16 +1443,37 @@
 
         class MobManager {
             constructor(e) { this.e = e; this.list = []; this.timer = 0; }
-            spawn() {
-                if(this.list.length >= 10) return;
-                let ang = Math.random() * Math.PI * 2; let dist = 10 + Math.random() * 10; let sx = this.e.player.pos.x + Math.cos(ang)*dist; let sz = this.e.player.pos.z + Math.sin(ang)*dist; let sy = CONFIG.CHUNK_HEIGHT;
+            spawn(forceHostile = false) {
+                if(this.list.length >= 14 && !forceHostile) return;
+                let ang = Math.random() * Math.PI * 2;
+                let dist = forceHostile ? (7 + Math.random() * 5) : (12 + Math.random() * 12);
+                let sx = this.e.player.pos.x + Math.cos(ang)*dist;
+                let sz = this.e.player.pos.z + Math.sin(ang)*dist;
+                let sy = CONFIG.CHUNK_HEIGHT - 1;
                 while(sy > 0 && this.e.world.getG(Math.floor(sx), Math.floor(sy), Math.floor(sz)) === 0) sy--;
-                if(sy > 0 && sy < CONFIG.WATER_LEVEL) return;
+                if(sy <= CONFIG.WATER_LEVEL) return;
                 
-                if (Math.random() > 0.5 && this.e.isDay) { this.list.push(new Pig(this.e, new THREE.Vector3(sx, sy+2, sz))); } 
-                else if (!this.e.isDay) { this.list.push(new Zombie(this.e, new THREE.Vector3(sx, sy+2, sz))); }
+                let spawnPos = new THREE.Vector3(sx, sy + 2.2, sz);
+                if (forceHostile) {
+                    this.list.push(new Creeper(this.e, spawnPos));
+                    this.list.push(new Zombie(this.e, spawnPos.clone().add(new THREE.Vector3(2, 0, 2))));
+                    return;
+                }
+
+                let r = Math.random();
+                if (r < 0.4) {
+                    this.list.push(new Pig(this.e, spawnPos));
+                } else if (r < 0.7) {
+                    this.list.push(new Zombie(this.e, spawnPos));
+                } else {
+                    this.list.push(new Creeper(this.e, spawnPos));
+                }
             }
-            update(dt) { this.timer+=dt; if(this.timer>3){ this.timer=0; this.spawn(); } this.list.forEach(m => m.update(dt)); }
+            update(dt) { 
+                this.timer += dt; 
+                if(this.timer > 3.5){ this.timer = 0; this.spawn(); } 
+                this.list.forEach(m => m.update(dt)); 
+            }
             remove(mob) { this.list = this.list.filter(m => m !== mob); }
         }
 
@@ -715,35 +1487,55 @@
             get(x,y,z) { if(x<0||x>=CONFIG.CHUNK_SIZE||y<0||y>=CONFIG.CHUNK_HEIGHT||z<0||z>=CONFIG.CHUNK_SIZE) return 0; return this.data[this.getIdx(x,y,z)]; }
             set(x,y,z,v) { if(x>=0&&x<CONFIG.CHUNK_SIZE&&y>=0&&y<CONFIG.CHUNK_HEIGHT&&z>=0&&z<CONFIG.CHUNK_SIZE) { this.data[this.getIdx(x,y,z)]=v; this.dirty=true; } }
             
+            static getBiomeAt(wx, wz) {
+                if (wx >= -4 && wx <= 20 && wz >= -4 && wz <= 20) return 'Planície & Floresta';
+                let temp = tempGen.fBm(wx, wz, 2, 0.012);
+                let elev = nGen.fBm(wx, wz, 2, 0.012);
+                if (elev > 0.28) return 'Montanhas Rochosas';
+                if (temp > 0.22) return 'Deserto Árido';
+                if (temp < -0.22) return 'Tundra Nevada';
+                return 'Planície & Floresta';
+            }
+
             generate() {
                 const wxOff = this.cx * CONFIG.CHUNK_SIZE; const wzOff = this.cz * CONFIG.CHUNK_SIZE;
                 for(let x=0; x<CONFIG.CHUNK_SIZE; x++) {
                     for(let z=0; z<CONFIG.CHUNK_SIZE; z++) {
                         const wx = wxOff + x; const wz = wzOff + z;
                         
-                        let hn = bGen.fBm(wx, wz, 3, 0.02);
-                        let isMountain = nGen.fBm(wx, wz, 2, 0.008) > 0.4;
-                        
-                        let h = Math.floor((hn+1)*12) + CONFIG.WATER_LEVEL - 4;
-                        if (isMountain) h += Math.floor((hn)*25);
-                        h = Math.max(1, Math.min(h, CONFIG.CHUNK_HEIGHT-2));
+                        let biome = Chunk.getBiomeAt(wx, wz);
+                        let hn = bGen.fBm(wx, wz, 3, 0.022);
+                        let h = Math.floor((hn+1)*10) + CONFIG.WATER_LEVEL - 2;
+                        if (biome === 'Montanhas Rochosas') h += Math.floor(Math.abs(hn)*22) + 6;
+                        if (biome === 'Deserto Árido') h = Math.floor((hn+1)*7) + CONFIG.WATER_LEVEL + 1;
+                        h = Math.max(1, Math.min(h, CONFIG.CHUNK_HEIGHT-6));
 
                         this.set(x, 0, z, BLOCKS.BEDROCK); 
-                        let surf = 0;
+                        let surf = BLOCKS.GRASS;
                         
                         let inCastle = (wx >= 3 && wx <= 13 && wz >= 3 && wz <= 13 && this.cx===0 && this.cz===0);
                         if(inCastle) { h = CONFIG.WATER_LEVEL + 4; } 
                         
                         for(let y=1; y<=h; y++) {
                             let cb = BLOCKS.STONE;
-                            let caveNoise = bGen.noise3D(wx * 0.05, y * 0.05, wz * 0.05);
-                            if(y < h - 4 && y > 2 && caveNoise > 0.4 && !inCastle) { this.set(x, y, z, 0); continue; }
-                            if(y<h-5 && Math.random()<0.05 && caveNoise < 0.4 && !inCastle) { 
+                            let caveNoise = bGen.noise3D(wx * 0.06, y * 0.06, wz * 0.06);
+                            if(y < h - 4 && y > 2 && caveNoise > 0.42 && !inCastle) { this.set(x, y, z, 0); continue; }
+                            if(y < h - 3 && Math.random() < 0.055 && !inCastle) { 
                                 let r = Math.random(); 
-                                if(y<15&&r<0.1) cb=BLOCKS.DIAMOND_ORE; else if(y<30&&r<0.3) cb=BLOCKS.GOLD; 
-                                else if(r<0.5) cb=BLOCKS.IRON_ORE; else cb=BLOCKS.COAL_ORE; 
+                                if(y<14&&r<0.12) cb=BLOCKS.DIAMOND_ORE; 
+                                else if(y<28&&r<0.28) cb=BLOCKS.GOLD; 
+                                else if(r<0.55) cb=BLOCKS.IRON_ORE; 
+                                else cb=BLOCKS.COAL_ORE; 
                             }
-                            if(y===h) { cb = h<=CONFIG.WATER_LEVEL+1 ? BLOCKS.SAND : BLOCKS.GRASS; surf = cb; } else if(y>h-3) cb = BLOCKS.DIRT;
+                            if(y===h) {
+                                if (h <= CONFIG.WATER_LEVEL + 1 || biome === 'Deserto Árido') cb = BLOCKS.SAND;
+                                else if (biome === 'Tundra Nevada') cb = BLOCKS.SNOW;
+                                else if (biome === 'Montanhas Rochosas' && h > CONFIG.WATER_LEVEL + 14) cb = h > CONFIG.WATER_LEVEL + 20 ? BLOCKS.SNOW : BLOCKS.STONE;
+                                else cb = BLOCKS.GRASS;
+                                surf = cb;
+                            } else if(y > h - 3) {
+                                cb = (biome === 'Deserto Árido') ? BLOCKS.SAND : BLOCKS.DIRT;
+                            }
                             this.set(x, y, z, cb);
                         }
                         
@@ -751,21 +1543,34 @@
                             if (wx === 3 || wx === 13 || wz === 3 || wz === 13) {
                                 let isTower = (wx===3||wx===13) && (wz===3||wz===13); 
                                 let wallH = isTower ? 4 : 2; 
-                                if (wx === 8 && wz === 13) wallH = 0; 
+                                if (wx === 8 && (wz === 13 || wz === 3)) wallH = 0; 
                                 for(let cy=h+1; cy<=h+wallH; cy++) this.set(x, cy, z, BLOCKS.COBBLESTONE);
                                 if(isTower) this.set(x, h+5, z, BLOCKS.TORCH);
                             } else {
                                 this.set(x, h, z, BLOCKS.PLANKS); 
-                                if(wx===8 && wz===8) this.set(x, h+1, z, BLOCKS.CRAFTING_TABLE);
+                                if(wx===8 && wz===6) this.set(x, h+1, z, BLOCKS.CHEST);
+                                if(wx===6 && wz===6) this.set(x, h+1, z, BLOCKS.CRAFTING_TABLE);
                             }
+                        }
+
+                        if(wx === 8 && wz === 1 && this.cx === 0 && this.cz === 0) {
+                            this.e.world.qTree(wx, h+1, wz);
                         }
 
                         for(let y=h+1; y<=CONFIG.WATER_LEVEL; y++) if(this.get(x,y,z)===0) this.set(x,y,z,BLOCKS.WATER);
                         
-                        if(h>CONFIG.WATER_LEVEL && surf===BLOCKS.GRASS && Math.random()<0.04 && !inCastle) {
-                            this.e.world.qTree(wx,h+1,wz);
-                        } else if(h>CONFIG.WATER_LEVEL && surf===BLOCKS.GRASS && Math.random()<0.08 && !inCastle) {
-                            this.set(x, h+1, z, Math.random()>0.5 ? BLOCKS.RED_FLOWER : BLOCKS.YELLOW_FLOWER);
+                        if(h > CONFIG.WATER_LEVEL + 1 && !inCastle) {
+                            if (biome === 'Planície & Floresta' && surf === BLOCKS.GRASS) {
+                                if(Math.random() < 0.045) this.e.world.qTree(wx, h+1, wz);
+                                else if(Math.random() < 0.09) this.set(x, h+1, z, Math.random()>0.5 ? BLOCKS.RED_FLOWER : BLOCKS.YELLOW_FLOWER);
+                            } else if (biome === 'Deserto Árido' && surf === BLOCKS.SAND) {
+                                if(Math.random() < 0.025) {
+                                    let ch = 2 + Math.floor(Math.random()*2);
+                                    for(let cy=1; cy<=ch; cy++) this.set(x, h+cy, z, BLOCKS.CACTUS);
+                                }
+                            } else if (biome === 'Tundra Nevada' && surf === BLOCKS.SNOW) {
+                                if(Math.random() < 0.03) this.e.world.qTree(wx, h+1, wz);
+                            }
                         }
                     }
                 }
@@ -785,9 +1590,9 @@
                 for(let y=0; y<CONFIG.CHUNK_HEIGHT; y++) for(let z=0; z<CONFIG.CHUNK_SIZE; z++) for(let x=0; x<CONFIG.CHUNK_SIZE; x++) {
                     const v = this.get(x,y,z); if(v===0) continue;
                     const pr = BLOCK_PROPS[v] || BLOCK_PROPS[0], isW = v===8, isF = pr.isFlora && v!==6;
+                    const tMap = this.e.atlas.getMap(v);
                     
                     if(isF) {
-                        const tMap = this.e.atlas.map[v]; if(!tMap) continue;
                         const tIdx = tMap[0], ts=1/16, tu=(tIdx%16)*ts, tv=1-(Math.floor(tIdx/16)*ts)-ts;
                         for(const f of floF) {
                             for(let i=0; i<4; i++) {
@@ -813,19 +1618,17 @@
                         else if(pr.trans && !pr.liquid && nv!==v) drw=true;
 
                         if(drw) {
-                            const tMap = this.e.atlas.map[v]; if(!tMap) continue;
-                            const tIdx = tMap[f.u], ts=1/16, tu=(tIdx%16)*ts, tv=1-(Math.floor(tIdx/16)*ts)-ts; 
-                            let bL = (f.d[1]===-1)?0.4:(f.d[0]!==0)?0.7:(f.d[2]!==0)?0.85:1.0;
+                            const tIdx = tMap[f.u] || tMap[0], ts=1/16, tu=(tIdx%16)*ts, tv=1-(Math.floor(tIdx/16)*ts)-ts; 
+                            let bL = (f.d[1]===-1)?0.45:(f.d[0]!==0)?0.75:(f.d[2]!==0)?0.88:1.0;
                             
                             for(let i=0; i<4; i++) {
                                 let vx=x+f.c[i][0], vy=y+f.c[i][1], vz=z+f.c[i][2];
-                                
                                 let ao = 1.0; 
-                                if(f.c[i][1]===0 && f.d[1]!==-1) ao=0.6; 
+                                if(f.c[i][1]===0 && f.d[1]!==-1) ao=0.65; 
                                 if(f.d[1]===1 && !isW) { 
                                     let dx=f.c[i][0]===1?1:-1, dz=f.c[i][2]===1?1:-1; 
                                     let o1=this.get(x+dx,y,z)!==0, o2=this.get(x,y,z+dz)!==0, o3=this.get(x+dx,y,z+dz)!==0;
-                                    if(o1&&o2) ao=0.45; else if(o1||o2||o3) ao=0.7;
+                                    if(o1&&o2) ao=0.5; else if(o1||o2||o3) ao=0.75;
                                 }
                                 let fc = bL * ao;
                                 
@@ -882,10 +1685,10 @@
             qTree(x,y,z) { this.trees.push({x,y,z}); }
             procTrees() {
                 while(this.trees.length>0) {
-                    const t=this.trees.pop(), h=4+Math.floor(Math.random()*3);
+                    const t=this.trees.pop(), h=4+Math.floor(Math.random()*2);
                     for(let i=0;i<h;i++) this.setG(t.x,t.y+i,t.z,BLOCKS.WOOD);
-                    for(let lx=-2;lx<=2;lx++) for(let ly=h-2;ly<=h+2;ly++) for(let lz=-2;lz<=2;lz++) {
-                        if(Math.abs(lx)===2&&Math.abs(lz)===2&&(ly===h-2||ly===h+2)) continue; if(lx===0&&lz===0&&ly<h) continue;
+                    for(let lx=-2;lx<=2;lx++) for(let ly=h-2;ly<=h+1;ly++) for(let lz=-2;lz<=2;lz++) {
+                        if(Math.abs(lx)===2&&Math.abs(lz)===2&&(ly===h-2||ly===h+1)) continue; if(lx===0&&lz===0&&ly<h) continue;
                         if(this.getG(t.x+lx,t.y+ly,t.z+lz)===0) this.setG(t.x+lx,t.y+ly,t.z+lz,BLOCKS.LEAVES);
                     }
                 }
@@ -918,17 +1721,19 @@
                 
                 const tabCont = document.getElementById('ui-tabs');
                 if(tabCont) {
+                    tabCont.innerHTML = '';
                     RECIPE_CATEGORIES.forEach(cat => {
                         let div = document.createElement('div');
                         div.className = `xb-tab ${cat.id === this.selectedTab ? 'active' : ''}`;
-                        div.innerHTML = `<img src="${this.e.atlas.ui[cat.icon]}">`;
-                        div.onclick = () => this.switchTab(cat.id);
+                        div.title = cat.name;
+                        div.innerHTML = `<img src="${this.e.atlas.ui[cat.icon] || ''}">`;
+                        div.onclick = () => { this.e.audio.playUI(); this.switchTab(cat.id); };
                         tabCont.appendChild(div);
                     });
                 }
 
                 let btnClose = document.getElementById('btn-close-inv');
-                if(btnClose) btnClose.onclick = () => this.e.player.lockF();
+                if(btnClose) btnClose.onclick = () => { this.e.audio.playUI(); this.e.player.lockF(); };
                 
                 this.updateHotbar();
             }
@@ -936,7 +1741,7 @@
             switchTab(tabId) {
                 this.selectedTab = tabId;
                 document.querySelectorAll('.xb-tab').forEach((el, i) => {
-                    if(RECIPE_CATEGORIES[i].id === tabId) el.classList.add('active');
+                    if(RECIPE_CATEGORIES[i] && RECIPE_CATEGORIES[i].id === tabId) el.classList.add('active');
                     else el.classList.remove('active');
                 });
                 this.selectedRecipeIdx = 0;
@@ -953,20 +1758,21 @@
                 recipesInTab.forEach((r, idx) => {
                     let item = document.createElement('div');
                     item.className = `xb-carousel-item ${idx === this.selectedRecipeIdx ? 'selected' : ''}`;
-                    item.innerHTML = `<img src="${this.e.atlas.ui[r.res]}">`;
-                    item.onclick = () => { this.selectedRecipeIdx = idx; this.renderCraftingMenu(); };
+                    item.innerHTML = `<img src="${this.e.atlas.ui[r.res] || ''}">`;
+                    item.onclick = () => { this.e.audio.playUI(); this.selectedRecipeIdx = idx; this.renderCraftingMenu(); };
                     carousel.appendChild(item);
                 });
 
                 if(recipesInTab.length > 0) {
-                    this.updateRecipeDetails(recipesInTab[this.selectedRecipeIdx]);
+                    this.updateRecipeDetails(recipesInTab[this.selectedRecipeIdx] || recipesInTab[0]);
                 }
 
                 this.renderInventoryGrid();
             }
 
             updateRecipeDetails(recipe) {
-                document.getElementById('ui-recipe-name').innerText = `${recipe.name} x${recipe.count}`;
+                if(!recipe) return;
+                document.getElementById('ui-recipe-name').innerText = `${recipe.name} (x${recipe.count})`;
                 
                 const grid = document.getElementById('ui-grid-3x3');
                 grid.innerHTML = '';
@@ -983,14 +1789,16 @@
                 const reqList = document.getElementById('ui-req-list');
                 reqList.innerHTML = '';
                 recipe.req.forEach(req => {
+                    let reqId = req[0], reqQty = req[1];
                     let has = 0;
-                    for(let i=0; i<36; i++) if(this.e.player.inv[i] === req[0]) has += this.e.player.invCount[i];
-                    if(has < req[1]) canCraft = false;
+                    for(let i=0; i<36; i++) if(this.e.player.inv[i] === reqId) has += this.e.player.invCount[i];
+                    if(has < reqQty) canCraft = false;
                     
                     reqList.innerHTML += `
                         <div class="xb-req-badge">
-                            <img src="${this.e.atlas.ui[req[0]]}">
-                            <span class="${has >= req[1] ? 'req-ok' : 'req-fail'}">${has} / ${req[1]}</span>
+                            <img src="${this.e.atlas.ui[reqId] || ''}">
+                            <span>${BLOCK_PROPS[reqId]?.name || ''}:</span>
+                            <span class="${has >= reqQty ? 'req-ok' : 'req-fail'}">${has}/${reqQty}</span>
                         </div>
                     `;
                 });
@@ -1009,27 +1817,24 @@
                         } 
                     });
                     
-                    let added = false; 
-                    for(let i=0; i<36; i++) { 
-                        if(this.e.player.inv[i] === recipe.res && this.e.player.invCount[i] + recipe.count <= 64) { 
-                            this.e.player.invCount[i] += recipe.count; added = true; break; 
-                        } 
-                    }
-                    if(!added) { 
-                        for(let i=0; i<36; i++) { 
-                            if(!this.e.player.inv[i] || this.e.player.inv[i] === 0) { 
-                                this.e.player.inv[i] = recipe.res; this.e.player.invCount[i] = recipe.count; added = true; break; 
-                            } 
-                        } 
-                    }
-                    
+                    this.e.player.giveItem(recipe.res, recipe.count);
                     this.e.audio.playCraft();
                     this.renderCraftingMenu();
                     this.updateHotbar();
                     this.e.player.updArm();
                     
-                    if(recipe.res === BLOCKS.CRAFTING_TABLE) XboxAchv.unlock('Benchmarking');
-                    if(recipe.res === BLOCKS.PICKAXE || recipe.res === BLOCKS.SWORD) XboxAchv.unlock('Time to Strike');
+                    if(recipe.res === BLOCKS.PLANKS) {
+                        this.e.tutorial.completeStep(3);
+                    }
+                    if(recipe.res === BLOCKS.CRAFTING_TABLE) {
+                        XboxAchv.unlock('Benchmarking');
+                        this.e.tutorial.completeStep(3);
+                        this.e.tutorial.completeStep(4);
+                    }
+                    if(recipe.res === BLOCKS.PICKAXE || recipe.res === BLOCKS.SWORD || recipe.res === BLOCKS.AXE) {
+                        XboxAchv.unlock('Time to Strike');
+                        this.e.tutorial.completeStep(5);
+                    }
                 } : null;
             }
 
@@ -1049,7 +1854,16 @@
                         cell.innerHTML = `<img src="${this.e.atlas.ui[id]}">${cnt}`;
                     }
                     cell.onclick = () => {
-                        this.e.player.slot = i % 9; 
+                        if (i >= 9) {
+                            let tmpId = this.e.player.inv[this.e.player.slot];
+                            let tmpCnt = this.e.player.invCount[this.e.player.slot];
+                            this.e.player.inv[this.e.player.slot] = this.e.player.inv[i];
+                            this.e.player.invCount[this.e.player.slot] = this.e.player.invCount[i];
+                            this.e.player.inv[i] = tmpId;
+                            this.e.player.invCount[i] = tmpCnt;
+                        } else {
+                            this.e.player.slot = i;
+                        }
                         this.updateHotbar();
                         this.renderCraftingMenu();
                         this.e.player.updArm();
@@ -1074,18 +1888,44 @@
                         d.innerHTML = `<img src="${this.e.atlas.ui[id]}">${cnt}`;
                     }
                     d.innerHTML += `<div class="slot-num">${i+1}</div>`;
+                    d.onclick = () => {
+                        this.e.player.slot = i;
+                        this.updateHotbar();
+                        this.e.player.updArm();
+                    };
                     hc.appendChild(d);
+                }
+
+                let curId = this.e.player.inv[this.e.player.slot];
+                let banner = document.getElementById('item-name-banner');
+                if(banner) {
+                    if(curId && BLOCK_PROPS[curId]) {
+                        banner.innerText = BLOCK_PROPS[curId].name;
+                        banner.style.opacity = '1';
+                        clearTimeout(this.bannerTimer);
+                        this.bannerTimer = setTimeout(() => banner.style.opacity = '0', 1800);
+                    } else {
+                        banner.style.opacity = '0';
+                    }
                 }
             }
         }
 
         class Player {
             constructor(e) {
-                this.e = e; this.pos = new THREE.Vector3(8, CONFIG.WATER_LEVEL+20, 8); this.vel = new THREE.Vector3(); this.box = new THREE.Box3(); 
+                this.e = e; 
+                this.pos = new THREE.Vector3(8.5, CONFIG.WATER_LEVEL + 7, 9.5); 
+                this.vel = new THREE.Vector3(); 
+                this.box = new THREE.Box3(); 
                 this.w = 0.3; this.h = 1.6; this.dead = false; this.onG = false; this.hp = 20; this.breath = 10; 
-                this.keys = {w:0, a:0, s:0, d:0, space:0, shift:0, c:0}; this.yaw = 0; this.pitch = 0; this.lock = false;
+                this.keys = {w:0, a:0, s:0, d:0, space:0, shift:0, c:0}; 
+                this.yaw = 0; this.pitch = -0.15; this.lock = false;
+                this.visitedBiomes = new Set();
+                this.chestOpened = false;
+                this.cactusTimer = 0;
                 
-                this.cam = new THREE.PerspectiveCamera(CONFIG.FOV, window.innerWidth/window.innerHeight, 0.1, 1000); this.cam.rotation.order = 'YXZ';
+                this.cam = new THREE.PerspectiveCamera(CONFIG.FOV, window.innerWidth/window.innerHeight, 0.1, 1000); 
+                this.cam.rotation.order = 'YXZ';
                 
                 this.fpArm = new THREE.Group(); 
                 const sleeveGeo = new THREE.BoxGeometry(0.16, 0.2, 0.16); const skinGeo = new THREE.BoxGeometry(0.14, 0.4, 0.14); 
@@ -1095,12 +1935,57 @@
                 this.aO = new THREE.Vector3(0.5, -0.4, -0.6); this.fpArm.position.copy(this.aO); this.fpArm.rotation.set(Math.PI/4, -Math.PI/6, 0); 
                 this.cam.add(this.fpArm); this.e.scene.add(this.cam);
                 
-                this.sTime = 0; this.inv = [...INIT_INV]; this.invCount = new Array(36).fill(64); this.slot = 0; this.isM = false; this.mTime = 0;
+                this.sTime = 0; 
+                this.inv = new Array(36).fill(0);
+                this.invCount = new Array(36).fill(0);
+                this.inv[0] = BLOCKS.SWORD; this.invCount[0] = 1;
+                this.inv[1] = BLOCKS.COBBLESTONE; this.invCount[1] = 16;
+                this.inv[2] = BLOCKS.DIRT; this.invCount[2] = 16;
+                this.inv[3] = BLOCKS.TORCH; this.invCount[3] = 8;
+
+                this.slot = 0; this.isM = false; this.mTime = 0; this.stepSoundTimer = 0;
                 
-                this.hl = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.005,1.005,1.005)), new THREE.LineBasicMaterial({color:0x000000, linewidth:2})); 
+                this.hl = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.006,1.006,1.006)), new THREE.LineBasicMaterial({color:0x000000, linewidth:2})); 
                 this.hl.visible=false; this.e.scene.add(this.hl);
 
                 this.setup(); this.updArm(); this.updHp();
+            }
+
+            giveItem(id, count = 1) {
+                for(let i=0; i<36; i++) {
+                    if(this.inv[i] === id && this.invCount[i] + count <= 64 && !(BLOCK_PROPS[id]?.toolType)) {
+                        this.invCount[i] += count;
+                        if(this.e.ui) this.e.ui.updateHotbar();
+                        this.updArm();
+                        return true;
+                    }
+                }
+                for(let i=0; i<36; i++) {
+                    if(!this.inv[i] || this.inv[i] === 0) {
+                        this.inv[i] = id;
+                        this.invCount[i] = count;
+                        if(this.e.ui) this.e.ui.updateHotbar();
+                        this.updArm();
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            openStarterChest() {
+                this.e.audio.playChestOpen();
+                XboxAchv.unlock('Chest Hunter');
+                this.e.tutorial.completeStep(1);
+                if (!this.chestOpened) {
+                    this.chestOpened = true;
+                    this.giveItem(BLOCKS.APPLE, 5);
+                    this.giveItem(BLOCKS.WOOD, 2);
+                    this.giveItem(BLOCKS.GLASS, 8);
+                    this.giveItem(BLOCKS.TORCH, 8);
+                    showToast("🎁 Baú Inicial Aberto: +5 Maçãs, +2 Troncos, +8 Vidros e +8 Tochas!");
+                } else {
+                    showToast("📦 O Baú Inicial já foi recolhido! Agora extrai uma árvore lá fora.");
+                }
             }
 
             updHp() { 
@@ -1115,20 +2000,20 @@
             dmg(a) { 
                 if(this.dead) return; this.hp-=a; this.e.audio.playHit(); 
                 let o=document.getElementById('damage-flash'); if(o){ o.style.opacity='1'; setTimeout(()=>o.style.opacity='0',200); } 
-                this.pitch-=0.15; this.updHp(); if(this.hp<=0) this.die(); 
+                this.pitch-=0.12; this.updHp(); if(this.hp<=0) this.die(); 
             }
 
             lockF() { 
                 try{document.body.requestPointerLock();}catch(e){} 
-                this.lock=true; document.querySelectorAll('.menu-overlay').forEach(m=>m.style.display='none'); 
+                this.lock=true; 
+                document.querySelectorAll('.menu-overlay').forEach(m=>m.style.display='none'); 
                 let inv=document.getElementById('ui-crafting'); if(inv) inv.style.display='none'; 
                 if(!this.dead) { let hud=document.getElementById('hud'); if(hud) hud.style.display='block'; } 
             }
 
             die() { this.dead=true; try{document.exitPointerLock();}catch(e){} let d=document.getElementById('death-screen'); if(d)d.style.display='flex'; this.isM=false; }
-            respawn() { this.dead=false; this.hp=20; this.breath=10; this.updHp(); this.pos.set(8,CONFIG.WATER_LEVEL+20,8); this.vel.set(0,0,0); this.pitch=0; let d=document.getElementById('death-screen'); if(d)d.style.display='none'; this.lockF(); }
+            respawn() { this.dead=false; this.hp=20; this.breath=10; this.updHp(); this.pos.set(8.5,CONFIG.WATER_LEVEL+8,9.5); this.vel.set(0,0,0); this.pitch=0; let d=document.getElementById('death-screen'); if(d)d.style.display='none'; this.lockF(); }
             
-            // RAYCASTING DDA Amanatides-Woo: Cálculo Perfeito de Face/Bloco
             raycast(origin, direction, maxDistance) {
                 let x = Math.floor(origin.x);
                 let y = Math.floor(origin.y);
@@ -1182,30 +2067,43 @@
                 this.lk = lk;
                 this.sTime=1.0; 
 
-                if (button === 0) { // Mine
+                if (button === 0) {
                     if(this.e.mobs) {
-                        let ray = new THREE.Raycaster(this.cam.position, cd, 0, 4);
+                        let ray = new THREE.Raycaster(this.cam.position, cd, 0, 4.2);
                         let hits = ray.intersectObjects(this.e.mobs.list.map(m => m.group), true);
                         if(hits.length > 0) { 
                             let g = hits[0].object.parent; let mob = this.e.mobs.list.find(m => m.group === g); 
-                            if(mob) { mob.dmg(BLOCK_PROPS[this.inv[this.slot]]?.dmg || 1); return; } 
+                            if(mob) { mob.dmg(BLOCK_PROPS[this.inv[this.slot]]?.dmg || 2); return; } 
                         }
                     }
                     if(lk) { this.isM=true; this.mTime=0; }
-                } else if (button === 2) { // Place / Interact
+                } else if (button === 2) {
                     let id = this.inv[this.slot];
+                    if(lk && lk.block === BLOCKS.CHEST) {
+                        this.openStarterChest();
+                        return;
+                    }
                     if(lk && lk.block === BLOCKS.CRAFTING_TABLE) { 
                         this.lock=false; try{document.exitPointerLock();}catch(err){} 
                         let hud=document.getElementById('hud'); if(hud) hud.style.display='none'; 
-                        let inv=document.getElementById('ui-crafting'); if(inv) { inv.style.display='flex'; this.e.ui.renderCraftingMenu(); XboxAchv.unlock('Benchmarking'); } 
+                        let inv=document.getElementById('ui-crafting');
+                        if(inv) { inv.style.display='flex'; this.e.ui.renderCraftingMenu(); XboxAchv.unlock('Taking Inventory'); } 
                         return; 
                     }
-                    if(id === BLOCKS.APPLE && this.hp < 20) { this.e.audio.play('eat'); this.hp = Math.min(20, this.hp + 4); this.updHp(); this.invCount[this.slot]--; if(this.invCount[this.slot]<=0){this.inv[this.slot]=0;} this.e.ui.updateHotbar(); this.updArm(); return; }
+                    if(id === BLOCKS.APPLE && this.hp < 20) {
+                        this.e.audio.playEat();
+                        this.hp = Math.min(20, this.hp + 4);
+                        this.updHp();
+                        this.invCount[this.slot]--;
+                        if(this.invCount[this.slot]<=0){this.inv[this.slot]=0;}
+                        this.e.ui.updateHotbar();
+                        this.updArm();
+                        return;
+                    }
                     
                     if(lk && id && BLOCK_PROPS[id] && !BLOCK_PROPS[id].isItem) {
                         let bx = lk.pos.x+lk.norm.x, by = lk.pos.y+lk.norm.y, bz = lk.pos.z+lk.norm.z;
                         
-                        // Perfeito Pillar Jump - Encolher e verificar hitboxes
                         let pb = new THREE.Box3(
                             new THREE.Vector3(this.pos.x - this.w + 0.05, this.pos.y - this.h + 0.05, this.pos.z - this.w + 0.05), 
                             new THREE.Vector3(this.pos.x + this.w - 0.05, this.pos.y - 0.05, this.pos.z + this.w - 0.05)
@@ -1213,7 +2111,6 @@
                         let blockBox = new THREE.Box3(new THREE.Vector3(bx,by,bz), new THREE.Vector3(bx+1,by+1,bz+1));
                         
                         if(pb.intersectsBox(blockBox)) {
-                            // Pillar Jump Auto-Teleport para o topo
                             this.pos.y = by + 1.01 + this.h;
                             this.vel.y = 0;
                             this.placeBlock(bx, by, bz, id);
@@ -1233,9 +2130,61 @@
             }
 
             setup() {
-                const btnStart = document.getElementById('btn-start'); if(btnStart) btnStart.onclick = () => { this.lockF(); XboxAchv.unlock('Getting Ready'); };
-                const btnResume = document.getElementById('btn-resume'); if(btnResume) btnResume.onclick = () => this.lockF();
-                const btnRespawn = document.getElementById('btn-respawn'); if(btnRespawn) btnRespawn.onclick = () => this.respawn();
+                const startFn = () => { this.e.audio.playUI(); this.lockF(); };
+                const btnStart = document.getElementById('btn-start');
+                if(btnStart) btnStart.onclick = startFn;
+                const hintPlay = document.getElementById('hint-play');
+                if(hintPlay) hintPlay.onclick = startFn;
+
+                const btnResume = document.getElementById('btn-resume');
+                if(btnResume) btnResume.onclick = () => { this.e.audio.playUI(); this.lockF(); };
+
+                const btnRespawn = document.getElementById('btn-respawn');
+                if(btnRespawn) btnRespawn.onclick = () => { this.e.audio.playUI(); this.respawn(); };
+
+                const openAchv = () => {
+                    this.e.audio.playUI();
+                    XboxAchv.updateUI();
+                    document.getElementById('achv-modal').style.display = 'flex';
+                };
+                document.getElementById('btn-open-achv').onclick = openAchv;
+                document.getElementById('hint-achv').onclick = openAchv;
+                document.getElementById('btn-pause-achv').onclick = openAchv;
+                document.getElementById('btn-close-achv').onclick = () => {
+                    this.e.audio.playUI();
+                    document.getElementById('achv-modal').style.display = 'none';
+                };
+
+                const openHelp = () => {
+                    this.e.audio.playUI();
+                    document.getElementById('help-modal').style.display = 'flex';
+                };
+                document.getElementById('btn-how-to').onclick = openHelp;
+                document.getElementById('hint-help').onclick = openHelp;
+                document.getElementById('btn-close-help').onclick = () => {
+                    this.e.audio.playUI();
+                    document.getElementById('help-modal').style.display = 'none';
+                };
+
+                document.getElementById('btn-toggle-time').onclick = () => {
+                    this.e.audio.playUI();
+                    this.e.time += 75;
+                    showToast("🌗 Ciclo Dia/Noite Alternado!");
+                    this.lockF();
+                };
+
+                document.getElementById('btn-spawn-creeper').onclick = () => {
+                    this.e.audio.playUI();
+                    this.e.mobs.spawn(true);
+                    showToast("💥 Creeper e Zombie invocados nas redondezas!");
+                    this.lockF();
+                };
+
+                document.getElementById('btn-main-menu').onclick = () => {
+                    this.e.audio.playUI();
+                    document.getElementById('pause-menu').style.display = 'none';
+                    document.getElementById('main-menu').style.display = 'flex';
+                };
                 
                 document.addEventListener('pointerlockchange', ()=>{ 
                     if(document.pointerLockElement===document.body) { this.lock=true; } 
@@ -1256,7 +2205,7 @@
                     this.performAction(e.button);
                 });
                 document.addEventListener('mouseup', e=>{ if(e.button===0){ this.isM=false; this.mTime=0; let m=document.getElementById('mining-bar-container'); if(m) m.style.display='none'; } });
-                document.addEventListener('mousemove', e=>{ if(!this.lock||this.dead)return; this.yaw-=e.movementX*0.002; this.pitch-=e.movementY*0.002; this.pitch=Math.max(-1.5,Math.min(1.5,this.pitch)); });
+                document.addEventListener('mousemove', e=>{ if(!this.lock||this.dead)return; this.yaw-=e.movementX*0.0022; this.pitch-=e.movementY*0.0022; this.pitch=Math.max(-1.52,Math.min(1.52,this.pitch)); });
                 
                 const sk = (c,v)=>{ 
                     if(c==='KeyW')this.keys.w=v; if(c==='KeyS')this.keys.s=v; if(c==='KeyA')this.keys.a=v; if(c==='KeyD')this.keys.d=v; if(c==='Space')this.keys.space=v; if(c==='ShiftLeft')this.keys.shift=v; if(c==='KeyC')this.keys.c=v; 
@@ -1275,8 +2224,17 @@
                             if(this.lock){ 
                                 this.lock=false; try{document.exitPointerLock();}catch(e){} 
                                 let hud=document.getElementById('hud'); if(hud) hud.style.display='none'; 
-                                if(inv) { inv.style.display='flex'; this.e.ui.renderCraftingMenu(); XboxAchv.unlock('Taking Inventory'); }
-                            } else if(inv && inv.style.display==='flex') { inv.style.display='none'; this.lockF(); } 
+                                if(inv) {
+                                    inv.style.display='flex';
+                                    this.e.audio.playUI();
+                                    this.e.ui.renderCraftingMenu();
+                                    XboxAchv.unlock('Taking Inventory');
+                                }
+                            } else if(inv && inv.style.display==='flex') {
+                                this.e.audio.playUI();
+                                inv.style.display='none';
+                                this.lockF();
+                            } 
                         } 
                         if(c.startsWith('Digit')) { let n=parseInt(c.replace('Digit','')); if(n>=1&&n<=9){ this.slot=n-1; this.e.ui.updateHotbar(); this.updArm(); } } 
                     } 
@@ -1287,11 +2245,20 @@
 
             chkCol(box) { 
                 let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z); 
-                for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){ let v=this.e.world.getG(x,y,z); if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true; } return false; 
+                for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){
+                    let v=this.e.world.getG(x,y,z);
+                    if(v === BLOCKS.CACTUS && this.cactusTimer <= 0) {
+                        this.dmg(1);
+                        this.cactusTimer = 0.8;
+                    }
+                    if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true;
+                }
+                return false; 
             }
 
             update(dt) {
                 if(!this.lock&&!this.dead) return; 
+                if(this.cactusTimer > 0) this.cactusTimer -= dt;
                 if(this.dead) { this.vel.y-=40*dt; this.pos.y+=this.vel.y*dt; if(this.pos.y<0)this.pos.y=0; this.cam.position.copy(this.pos); this.cam.rotation.set(this.pitch,this.yaw,0,'YXZ'); return; }
                 
                 this.vel.x-=this.vel.x*12*dt; this.vel.z-=this.vel.z*12*dt; 
@@ -1312,7 +2279,7 @@
                     this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w)); 
                     if(this.chkCol(this.box)){ 
                         this.pos[ax]-=this.vel[ax]*dt; 
-                        if(ax==='y'&&this.vel.y<0){ if(pVY < -22 && !inW) { let dg = Math.floor((-pVY-20)/2); if(dg>0) this.dmg(dg); } this.onG=true; } 
+                        if(ax==='y'&&this.vel.y<0){ if(pVY < -23 && !inW) { let dg = Math.floor((-pVY-21)/2); if(dg>0) this.dmg(dg); } this.onG=true; } 
                         this.vel[ax]=0; 
                     } 
                 };
@@ -1328,7 +2295,6 @@
                 else { this.sTime=0; this.fpArm.position.z=this.aO.z; this.fpArm.rotation.x=Math.PI/4; } 
                 this.fpArm.position.y+=(bob*0.6)+(Math.sin(this.e.time*2)*0.02); this.fpArm.position.x+=(Math.cos(this.e.time*1.5)*0.015);
                 
-                // Continuous Mining Raycast update
                 let cd=new THREE.Vector3(); this.cam.getWorldDirection(cd);
                 this.lk = this.raycast(this.cam.position, cd, 6);
                 
@@ -1340,12 +2306,31 @@
                         let pr=BLOCK_PROPS[this.lk.block], hd=pr.hardness||1, sp=1, hid=this.inv[this.slot], hp=BLOCK_PROPS[hid]; 
                         if(hp&&hp.isItem){ if(hp.toolType===pr.tool)sp=hp.multiplier; else if(hp.toolType==='sword')sp=1.5; } 
                         this.mTime+=dt*sp; this.sTime=0.5; 
+
+                        this.stepSoundTimer += dt;
+                        if(this.stepSoundTimer >= 0.22) {
+                            this.stepSoundTimer = 0;
+                            this.e.audio.playMineStep(pr.sound);
+                        }
+
                         if(b) b.style.width=`${Math.min((this.mTime/hd)*100,100)}%`; if(c) c.style.display='block'; 
                         if(this.mTime>=hd) { 
+                            let minedBlock = this.lk.block;
                             this.e.audio.playDig(pr.sound); 
-                            if(this.e.parts) this.e.parts.spawn(this.lk.pos, this.lk.block);
+                            if(this.e.parts) this.e.parts.spawn(this.lk.pos, minedBlock);
                             this.e.world.setG(this.lk.pos.x,this.lk.pos.y,this.lk.pos.z,0); 
-                            if(this.e.drops) this.e.drops.spawn(this.lk.pos, this.lk.block);
+
+                            if(minedBlock === BLOCKS.CHEST) {
+                                this.openStarterChest();
+                            } else if(this.e.drops) {
+                                this.e.drops.spawn(this.lk.pos, minedBlock);
+                            }
+
+                            if(minedBlock === BLOCKS.WOOD) {
+                                XboxAchv.unlock('Getting Wood');
+                                this.e.tutorial.completeStep(2);
+                            }
+
                             this.mTime=0; if(c) c.style.display='none'; 
                         } 
                     } else { this.mTime=0; if(c) c.style.display='none'; }
@@ -1354,9 +2339,12 @@
 
             updArm() {
                 let id=this.inv[this.slot]; if(this.heldItem) { this.fpArm.remove(this.heldItem); this.heldItem = null; }
-                if(!id||id===0) return; let tMap = this.e.atlas.map[id]; if(!tMap) return;
-                let ti=tMap[0], ts=1/16, tu=(ti%16)*ts, tv=1-(Math.floor(ti/16)*ts)-ts; let isItem = BLOCK_PROPS[id]&&BLOCK_PROPS[id].isItem;
-                let geo = isItem ? new THREE.PlaneGeometry(0.5,0.5) : new THREE.BoxGeometry(0.2,0.2,0.2); this.heldItem = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({map:this.e.atlas.tex, transparent:true, alphaTest:0.1, side:THREE.DoubleSide}));
+                if(!id||id===0) return; 
+                let tMap = this.e.atlas.getMap(id);
+                let ti=tMap[0], ts=1/16, tu=(ti%16)*ts, tv=1-(Math.floor(ti/16)*ts)-ts; 
+                let isItem = Boolean(BLOCK_PROPS[id]&&BLOCK_PROPS[id].isItem);
+                let geo = isItem ? new THREE.PlaneGeometry(0.5,0.5) : new THREE.BoxGeometry(0.24,0.24,0.24); 
+                this.heldItem = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({map:this.e.atlas.tex, transparent:true, alphaTest:0.1, side:THREE.DoubleSide}));
                 if(isItem) { this.heldItem.position.set(-0.1, 0.3, -0.1); this.heldItem.rotation.set(0, Math.PI/4, 0); } else { this.heldItem.position.set(-0.1, 0.2, -0.1); }
                 let uH=this.heldItem.geometry.attributes.uv; for(let i=0;i<uH.count;i++)uH.setXY(i,tu+(uH.getX(i)*ts),tv+(uH.getY(i)*ts)); uH.needsUpdate=true; this.fpArm.add(this.heldItem);
             }
@@ -1364,36 +2352,63 @@
 
         class Engine {
             constructor() {
-                this.time = 0; this.clock = new THREE.Clock(); this.skyC = { d: new THREE.Color(0x87CEEB), s: new THREE.Color(0x8B5F8F), n: new THREE.Color(0x050514) };
-                this.scene = new THREE.Scene(); this.scene.background = this.skyC.d.clone(); this.scene.fog = new THREE.FogExp2(this.skyC.d.clone(), 0.015);
-                this.renderer = new THREE.WebGLRenderer({ antialias: false }); this.renderer.setSize(window.innerWidth, window.innerHeight); this.renderer.shadowMap.enabled = true; this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; document.body.appendChild(this.renderer.domElement);
+                this.time = 15; 
+                this.clock = new THREE.Clock(); 
+                this.skyC = { d: new THREE.Color(0x78A7FF), s: new THREE.Color(0xd97757), n: new THREE.Color(0x050716) };
+                this.scene = new THREE.Scene(); 
+                this.scene.background = this.skyC.d.clone(); 
+                this.scene.fog = new THREE.FogExp2(0x78A7FF, 0.014);
                 
-                this.scene.add(new THREE.AmbientLight(0xffffff, 0.4)); 
-                this.sun = new THREE.DirectionalLight(0xffeedd, 1.2); 
+                this.renderer = new THREE.WebGLRenderer({ antialias: false }); 
+                this.renderer.setSize(window.innerWidth, window.innerHeight); 
+                this.renderer.shadowMap.enabled = true; 
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
+                document.body.appendChild(this.renderer.domElement);
+                
+                this.ambLight = new THREE.AmbientLight(0xffffff, 0.52);
+                this.scene.add(this.ambLight); 
+                
+                this.sun = new THREE.DirectionalLight(0xfff4e0, 1.15); 
                 this.sun.castShadow=true; this.sun.shadow.mapSize.width=1024; this.sun.shadow.mapSize.height=1024; 
-                this.sun.shadow.camera.near=0.5; this.sun.shadow.camera.far=100; this.sun.shadow.camera.left=-30; 
-                this.sun.shadow.camera.right=30; this.sun.shadow.camera.top=30; this.sun.shadow.camera.bottom=-30; 
+                this.sun.shadow.camera.near=0.5; this.sun.shadow.camera.far=110; this.sun.shadow.camera.left=-35; 
+                this.sun.shadow.camera.right=35; this.sun.shadow.camera.top=35; this.sun.shadow.camera.bottom=-35; 
                 this.scene.add(this.sun); this.scene.add(this.sun.target); 
                 
-                this.cloudsGeo = new THREE.PlaneGeometry(800, 800); this.cloudsMat = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.8, side: THREE.DoubleSide}); this.clouds = new THREE.Mesh(this.cloudsGeo, this.cloudsMat); this.clouds.rotation.x = Math.PI / 2; this.clouds.position.y = 100; this.scene.add(this.clouds);
+                this.cloudsGeo = new THREE.PlaneGeometry(800, 800); 
+                this.cloudsMat = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.78, side: THREE.DoubleSide}); 
+                this.clouds = new THREE.Mesh(this.cloudsGeo, this.cloudsMat); 
+                this.clouds.rotation.x = Math.PI / 2; this.clouds.position.y = 95; 
+                this.scene.add(this.clouds);
+
+                const starGeo = new THREE.BufferGeometry();
+                const starVerts = [];
+                for(let i=0; i<350; i++) {
+                    let theta = Math.random() * Math.PI * 2;
+                    let phi = Math.acos(Math.random() * 0.85 + 0.15);
+                    let r = 260;
+                    starVerts.push(r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
+                }
+                starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
+                this.stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 2.2, transparent: true, opacity: 0 }));
+                this.scene.add(this.stars);
                 
-                this.torchLight = new THREE.PointLight(0xffaa00, 0, 15); this.scene.add(this.torchLight);
+                this.torchLight = new THREE.PointLight(0xffaa33, 0, 16); 
+                this.scene.add(this.torchLight);
 
                 window.App = this;
+                updateLoading(25, "A Sintetizar Texturas 16x16 e Sons...");
+                this.tutorial = new TutorialManager();
                 this.audio = new AudioManager(); 
                 this.atlas = new AtlasGen(); 
-                
-                this.matS = new THREE.MeshStandardMaterial({ map: this.atlas.tex, vertexColors: true, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide, roughness: 0.8 });
-                this.matW = new THREE.MeshStandardMaterial({ map: this.atlas.tex, vertexColors: true, color: 0x3399ff, transparent: true, opacity: 0.85, roughness: 0.05, metalness: 0.8 });
-                this.matW.onBeforeCompile = (sh) => {
-                    sh.uniforms.uT = { value: 0 }; this.cUW = sh.uniforms;
-                    sh.vertexShader = 'uniform float uT;\n' + sh.vertexShader;
-                    sh.vertexShader = sh.vertexShader.replace('#include <begin_vertex>', `
-                        #include <begin_vertex>
-                        transformed.y += sin(position.x * 2.0 + uT * 3.0) * 0.1 + cos(position.z * 2.0 + uT * 2.0) * 0.1;
-                    `);
-                };
+                XboxAchv.updateUI();
 
+                let sp = document.getElementById('splash-text');
+                if(sp) sp.innerText = SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)];
+                
+                this.matS = new THREE.MeshStandardMaterial({ map: this.atlas.tex, vertexColors: true, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide, roughness: 0.85 });
+                this.matW = new THREE.MeshStandardMaterial({ map: this.atlas.tex, vertexColors: true, color: 0x3399ff, transparent: true, opacity: 0.82, roughness: 0.1, metalness: 0.6 });
+
+                updateLoading(60, "A Construir Forte Inicial e Biomas...");
                 this.world = new WorldManager(this); 
                 this.player = new Player(this);
                 this.ui = new UIManager(this);
@@ -1401,56 +2416,126 @@
                 this.drops = new DroppedItems(this);
                 this.parts = new Particles(this);
                 
-                setTimeout(() => { 
-                    this.world.update(this.player.pos); 
-                    this.initClouds(); 
-                }, 50);
+                for(let cx=-1; cx<=1; cx++) {
+                    for(let cz=-1; cz<=1; cz++) {
+                        let k = this.world.k(cx, cz);
+                        let nc = new Chunk(cx, cz, this);
+                        nc.generate();
+                        this.world.chunks.set(k, nc);
+                    }
+                }
+                this.world.procTrees();
+                this.initClouds();
 
-                window.addEventListener('resize', ()=>{ this.player.cam.aspect=window.innerWidth/window.innerHeight; this.player.cam.updateProjectionMatrix(); this.renderer.setSize(window.innerWidth,window.innerHeight); });
+                window.addEventListener('resize', ()=>{ 
+                    this.player.cam.aspect=window.innerWidth/window.innerHeight; 
+                    this.player.cam.updateProjectionMatrix(); 
+                    this.renderer.setSize(window.innerWidth,window.innerHeight); 
+                });
                 
-                updateLoading(100, "MUNDO CARREGADO"); 
+                updateLoading(100, "MUNDO XBOX 360 PRONTO!"); 
                 setTimeout(()=>{ 
-                    let ls=document.getElementById('loading-screen'); if(ls){ ls.style.opacity='0'; setTimeout(()=>{ ls.style.display='none'; let mm=document.getElementById('main-menu'); if(mm) mm.style.display='flex'; },800); } 
-                }, 800);
+                    let ls=document.getElementById('loading-screen'); 
+                    if(ls){ 
+                        ls.style.opacity='0'; 
+                        setTimeout(()=>{ 
+                            ls.style.display='none'; 
+                            let mm=document.getElementById('main-menu'); 
+                            if(mm) mm.style.display='flex'; 
+                        }, 550); 
+                    } 
+                }, 450);
                 
                 this.renderer.setAnimationLoop(() => this.loop());
             }
 
             initClouds() {
                 let cv = document.createElement('canvas'); cv.width=128; cv.height=128; let ctx=cv.getContext('2d'); ctx.fillStyle='rgba(255,255,255,0)'; ctx.fillRect(0,0,128,128); ctx.fillStyle='rgba(255,255,255,1)';
-                for(let i=0;i<100;i++){ let cx=Math.random()*128, cy=Math.random()*128, w=Math.random()*20+10, h=Math.random()*10+5; ctx.fillRect(cx,cy,w,h); }
+                for(let i=0;i<90;i++){ let cx=Math.random()*128, cy=Math.random()*128, w=Math.random()*22+10, h=Math.random()*12+5; ctx.fillRect(cx,cy,w,h); }
                 let tex = new THREE.CanvasTexture(cv); tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping; tex.magFilter = THREE.NearestFilter; this.cloudsMat.map = tex; this.cloudsMat.needsUpdate = true;
             }
 
             loop() {
-                let dt = Math.min(this.clock.getDelta(), 0.05); this.time += dt; let dC = (this.time*0.02)%(Math.PI*2);
-                
-                if(this.cUW) this.cUW.uT.value = this.time;
-                this.player.update(dt); this.world.update(this.player.pos); 
-                this.mobs.update(dt); this.drops.update(dt); this.parts.update(dt);
-                
-                if(this.cloudsMat.map) { this.cloudsMat.map.offset.x += dt * 0.005; this.cloudsMat.map.offset.y += dt * 0.002; this.clouds.position.set(this.player.pos.x, 100, this.player.pos.z); }
-                
-                let sH = Math.sin(dC); this.isDay = sH > 0;
-                if(this.sun) { this.sun.position.set(this.player.pos.x+Math.cos(dC)*100, sH*100, this.player.pos.z+Math.sin(dC)*100); this.sun.target.position.copy(this.player.pos); this.sun.target.updateMatrixWorld(); }
-                if(this.isDay) { let t=Math.min(sH*3,1); this.scene.background.lerpColors(this.skyC.s,this.skyC.d,t); if(this.sun)this.sun.intensity=Math.max(0.1,sH*1.5); this.scene.fog.color.copy(this.scene.background); this.cloudsMat.color.setHex(0xffffff); }
-                else { let t=Math.max((sH+0.3)*3,0); this.scene.background.lerpColors(this.skyC.n,this.skyC.s,t); if(this.sun)this.sun.intensity=0; this.scene.fog.color.copy(this.scene.background); this.cloudsMat.color.setHex(0x555555); }
-                
-                if (this.player.inv[this.player.slot] === BLOCKS.TORCH) { this.torchLight.intensity = 1.2; this.torchLight.position.copy(this.player.pos); } else { this.torchLight.intensity = 0; }
+                let dt = Math.min(this.clock.getDelta(), 0.05); 
+                this.time += dt; 
+                let dC = (this.time * 0.02) % (Math.PI * 2);
 
-                if(Math.floor(this.time*10)%3===0 && this.player.lock) { 
-                    let fE=document.getElementById('fps-counter'); if(fE)fE.innerText=`FPS: ${Math.round(1/dt)}`; 
-                    let pE=document.getElementById('pos-counter'); if(pE)pE.innerText=`XYZ: ${this.player.pos.x.toFixed(0)} / ${this.player.pos.y.toFixed(0)} / ${this.player.pos.z.toFixed(0)}`; 
+                const mainMenuEl = document.getElementById('main-menu');
+                if (!this.player.lock && mainMenuEl && mainMenuEl.style.display === 'flex') {
+                    this.player.cam.position.set(8.5 + Math.cos(this.time * 0.15) * 14, CONFIG.WATER_LEVEL + 14, 8.5 + Math.sin(this.time * 0.15) * 14);
+                    this.player.cam.lookAt(8.5, CONFIG.WATER_LEVEL + 5, 6.5);
+                } else {
+                    this.player.update(dt);
+                }
+
+                this.world.update(this.player.pos); 
+                this.mobs.update(dt); 
+                this.drops.update(dt); 
+                this.parts.update(dt);
+                
+                if(this.cloudsMat.map) { 
+                    this.cloudsMat.map.offset.x += dt * 0.004; 
+                    this.cloudsMat.map.offset.y += dt * 0.002; 
+                    this.clouds.position.set(this.player.pos.x, 95, this.player.pos.z); 
+                }
+                this.stars.position.set(this.player.pos.x, 0, this.player.pos.z);
+                
+                let sH = Math.sin(dC); 
+                this.isDay = sH > -0.05;
+                if(this.sun) { 
+                    this.sun.position.set(this.player.pos.x+Math.cos(dC)*100, sH*100, this.player.pos.z+Math.sin(dC)*100); 
+                    this.sun.target.position.copy(this.player.pos); 
+                    this.sun.target.updateMatrixWorld(); 
+                }
+                if(this.isDay) { 
+                    let t=Math.min(Math.max(sH*3,0),1); 
+                    this.scene.background.lerpColors(this.skyC.s,this.skyC.d,t); 
+                    if(this.sun) this.sun.intensity=Math.max(0.2,sH*1.3); 
+                    this.ambLight.intensity = 0.52;
+                    this.scene.fog.color.copy(this.scene.background); 
+                    this.cloudsMat.color.setHex(0xffffff); 
+                    this.stars.material.opacity = 0;
+                } else { 
+                    let t=Math.max((sH+0.35)*3,0); 
+                    this.scene.background.lerpColors(this.skyC.n,this.skyC.s,t); 
+                    if(this.sun) this.sun.intensity=0.05; 
+                    this.ambLight.intensity = 0.25;
+                    this.scene.fog.color.copy(this.scene.background); 
+                    this.cloudsMat.color.setHex(0x444455); 
+                    this.stars.material.opacity = Math.min(1, -sH * 1.5);
                 }
                 
-                let vig = document.getElementById('vignette'); if(vig) vig.style.display = (this.player.pos.y < CONFIG.WATER_LEVEL || !this.isDay) ? 'block' : 'none';
+                if (this.player.inv[this.player.slot] === BLOCKS.TORCH) { 
+                    this.torchLight.intensity = 1.4; 
+                    this.torchLight.position.copy(this.player.pos); 
+                } else { 
+                    this.torchLight.intensity = 0; 
+                }
+
+                if(Math.floor(this.time*10)%3===0 && this.player.lock) { 
+                    let fE=document.getElementById('fps-counter'); if(fE)fE.innerText=`FPS: ${Math.round(1/Math.max(dt,0.001))}`; 
+                    let pE=document.getElementById('pos-counter'); if(pE)pE.innerText=`XYZ: ${this.player.pos.x.toFixed(0)} / ${this.player.pos.y.toFixed(0)} / ${this.player.pos.z.toFixed(0)}`; 
+                    
+                    let curBiome = Chunk.getBiomeAt(Math.floor(this.player.pos.x), Math.floor(this.player.pos.z));
+                    let bE=document.getElementById('biome-counter'); if(bE) bE.innerText = `Bioma: ${curBiome}`;
+                    let tE=document.getElementById('time-counter'); if(tE) tE.innerText = `Hora: ${this.isDay ? 'Dia ☀️' : 'Noite 🌙'} | [E] Crafting`;
+
+                    this.player.visitedBiomes.add(curBiome);
+                    if(this.player.visitedBiomes.size >= 3) {
+                        XboxAchv.unlock('Adventurer');
+                    }
+                }
+                
+                let vig = document.getElementById('vignette'); 
+                if(vig) vig.style.display = (this.player.pos.y < CONFIG.WATER_LEVEL || !this.isDay) ? 'block' : 'none';
+                
                 this.renderer.render(this.scene, this.player.cam);
             }
         }
 
-        // INIT
-        if (document.readyState === 'complete' || document.readyState === 'interactive') { setTimeout(() => new Engine(), 10); } 
-        else { document.addEventListener('DOMContentLoaded', () => new Engine()); }
+        window.onload = function () {
+            new Engine();
+        };
     </script>
 </body>
 </html>
