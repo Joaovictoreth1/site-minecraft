@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -648,16 +647,11 @@
                 osc.stop(t + duration);
             }
 
-            playUI() {
-                this.playTone(740, 'sine', 0.06, 0.15, 880);
-            }
-
+            playUI() { this.playTone(740, 'sine', 0.06, 0.15, 880); }
             playCraft() {
                 this.playNoise('bandpass', 1100, 0.12, 0.25, true);
                 this.playTone(220, 'triangle', 0.1, 0.25, 440);
-                setTimeout(() => {
-                    this.playTone(330, 'triangle', 0.12, 0.25, 580);
-                }, 75);
+                setTimeout(() => { this.playTone(330, 'triangle', 0.12, 0.25, 580); }, 75);
             }
 
             playChestOpen() {
@@ -722,24 +716,16 @@
                 this.playTone(160, 'sawtooth', 0.15, 0.28, 70);
             }
 
-            playPop() {
-                this.playTone(480, 'sine', 0.07, 0.22, 880);
-            }
-
+            playPop() { this.playTone(480, 'sine', 0.07, 0.22, 880); }
             playZombie() {
                 this.playTone(95, 'sawtooth', 0.32, 0.22, 65);
                 this.playNoise('lowpass', 350, 0.25, 0.15);
             }
-
             playPig() {
                 this.playTone(210, 'triangle', 0.14, 0.18, 290);
                 setTimeout(() => this.playTone(190, 'triangle', 0.12, 0.15, 250), 90);
             }
-
-            playFuse() {
-                this.playNoise('highpass', 2600, 1.2, 0.32, false);
-            }
-
+            playFuse() { this.playNoise('highpass', 2600, 1.2, 0.32, false); }
             playExplosion() {
                 this.playNoise('lowpass', 380, 0.85, 0.65, true);
                 this.playTone(95, 'sawtooth', 0.6, 0.45, 28);
@@ -749,18 +735,12 @@
                 if (!this.ctx) return;
                 this.resume();
                 const t = this.ctx.currentTime;
-
                 const popOsc = this.ctx.createOscillator();
                 const popGain = this.ctx.createGain();
-                popOsc.type = 'sine';
-                popOsc.frequency.setValueAtTime(340, t);
-                popOsc.frequency.exponentialRampToValueAtTime(680, t + 0.08);
-                popGain.gain.setValueAtTime(0.25, t);
-                popGain.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
-                popOsc.connect(popGain);
-                popGain.connect(this.ctx.destination);
-                popOsc.start(t);
-                popOsc.stop(t + 0.1);
+                popOsc.type = 'sine'; popOsc.frequency.setValueAtTime(340, t); popOsc.frequency.exponentialRampToValueAtTime(680, t + 0.08);
+                popGain.gain.setValueAtTime(0.25, t); popGain.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+                popOsc.connect(popGain); popGain.connect(this.ctx.destination);
+                popOsc.start(t); popOsc.stop(t + 0.1);
 
                 const notes = [
                     { f: 987.77, start: 0.07, dur: 0.38 },
@@ -770,15 +750,10 @@
                 notes.forEach(n => {
                     const osc = this.ctx.createOscillator();
                     const g = this.ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(n.f, t + n.start);
-                    g.gain.setValueAtTime(0.001, t + n.start);
-                    g.gain.linearRampToValueAtTime(0.22, t + n.start + 0.02);
-                    g.gain.exponentialRampToValueAtTime(0.001, t + n.start + n.dur);
-                    osc.connect(g);
-                    g.connect(this.ctx.destination);
-                    osc.start(t + n.start);
-                    osc.stop(t + n.start + n.dur);
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(n.f, t + n.start);
+                    g.gain.setValueAtTime(0.001, t + n.start); g.gain.linearRampToValueAtTime(0.22, t + n.start + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + n.start + n.dur);
+                    osc.connect(g); g.connect(this.ctx.destination);
+                    osc.start(t + n.start); osc.stop(t + n.start + n.dur);
                 });
             }
         }
@@ -892,9 +867,7 @@
                 this.gen(); 
             }
 
-            getMap(id) {
-                return this.map[id] || this.map[BLOCKS.STONE] || [4, 4, 4, 4, 4, 4];
-            }
+            getMap(id) { return this.map[id] || this.map[BLOCKS.STONE] || [4, 4, 4, 4, 4, 4]; }
             
             drawPixelArt(cx, cy, s, art, pal) { 
                 if(!art || !Array.isArray(art)) return; 
@@ -933,17 +906,17 @@
                         'C':'#b47828','c':'#8f5b18','K':'#18181b','Y':'#fde047'
                     };
                     let art = [];
-                    if(t==='pickaxe') art = ["  wiiiiiiiiw    ", " wjj      jjw   ", " wjw      wsw   ", "  w       sw    ", "         sw     ", "        sw      ", "       sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                "];
+                    if(t==='pickaxe') art = ["  wiiiiiiiiw    ", " wjj      jjw   ", " wjw      wsw   ", "  w        sw   ", "         sw     ", "        sw      ", "       sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                "];
                     else if(t==='axe') art = ["  wjjjw         ", "  wjsjjw        ", "  wjssjwsw      ", "   wjw sw       ", "    w  sw       ", "      sw        ", "     sw         ", "    sw          ", "   sw           ", "  sw            ", "  w             ", "                ", "                ", "                ", "                ", "                "];
-                    else if(t==='sword') art = ["             w  ", "            wjw ", "           wjsw ", "          wjsw  ", "         wjsw   ", "        wjsw    ", "       wjsw     ", "      wjsw      ", "     wjsw       ", "    wjsw        ", "  s wjsw        ", " sws w          ", "  ws            ", "   w            ", "                ", "                "];
+                    else if(t==='sword') art = ["             w  ", "            wjw ", "            wjsw ", "          wjsw  ", "         wjsw   ", "        wjsw    ", "       wjsw     ", "      wjsw      ", "     wjsw       ", "    wjsw        ", "  s wjsw        ", " sws w          ", "  ws            ", "   w            ", "                ", "                "];
                     else if(t==='stick') art = ["                ", "       s        ", "      sjs       ", "      js        ", "     sjs        ", "     js         ", "    sjs         ", "    js          ", "   sjs          ", "   js           ", "  sjs           ", "  js            ", "   s            ", "                ", "                ", "                "];
-                    else if(t==='apple') art = ["                ", "       j        ", "      j g       ", "     rrrr       ", "    rrrrrr      ", "   rrwrrrrr     ", "   rwrrrrrr     ", "   rrrrrrrr     ", "   rrrrrrrr     ", "    rrrrrr      ", "     rrrr       ", "                ", "                ", "                ", "                ", "                "];
+                    else if(t==='apple') art = ["                ", "       j        ", "      j g       ", "      rrrr      ", "    rrrrrr      ", "   rrwrrrrr     ", "   rwrrrrrr     ", "   rrrrrrrr     ", "   rrrrrrrr     ", "    rrrrrr      ", "     rrrr       ", "                ", "                ", "                ", "                ", "                "];
                     else if(t==='rotten_flesh') art = ["                ", "                ", "      FFFF      ", "     FZFFZF     ", "     FFFFFF     ", "    ZFZZFZF     ", "   FFFFFFFZ     ", "   ZFFFFFFZ     ", "    ZFZZFF      ", "     FFFF       ", "                ", "                ", "                ", "                ", "                "];
                     else if(t==='red_flower') art = ["                ", "                ", "      rrrr      ", "     rrrrrr     ", "     rryyrr     ", "      rrrr      ", "       gg       ", "      gggg      ", "     gg gg      ", "       gg       ", "       gg       ", "       gg       ", "      gggg      ", "       gg       ", "       gg       ", "      gggg      "];
                     else if(t==='yellow_flower') art = ["                ", "                ", "      yyyy      ", "     yyyyyy     ", "     yyooyy     ", "      yyyy      ", "       gg       ", "      gggg      ", "     gg gg      ", "       gg       ", "       gg       ", "       gg       ", "      gggg      ", "       gg       ", "       gg       ", "      gggg      "];
                     else if(t==='crafting_table') art = ["CCCCCCCCCCCCCCCC", "CsssssiiissssssC", "CsssssiiissssssC", "CsswwsssssssswsC", "CsswwsssssssswsC", "CKKKKKKKKKKKKKKC", "CcjsssssxxxsxxxC", "CcjssssxxsxxsxxC", "CcjssssxxsxxsssC", "CcjssssssssssssC", "CcjssssssssssssC", "CcjssxxxssssssxC", "CcjssxxxssssxssC", "CcjssxxxsssxxssC", "CCCCCCCCCCCCCCCC", "KKKKKKKKKKKKKKKK"];
                     else if(t==='bookshelf') art = ["CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "xrxxyxxyyxxbxbxx", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "xxbxxrxxyxxybxyx", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC", "CCCCCCCCCCCCCCCC"];
-                    else if(t==='torch') art = ["                ", "                ", "                ", "                ", "       t        ", "      tot       ", "      tot       ", "      sjs       ", "      sjs       ", "      sjs       ", "      sjs       ", "      sjs       ", "       s        ", "                ", "                ", "                "];
+                    else if(t==='torch') art = ["                ", "                ", "                ", "                ", "        t       ", "       tot      ", "       tot      ", "       sjs      ", "       sjs      ", "       sjs      ", "       sjs      ", "       sjs      ", "        s       ", "                ", "                ", "                "];
                     else if(t==='wood_side') art = [
                         "TvTvRvTvTvRvTvTv", "vTvTvRvTvTvRvTvT", "TvRvTvTvRvTvTvRv", "vRvTvTvRvTvTvRvT", 
                         "TvTvRvTvTvRvTvTv", "vTvRvTvTvTvRvTvT", "TvRvTvTvRvTvTvRv", "vTvTvRvTvTvRvTvT", 
@@ -1179,7 +1152,11 @@
         }
 
         class DroppedItems { 
-            constructor(e) { this.e = e; this.items = []; } 
+            constructor(e) { 
+                this.e = e; 
+                this.items = []; 
+                this._tempVec = new THREE.Vector3(); 
+            } 
             getDrop(id) { 
                 if(id === BLOCKS.STONE) return BLOCKS.COBBLESTONE; 
                 if(id === BLOCKS.GRASS) return BLOCKS.DIRT; 
@@ -1195,7 +1172,7 @@
                 this.e.atlas.applyUV(geo, tIdx); 
                 let mat = new THREE.MeshStandardMaterial({ map: this.e.atlas.tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide }); 
                 let mesh = new THREE.Mesh(geo, mat); mesh.castShadow = true; 
-                let spawnPos = pos.clone().add(new THREE.Vector3(0.5, 0.5, 0.5)); 
+                let spawnPos = pos.clone().add(this._tempVec.set(0.5, 0.5, 0.5)); 
                 mesh.position.copy(spawnPos); 
                 this.e.scene.add(mesh); 
                 this.items.push({ mesh: mesh, id: id, pos: spawnPos, vel: new THREE.Vector3((Math.random()-0.5)*3, 4, (Math.random()-0.5)*3), life: 300, bob: Math.random() * 6 }); 
@@ -1234,12 +1211,16 @@
                 this.lL = new THREE.Mesh(new THREE.BoxGeometry(0.25,0.75,0.25), mP); this.e.atlas.applyUV(this.lL.geometry, this.e.atlas.zPants); this.lL.position.set(0.125,-1.125,0); this.group.add(this.lL);
                 this.lR = new THREE.Mesh(new THREE.BoxGeometry(0.25,0.75,0.25), mP); this.e.atlas.applyUV(this.lR.geometry, this.e.atlas.zPants); this.lR.position.set(-0.125,-1.125,0); this.group.add(this.lR);
                 this.group.children.forEach(c => { c.castShadow=true; }); this.e.scene.add(this.group);
+                
+                this._tempDir = new THREE.Vector3();
+                this._tempMin = new THREE.Vector3();
+                this._tempMax = new THREE.Vector3();
             }
             chkCol(box) { let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z); for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){ let v=this.e.world.getG(x,y,z); if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true; } return false; }
             dmg(a) { 
                 if(this.dead) return; this.hp-=a; this.e.audio.playZombie();
                 this.group.children.forEach(c => c.material.color.setHex(0xff7777));
-                let knock = this.e.player.cam.getWorldDirection(new THREE.Vector3()); this.vel.x = knock.x * 7; this.vel.z = knock.z * 7; this.vel.y = 5;
+                this.e.player.cam.getWorldDirection(this._tempDir); this.vel.x = this._tempDir.x * 7; this.vel.z = this._tempDir.z * 7; this.vel.y = 5;
                 setTimeout(()=>{ if(!this.dead) this.group.children.forEach(c => c.material.color.setHex(0xffffff)); }, 200);
                 if(this.hp<=0) { 
                     this.dead=true; this.group.rotation.z = Math.PI/2; this.group.position.y -= 0.5; 
@@ -1249,10 +1230,33 @@
                 }
             }
             update(dt) {
-                if(this.dead) return; this.life += dt; let dP = this.e.player.pos.clone().sub(this.pos); let dist = dP.length(); this.vel.y -= 30 * dt;
-                if(dist < 18 && dist > 1.0) { dP.y = 0; dP.normalize(); this.vel.x += (dP.x * 2.6 - this.vel.x) * 5 * dt; this.vel.z += (dP.z * 2.6 - this.vel.z) * 5 * dt; this.group.rotation.y = Math.atan2(dP.x, dP.z); } else { this.vel.x *= 0.9; this.vel.z *= 0.9; }
+                if(this.dead) return; this.life += dt; 
+                this._tempDir.copy(this.e.player.pos).sub(this.pos); 
+                let dist = this._tempDir.length(); this.vel.y -= 30 * dt;
+                
+                if(dist < 18 && dist > 1.0) { 
+                    this._tempDir.y = 0; this._tempDir.normalize(); 
+                    this.vel.x += (this._tempDir.x * 2.6 - this.vel.x) * 5 * dt; 
+                    this.vel.z += (this._tempDir.z * 2.6 - this.vel.z) * 5 * dt; 
+                    this.group.rotation.y = Math.atan2(this._tempDir.x, this._tempDir.z); 
+                } else { 
+                    this.vel.x *= 0.9; this.vel.z *= 0.9; 
+                }
+                
                 if(dist < 1.3 && this.life > 1.0) { this.e.player.dmg(2); this.life = 0; }
-                const rA=(ax)=>{ this.pos[ax]+=this.vel[ax]*dt; this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w)); if(this.chkCol(this.box)){ this.pos[ax]-=this.vel[ax]*dt; if(ax==='y'&&this.vel.y<0){ this.vel.y=0; if(dist<18 && (Math.abs(this.vel.x)<0.2 || Math.abs(this.vel.z)<0.2)) this.vel.y=8; } else this.vel[ax]=0; } }; rA('x');rA('z');rA('y');
+                
+                const rA=(ax)=>{ 
+                    this.pos[ax]+=this.vel[ax]*dt; 
+                    this._tempMin.set(this.pos.x-this.w, this.pos.y-this.h, this.pos.z-this.w);
+                    this._tempMax.set(this.pos.x+this.w, this.pos.y+0.1, this.pos.z+this.w);
+                    this.box.set(this._tempMin, this._tempMax); 
+                    if(this.chkCol(this.box)){ 
+                        this.pos[ax]-=this.vel[ax]*dt; 
+                        if(ax==='y'&&this.vel.y<0){ this.vel.y=0; if(dist<18 && (Math.abs(this.vel.x)<0.2 || Math.abs(this.vel.z)<0.2)) this.vel.y=8; } 
+                        else this.vel[ax]=0; 
+                    } 
+                }; 
+                rA('x');rA('z');rA('y');
                 if(Math.abs(this.vel.x)>0.1 || Math.abs(this.vel.z)>0.1) { let wc=this.life*8; this.lL.rotation.x=Math.sin(wc)*0.5; this.lR.rotation.x=-Math.sin(wc)*0.5; } this.group.position.copy(this.pos);
             }
         }
@@ -1295,6 +1299,10 @@
 
                 this.group.children.forEach(c => { c.castShadow=true; });
                 this.e.scene.add(this.group);
+                
+                this._tempDir = new THREE.Vector3();
+                this._tempMin = new THREE.Vector3();
+                this._tempMax = new THREE.Vector3();
             }
 
             chkCol(box) {
@@ -1310,1232 +1318,4 @@
                 if(this.dead) return;
                 this.hp -= a;
                 this.e.audio.playHit();
-                this.group.children.forEach(c => c.material.color.setHex(0xff7777));
-                let knock = this.e.player.cam.getWorldDirection(new THREE.Vector3());
-                this.vel.x = knock.x * 7; this.vel.z = knock.z * 7; this.vel.y = 5;
-                setTimeout(()=>{ if(!this.dead) this.group.children.forEach(c => c.material.color.setHex(0xffffff)); }, 200);
-                if(this.hp <= 0) {
-                    this.dead = true;
-                    this.group.rotation.z = Math.PI/2;
-                    XboxAchv.unlock('Monster Hunter');
-                    setTimeout(()=>{ this.e.scene.remove(this.group); this.e.mobs.remove(this); }, 1200);
-                    if(this.e.drops) this.e.drops.spawn(this.pos, BLOCKS.COAL_ORE, true);
-                }
-            }
-
-            explode() {
-                if(this.dead) return;
-                this.dead = true;
-                this.e.audio.playExplosion();
-
-                let cx = Math.floor(this.pos.x), cy = Math.floor(this.pos.y - 0.5), cz = Math.floor(this.pos.z);
-                for(let dx=-2; dx<=2; dx++) {
-                    for(let dy=-2; dy<=2; dy++) {
-                        for(let dz=-2; dz<=2; dz++) {
-                            if(dx*dx + dy*dy + dz*dz <= 5) {
-                                let b = this.e.world.getG(cx+dx, cy+dy, cz+dz);
-                                if(b !== 0 && b !== BLOCKS.BEDROCK && b !== BLOCKS.WATER) {
-                                    if(Math.random() < 0.35) this.e.parts.spawn(new THREE.Vector3(cx+dx, cy+dy, cz+dz), b, 3);
-                                    this.e.world.setG(cx+dx, cy+dy, cz+dz, 0);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                let dist = this.pos.distanceTo(this.e.player.pos);
-                if(dist < 4.5) {
-                    this.e.player.dmg(Math.max(2, Math.floor((4.8 - dist) * 3)));
-                }
-                this.e.scene.remove(this.group);
-                this.e.mobs.remove(this);
-            }
-
-            update(dt) {
-                if(this.dead) return;
-                let dP = this.e.player.pos.clone().sub(this.pos);
-                let dist = dP.length();
-                this.vel.y -= 30 * dt;
-
-                if(dist < 3.0) {
-                    if(!this.fusing) {
-                        this.fusing = true;
-                        this.e.audio.playFuse();
-                    }
-                    this.fuse += dt;
-                    let flash = Math.floor(this.fuse * 12) % 2 === 0;
-                    this.group.children.forEach(c => c.material.color.setHex(flash ? 0xffffff : 0x88ff88));
-                    this.group.scale.setScalar(1 + this.fuse * 0.18);
-                    this.vel.x *= 0.5; this.vel.z *= 0.5;
-                    if(this.fuse >= 1.45) {
-                        this.explode();
-                        return;
-                    }
-                } else {
-                    if(this.fusing) {
-                        this.fusing = false;
-                        this.fuse = Math.max(0, this.fuse - dt * 2);
-                        this.group.scale.setScalar(1);
-                        this.group.children.forEach(c => c.material.color.setHex(0xffffff));
-                    }
-                    if(dist < 18) {
-                        dP.y = 0; dP.normalize();
-                        this.vel.x += (dP.x * 2.4 - this.vel.x) * 5 * dt;
-                        this.vel.z += (dP.z * 2.4 - this.vel.z) * 5 * dt;
-                        this.group.rotation.y = Math.atan2(dP.x, dP.z);
-                    } else {
-                        this.vel.x *= 0.9; this.vel.z *= 0.9;
-                    }
-                }
-
-                const rA=(ax)=>{
-                    this.pos[ax]+=this.vel[ax]*dt;
-                    this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w));
-                    if(this.chkCol(this.box)){
-                        this.pos[ax]-=this.vel[ax]*dt;
-                        if(ax==='y'&&this.vel.y<0){
-                            this.vel.y=0;
-                            if(dist<18 && !this.fusing && (Math.abs(this.vel.x)<0.2 || Math.abs(this.vel.z)<0.2)) this.vel.y=8;
-                        } else this.vel[ax]=0;
-                    }
-                };
-                rA('x'); rA('z'); rA('y');
-                if(Math.abs(this.vel.x)>0.1 || Math.abs(this.vel.z)>0.1) {
-                    let wc = this.e.time * 10;
-                    this.l1.rotation.x = Math.sin(wc)*0.5; this.l2.rotation.x = -Math.sin(wc)*0.5;
-                    this.l3.rotation.x = -Math.sin(wc)*0.5; this.l4.rotation.x = Math.sin(wc)*0.5;
-                }
-                this.group.position.copy(this.pos);
-            }
-        }
-
-        class Pig {
-            constructor(e, pos) {
-                this.e = e; this.pos = pos.clone(); this.vel = new THREE.Vector3(); this.hp = 10; this.dead = false; this.box = new THREE.Box3(); this.w = 0.4; this.h = 0.8;
-                this.group = new THREE.Group();
-                const mP = new THREE.MeshStandardMaterial({map:this.e.atlas.tex});
-                this.body = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.4,0.8), mP); this.e.atlas.applyUV(this.body.geometry, this.e.atlas.pigUV); this.body.position.y=0.2; this.group.add(this.body);
-                this.head = new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.4), mP); this.e.atlas.applyUV(this.head.geometry, this.e.atlas.pigUV); this.head.position.set(0,0.4,0.4); this.group.add(this.head);
-                this.l1 = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.3,0.2), mP); this.e.atlas.applyUV(this.l1.geometry, this.e.atlas.pigUV); this.l1.position.set(0.15,-0.15,0.3); this.group.add(this.l1);
-                this.l2 = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.3,0.2), mP); this.e.atlas.applyUV(this.l2.geometry, this.e.atlas.pigUV); this.l2.position.set(-0.15,-0.15,0.3); this.group.add(this.l2);
-                this.l3 = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.3,0.2), mP); this.e.atlas.applyUV(this.l3.geometry, this.e.atlas.pigUV); this.l3.position.set(0.15,-0.15,-0.3); this.group.add(this.l3);
-                this.l4 = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.3,0.2), mP); this.e.atlas.applyUV(this.l4.geometry, this.e.atlas.pigUV); this.l4.position.set(-0.15,-0.15,-0.3); this.group.add(this.l4);
-                this.group.children.forEach(c => { c.castShadow=true; }); this.e.scene.add(this.group);
-                this.dir = new THREE.Vector3(Math.random()-0.5, 0, Math.random()-0.5).normalize(); this.timer = 0;
-            }
-            chkCol(box) { let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z); for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){ let v=this.e.world.getG(x,y,z); if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true; } return false; }
-            dmg(a) { 
-                if(this.dead) return; this.hp-=a; this.e.audio.playPig();
-                this.group.children.forEach(c => c.material.color.setHex(0xffaaaa));
-                setTimeout(()=>{ if(!this.dead) this.group.children.forEach(c => c.material.color.setHex(0xffffff)); }, 200);
-                this.vel.y = 5; this.dir.set((Math.random()-0.5)*2, 0, (Math.random()-0.5)*2).normalize(); 
-                if(this.hp<=0) { this.dead=true; this.group.rotation.z = Math.PI/2; this.group.position.y -= 0.3; setTimeout(()=>{ this.e.scene.remove(this.group); this.e.mobs.remove(this); }, 1500); if(this.e.drops) this.e.drops.spawn(this.pos, BLOCKS.APPLE, true); }
-            }
-            update(dt) {
-                if(this.dead) return; this.vel.y -= 30 * dt; this.timer -= dt;
-                if(this.timer <= 0) { this.dir.set(Math.random()-0.5, 0, Math.random()-0.5).normalize(); this.timer = 2 + Math.random()*3; if(Math.random()<0.3) this.dir.set(0,0,0); }
-                this.vel.x = this.dir.x * 2.0; this.vel.z = this.dir.z * 2.0;
-                if(this.dir.lengthSq() > 0) this.group.rotation.y = Math.atan2(this.dir.x, this.dir.z);
-                const rA=(ax)=>{ this.pos[ax]+=this.vel[ax]*dt; this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w)); if(this.chkCol(this.box)){ this.pos[ax]-=this.vel[ax]*dt; if(ax==='y'&&this.vel.y<0) this.vel.y=0; else if((ax==='x'||ax==='z') && this.vel.y===0) this.vel.y=6; this.vel[ax]=0; } }; rA('x');rA('z');rA('y');
-                if(this.vel.x!==0 || this.vel.z!==0) { let wc=this.e.time*12; this.l1.rotation.x=Math.sin(wc)*0.5; this.l2.rotation.x=-Math.sin(wc)*0.5; this.l3.rotation.x=-Math.sin(wc)*0.5; this.l4.rotation.x=Math.sin(wc)*0.5; } this.group.position.copy(this.pos);
-            }
-        }
-
-        class MobManager {
-            constructor(e) { this.e = e; this.list = []; this.timer = 0; }
-            spawn(forceHostile = false) {
-                if(this.list.length >= 14 && !forceHostile) return;
-                let ang = Math.random() * Math.PI * 2;
-                let dist = forceHostile ? (7 + Math.random() * 5) : (12 + Math.random() * 12);
-                let sx = this.e.player.pos.x + Math.cos(ang)*dist;
-                let sz = this.e.player.pos.z + Math.sin(ang)*dist;
-                let sy = CONFIG.CHUNK_HEIGHT - 1;
-                while(sy > 0 && this.e.world.getG(Math.floor(sx), Math.floor(sy), Math.floor(sz)) === 0) sy--;
-                if(sy <= CONFIG.WATER_LEVEL) return;
-                
-                let spawnPos = new THREE.Vector3(sx, sy + 2.2, sz);
-                if (forceHostile) {
-                    this.list.push(new Creeper(this.e, spawnPos));
-                    this.list.push(new Zombie(this.e, spawnPos.clone().add(new THREE.Vector3(2, 0, 2))));
-                    return;
-                }
-
-                let r = Math.random();
-                if (r < 0.4) {
-                    this.list.push(new Pig(this.e, spawnPos));
-                } else if (r < 0.7) {
-                    this.list.push(new Zombie(this.e, spawnPos));
-                } else {
-                    this.list.push(new Creeper(this.e, spawnPos));
-                }
-            }
-            update(dt) { 
-                this.timer += dt; 
-                if(this.timer > 3.5){ this.timer = 0; this.spawn(); } 
-                this.list.forEach(m => m.update(dt)); 
-            }
-            remove(mob) { this.list = this.list.filter(m => m !== mob); }
-        }
-
-        class Chunk {
-            constructor(cx, cz, engine) {
-                this.cx = cx; this.cz = cz; this.e = engine;
-                this.data = new Uint8Array(CONFIG.CHUNK_SIZE * CONFIG.CHUNK_HEIGHT * CONFIG.CHUNK_SIZE);
-                this.meshS = null; this.meshW = null; this.dirty = true; this.gen = false;
-            }
-            getIdx(x,y,z) { return x + z*CONFIG.CHUNK_SIZE + y*CONFIG.CHUNK_SIZE*CONFIG.CHUNK_SIZE; }
-            get(x,y,z) { if(x<0||x>=CONFIG.CHUNK_SIZE||y<0||y>=CONFIG.CHUNK_HEIGHT||z<0||z>=CONFIG.CHUNK_SIZE) return 0; return this.data[this.getIdx(x,y,z)]; }
-            set(x,y,z,v) { if(x>=0&&x<CONFIG.CHUNK_SIZE&&y>=0&&y<CONFIG.CHUNK_HEIGHT&&z>=0&&z<CONFIG.CHUNK_SIZE) { this.data[this.getIdx(x,y,z)]=v; this.dirty=true; } }
-            
-            static getBiomeAt(wx, wz) {
-                if (wx >= -4 && wx <= 20 && wz >= -4 && wz <= 20) return 'Planície & Floresta';
-                let temp = tempGen.fBm(wx, wz, 2, 0.012);
-                let elev = nGen.fBm(wx, wz, 2, 0.012);
-                if (elev > 0.28) return 'Montanhas Rochosas';
-                if (temp > 0.22) return 'Deserto Árido';
-                if (temp < -0.22) return 'Tundra Nevada';
-                return 'Planície & Floresta';
-            }
-
-            generate() {
-                const wxOff = this.cx * CONFIG.CHUNK_SIZE; const wzOff = this.cz * CONFIG.CHUNK_SIZE;
-                for(let x=0; x<CONFIG.CHUNK_SIZE; x++) {
-                    for(let z=0; z<CONFIG.CHUNK_SIZE; z++) {
-                        const wx = wxOff + x; const wz = wzOff + z;
-                        
-                        let biome = Chunk.getBiomeAt(wx, wz);
-                        let hn = bGen.fBm(wx, wz, 3, 0.022);
-                        let h = Math.floor((hn+1)*10) + CONFIG.WATER_LEVEL - 2;
-                        if (biome === 'Montanhas Rochosas') h += Math.floor(Math.abs(hn)*22) + 6;
-                        if (biome === 'Deserto Árido') h = Math.floor((hn+1)*7) + CONFIG.WATER_LEVEL + 1;
-                        h = Math.max(1, Math.min(h, CONFIG.CHUNK_HEIGHT-6));
-
-                        this.set(x, 0, z, BLOCKS.BEDROCK); 
-                        let surf = BLOCKS.GRASS;
-                        
-                        let inCastle = (wx >= 3 && wx <= 13 && wz >= 3 && wz <= 13 && this.cx===0 && this.cz===0);
-                        if(inCastle) { h = CONFIG.WATER_LEVEL + 4; } 
-                        
-                        for(let y=1; y<=h; y++) {
-                            let cb = BLOCKS.STONE;
-                            let caveNoise = bGen.noise3D(wx * 0.06, y * 0.06, wz * 0.06);
-                            if(y < h - 4 && y > 2 && caveNoise > 0.42 && !inCastle) { this.set(x, y, z, 0); continue; }
-                            if(y < h - 3 && Math.random() < 0.055 && !inCastle) { 
-                                let r = Math.random(); 
-                                if(y<14&&r<0.12) cb=BLOCKS.DIAMOND_ORE; 
-                                else if(y<28&&r<0.28) cb=BLOCKS.GOLD; 
-                                else if(r<0.55) cb=BLOCKS.IRON_ORE; 
-                                else cb=BLOCKS.COAL_ORE; 
-                            }
-                            if(y===h) {
-                                if (h <= CONFIG.WATER_LEVEL + 1 || biome === 'Deserto Árido') cb = BLOCKS.SAND;
-                                else if (biome === 'Tundra Nevada') cb = BLOCKS.SNOW;
-                                else if (biome === 'Montanhas Rochosas' && h > CONFIG.WATER_LEVEL + 14) cb = h > CONFIG.WATER_LEVEL + 20 ? BLOCKS.SNOW : BLOCKS.STONE;
-                                else cb = BLOCKS.GRASS;
-                                surf = cb;
-                            } else if(y > h - 3) {
-                                cb = (biome === 'Deserto Árido') ? BLOCKS.SAND : BLOCKS.DIRT;
-                            }
-                            this.set(x, y, z, cb);
-                        }
-                        
-                        if(inCastle) {
-                            if (wx === 3 || wx === 13 || wz === 3 || wz === 13) {
-                                let isTower = (wx===3||wx===13) && (wz===3||wz===13); 
-                                let wallH = isTower ? 4 : 2; 
-                                if (wx === 8 && (wz === 13 || wz === 3)) wallH = 0; 
-                                for(let cy=h+1; cy<=h+wallH; cy++) this.set(x, cy, z, BLOCKS.COBBLESTONE);
-                                if(isTower) this.set(x, h+5, z, BLOCKS.TORCH);
-                            } else {
-                                this.set(x, h, z, BLOCKS.PLANKS); 
-                                if(wx===8 && wz===6) this.set(x, h+1, z, BLOCKS.CHEST);
-                                if(wx===6 && wz===6) this.set(x, h+1, z, BLOCKS.CRAFTING_TABLE);
-                            }
-                        }
-
-                        if(wx === 8 && wz === 1 && this.cx === 0 && this.cz === 0) {
-                            this.e.world.qTree(wx, h+1, wz);
-                        }
-
-                        for(let y=h+1; y<=CONFIG.WATER_LEVEL; y++) if(this.get(x,y,z)===0) this.set(x,y,z,BLOCKS.WATER);
-                        
-                        if(h > CONFIG.WATER_LEVEL + 1 && !inCastle) {
-                            if (biome === 'Planície & Floresta' && surf === BLOCKS.GRASS) {
-                                if(Math.random() < 0.045) this.e.world.qTree(wx, h+1, wz);
-                                else if(Math.random() < 0.09) this.set(x, h+1, z, Math.random()>0.5 ? BLOCKS.RED_FLOWER : BLOCKS.YELLOW_FLOWER);
-                            } else if (biome === 'Deserto Árido' && surf === BLOCKS.SAND) {
-                                if(Math.random() < 0.025) {
-                                    let ch = 2 + Math.floor(Math.random()*2);
-                                    for(let cy=1; cy<=ch; cy++) this.set(x, h+cy, z, BLOCKS.CACTUS);
-                                }
-                            } else if (biome === 'Tundra Nevada' && surf === BLOCKS.SNOW) {
-                                if(Math.random() < 0.03) this.e.world.qTree(wx, h+1, wz);
-                            }
-                        }
-                    }
-                }
-                this.gen = true;
-            }
-
-            build() {
-                if(this.meshS) { this.e.scene.remove(this.meshS); this.meshS.geometry.dispose(); }
-                if(this.meshW) { this.e.scene.remove(this.meshW); this.meshW.geometry.dispose(); }
-                
-                const pS=[], nS=[], uS=[], cS=[], iS=[]; let ctS=0;
-                const pW=[], nW=[], uW=[], cW=[], iW=[]; let ctW=0;
-                
-                const fcs = [ { d:[1,0,0], c:[[1,1,1],[1,0,1],[1,0,0],[1,1,0]], u:0 }, { d:[-1,0,0], c:[[0,1,0],[0,0,0],[0,0,1],[0,1,1]], u:1 }, { d:[0,1,0], c:[[0,1,1],[1,1,1],[1,1,0],[0,1,0]], u:2 }, { d:[0,-1,0], c:[[0,0,0],[1,0,0],[1,0,1],[0,0,1]], u:3 }, { d:[0,0,1], c:[[0,1,1],[0,0,1],[1,0,1],[1,1,1]], u:4 }, { d:[0,0,-1], c:[[1,1,0],[1,0,0],[0,0,0],[0,1,0]], u:5 } ];
-                const floF = [ { c:[[0,1,0],[0,0,0],[1,0,1],[1,1,1]], n:[0.7,0,-0.7] }, { c:[[1,1,1],[1,0,1],[0,0,0],[0,1,0]], n:[-0.7,0,0.7] }, { c:[[0,1,1],[0,0,1],[1,0,0],[1,1,0]], n:[0.7,0,0.7] }, { c:[[1,1,0],[1,0,0],[0,0,1],[0,1,1]], n:[-0.7,0,-0.7] } ];
-
-                for(let y=0; y<CONFIG.CHUNK_HEIGHT; y++) for(let z=0; z<CONFIG.CHUNK_SIZE; z++) for(let x=0; x<CONFIG.CHUNK_SIZE; x++) {
-                    const v = this.get(x,y,z); if(v===0) continue;
-                    const pr = BLOCK_PROPS[v] || BLOCK_PROPS[0], isW = v===8, isF = pr.isFlora && v!==6;
-                    const tMap = this.e.atlas.getMap(v);
-                    
-                    if(isF) {
-                        const tIdx = tMap[0], ts=1/16, tu=(tIdx%16)*ts, tv=1-(Math.floor(tIdx/16)*ts)-ts;
-                        for(const f of floF) {
-                            for(let i=0; i<4; i++) {
-                                pS.push(x+f.c[i][0]+this.cx*CONFIG.CHUNK_SIZE, y+f.c[i][1], z+f.c[i][2]+this.cz*CONFIG.CHUNK_SIZE);
-                                nS.push(f.n[0], f.n[1], f.n[2]); uS.push(tu+(i===1||i===2?ts:0), tv+(i===0||i===1?ts:0)); 
-                                cS.push(v===27?1.5:1, v===27?1.5:1, v===27?1.5:1); 
-                            }
-                            iS.push(ctS,ctS+1,ctS+2,ctS+2,ctS+3,ctS); ctS+=4;
-                        }
-                        continue;
-                    }
-
-                    for(const f of fcs) {
-                        const nx=x+f.d[0], ny=y+f.d[1], nz=z+f.d[2];
-                        let nv = (nx<0||nx>=CONFIG.CHUNK_SIZE||nz<0||nz>=CONFIG.CHUNK_SIZE) ? this.e.world.getG(this.cx*CONFIG.CHUNK_SIZE+nx, ny, this.cz*CONFIG.CHUNK_SIZE+nz) : this.get(nx,ny,nz);
-                        const npr = BLOCK_PROPS[nv] || BLOCK_PROPS[0]; 
-                        
-                        let drw = false;
-                        if(nv===0) drw=true; 
-                        else if(npr.trans && !pr.trans) drw=true; 
-                        else if(pr.liquid && !npr.liquid && f.d[1]===1) drw=true; 
-                        else if(isW && nv===0) drw=true; 
-                        else if(pr.trans && !pr.liquid && nv!==v) drw=true;
-
-                        if(drw) {
-                            const tIdx = tMap[f.u] || tMap[0], ts=1/16, tu=(tIdx%16)*ts, tv=1-(Math.floor(tIdx/16)*ts)-ts; 
-                            let bL = (f.d[1]===-1)?0.45:(f.d[0]!==0)?0.75:(f.d[2]!==0)?0.88:1.0;
-                            
-                            for(let i=0; i<4; i++) {
-                                let vx=x+f.c[i][0], vy=y+f.c[i][1], vz=z+f.c[i][2];
-                                let ao = 1.0; 
-                                if(f.c[i][1]===0 && f.d[1]!==-1) ao=0.65; 
-                                if(f.d[1]===1 && !isW) { 
-                                    let dx=f.c[i][0]===1?1:-1, dz=f.c[i][2]===1?1:-1; 
-                                    let o1=this.get(x+dx,y,z)!==0, o2=this.get(x,y,z+dz)!==0, o3=this.get(x+dx,y,z+dz)!==0;
-                                    if(o1&&o2) ao=0.5; else if(o1||o2||o3) ao=0.75;
-                                }
-                                let fc = bL * ao;
-                                
-                                if(isW) {
-                                    pW.push(vx+this.cx*CONFIG.CHUNK_SIZE, vy, vz+this.cz*CONFIG.CHUNK_SIZE); nW.push(f.d[0],f.d[1],f.d[2]); uW.push(tu+(i===1||i===2?ts:0), tv+(i===0||i===1?ts:0)); cW.push(fc,fc,fc);
-                                } else {
-                                    pS.push(vx+this.cx*CONFIG.CHUNK_SIZE, vy, vz+this.cz*CONFIG.CHUNK_SIZE); nS.push(f.d[0],f.d[1],f.d[2]); uS.push(tu+(i===1||i===2?ts:0), tv+(i===0||i===1?ts:0)); cS.push(fc,fc,fc);
-                                }
-                            }
-                            if(isW){ iW.push(ctW,ctW+1,ctW+2,ctW+2,ctW+3,ctW); ctW+=4; } else { iS.push(ctS,ctS+1,ctS+2,ctS+2,ctS+3,ctS); ctS+=4; }
-                        }
-                    }
-                }
-                
-                if(ctS>0) {
-                    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pS, 3)); geo.setAttribute('normal', new THREE.Float32BufferAttribute(nS, 3)); geo.setAttribute('uv', new THREE.Float32BufferAttribute(uS, 2)); geo.setAttribute('color', new THREE.Float32BufferAttribute(cS, 3)); geo.setIndex(iS);
-                    this.meshS = new THREE.Mesh(geo, this.e.matS); this.meshS.castShadow = true; this.meshS.receiveShadow = true; this.meshS.matrixAutoUpdate=false; this.meshS.updateMatrix(); this.e.scene.add(this.meshS);
-                }
-                if(ctW>0) {
-                    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pW, 3)); geo.setAttribute('normal', new THREE.Float32BufferAttribute(nW, 3)); geo.setAttribute('uv', new THREE.Float32BufferAttribute(uW, 2)); geo.setAttribute('color', new THREE.Float32BufferAttribute(cW, 3)); geo.setIndex(iW);
-                    this.meshW = new THREE.Mesh(geo, this.e.matW); this.meshW.receiveShadow=true; this.meshW.matrixAutoUpdate=false; this.meshW.updateMatrix(); this.e.scene.add(this.meshW);
-                    this.meshW.userData.origPos = geo.attributes.position.clone();
-                }
-                this.dirty = false;
-            }
-            updateWaterAnim(time) {
-                if(!this.meshW) return; 
-                let pos = this.meshW.geometry.attributes.position; 
-                let orig = this.meshW.userData.origPos; 
-                let changed = false;
-                for(let i=0; i<pos.count; i++) { 
-                    let y = orig.getY(i); 
-                    if(y % 1 === 0 && y > 0) { 
-                        pos.setY(i, y - 0.15 + Math.sin(orig.getX(i)*0.5 + orig.getZ(i)*0.5 + time*2)*0.1); 
-                        changed = true; 
-                    } 
-                }
-                if(changed) pos.needsUpdate = true;
-            }
-        }
-
-        class WorldManager {
-            constructor(e) { this.e=e; this.chunks=new Map(); this.qG=[]; this.trees=[]; }
-            k(cx,cz) { return `${cx},${cz}`; }
-            getG(gx,gy,gz) { if(gy<0||gy>=CONFIG.CHUNK_HEIGHT) return 0; let cx=Math.floor(gx/CONFIG.CHUNK_SIZE), cz=Math.floor(gz/CONFIG.CHUNK_SIZE); let c=this.chunks.get(this.k(cx,cz)); return c?c.get(gx-cx*CONFIG.CHUNK_SIZE,gy,gz-cz*CONFIG.CHUNK_SIZE):0; }
-            setG(gx,gy,gz,v) { 
-                if(gy<0||gy>=CONFIG.CHUNK_HEIGHT) return; let cx=Math.floor(gx/CONFIG.CHUNK_SIZE), cz=Math.floor(gz/CONFIG.CHUNK_SIZE); let k=this.k(cx,cz), c=this.chunks.get(k);
-                if(c) {
-                    let lx=gx-cx*CONFIG.CHUNK_SIZE, lz=gz-cz*CONFIG.CHUNK_SIZE; c.set(lx,gy,lz,v);
-                    if(lx===0){ let n=this.chunks.get(this.k(cx-1,cz)); if(n) n.dirty=true; } if(lx===CONFIG.CHUNK_SIZE-1){ let n=this.chunks.get(this.k(cx+1,cz)); if(n) n.dirty=true; }
-                    if(lz===0){ let n=this.chunks.get(this.k(cx,cz-1)); if(n) n.dirty=true; } if(lz===CONFIG.CHUNK_SIZE-1){ let n=this.chunks.get(this.k(cx,cz+1)); if(n) n.dirty=true; }
-                }
-            }
-            qTree(x,y,z) { this.trees.push({x,y,z}); }
-            procTrees() {
-                while(this.trees.length>0) {
-                    const t=this.trees.pop(), h=4+Math.floor(Math.random()*2);
-                    for(let i=0;i<h;i++) this.setG(t.x,t.y+i,t.z,BLOCKS.WOOD);
-                    for(let lx=-2;lx<=2;lx++) for(let ly=h-2;ly<=h+1;ly++) for(let lz=-2;lz<=2;lz++) {
-                        if(Math.abs(lx)===2&&Math.abs(lz)===2&&(ly===h-2||ly===h+1)) continue; if(lx===0&&lz===0&&ly<h) continue;
-                        if(this.getG(t.x+lx,t.y+ly,t.z+lz)===0) this.setG(t.x+lx,t.y+ly,t.z+lz,BLOCKS.LEAVES);
-                    }
-                }
-            }
-            update(pPos) {
-                const pcx=Math.floor(pPos.x/CONFIG.CHUNK_SIZE), pcz=Math.floor(pPos.z/CONFIG.CHUNK_SIZE), d=CONFIG.RENDER_DISTANCE;
-                for(let x=-d; x<=d; x++) for(let z=-d; z<=d; z++) {
-                    if(x*x+z*z > d*d+2) continue; let cx=pcx+x, cz=pcz+z, k=this.k(cx,cz);
-                    if(!this.chunks.has(k) && !this.qG.includes(k)) { this.qG.push(k); }
-                }
-                if (this.qG.length > 0) {
-                    let k = this.qG.shift(); let parts = k.split(','); let cx = parseInt(parts[0]), cz = parseInt(parts[1]);
-                    let nc = new Chunk(cx, cz, this.e); nc.generate(); this.chunks.set(k, nc); this.procTrees();
-                }
-                for(const c of this.chunks.values()) {
-                    if(c.dirty && c.gen && this.chunks.has(this.k(c.cx+1,c.cz))&&this.chunks.has(this.k(c.cx-1,c.cz))&&this.chunks.has(this.k(c.cx,c.cz+1))&&this.chunks.has(this.k(c.cx,c.cz-1))) { c.build(); return; }
-                }
-                for(const [k, c] of this.chunks.entries()) {
-                    if(Math.pow(c.cx-pcx,2)+Math.pow(c.cz-pcz,2) > Math.pow(d+2,2)) { if(c.meshS) { this.e.scene.remove(c.meshS); c.meshS.geometry.dispose(); } if(c.meshW) { this.e.scene.remove(c.meshW); c.meshW.geometry.dispose(); } this.chunks.delete(k); }
-                    else { c.updateWaterAnim(this.e.time); }
-                }
-            }
-        }
-
-        class UIManager {
-            constructor(engine) {
-                this.e = engine;
-                this.selectedTab = 'structures';
-                this.selectedRecipeIdx = 0;
-                
-                const tabCont = document.getElementById('ui-tabs');
-                if(tabCont) {
-                    tabCont.innerHTML = '';
-                    RECIPE_CATEGORIES.forEach(cat => {
-                        let div = document.createElement('div');
-                        div.className = `xb-tab ${cat.id === this.selectedTab ? 'active' : ''}`;
-                        div.title = cat.name;
-                        div.innerHTML = `<img src="${this.e.atlas.ui[cat.icon] || ''}">`;
-                        div.onclick = () => { this.e.audio.playUI(); this.switchTab(cat.id); };
-                        tabCont.appendChild(div);
-                    });
-                }
-
-                let btnClose = document.getElementById('btn-close-inv');
-                if(btnClose) btnClose.onclick = () => { this.e.audio.playUI(); this.e.player.lockF(); };
-                
-                this.updateHotbar();
-            }
-
-            switchTab(tabId) {
-                this.selectedTab = tabId;
-                document.querySelectorAll('.xb-tab').forEach((el, i) => {
-                    if(RECIPE_CATEGORIES[i] && RECIPE_CATEGORIES[i].id === tabId) el.classList.add('active');
-                    else el.classList.remove('active');
-                });
-                this.selectedRecipeIdx = 0;
-                this.renderCraftingMenu();
-            }
-
-            renderCraftingMenu() {
-                const carousel = document.getElementById('ui-carousel');
-                if(!carousel) return;
-                
-                const recipesInTab = RECIPES.filter(r => r.cat === this.selectedTab);
-                
-                carousel.innerHTML = '';
-                recipesInTab.forEach((r, idx) => {
-                    let item = document.createElement('div');
-                    item.className = `xb-carousel-item ${idx === this.selectedRecipeIdx ? 'selected' : ''}`;
-                    item.innerHTML = `<img src="${this.e.atlas.ui[r.res] || ''}">`;
-                    item.onclick = () => { this.e.audio.playUI(); this.selectedRecipeIdx = idx; this.renderCraftingMenu(); };
-                    carousel.appendChild(item);
-                });
-
-                if(recipesInTab.length > 0) {
-                    this.updateRecipeDetails(recipesInTab[this.selectedRecipeIdx] || recipesInTab[0]);
-                }
-
-                this.renderInventoryGrid();
-            }
-
-            updateRecipeDetails(recipe) {
-                if(!recipe) return;
-                document.getElementById('ui-recipe-name').innerText = `${recipe.name} (x${recipe.count})`;
-                
-                const grid = document.getElementById('ui-grid-3x3');
-                grid.innerHTML = '';
-                for(let i=0; i<9; i++) {
-                    let id = recipe.grid[i];
-                    let slot = document.createElement('div'); slot.className = 'xb-slot';
-                    if(id && id !== 0 && this.e.atlas.ui[id]) {
-                        slot.innerHTML = `<img src="${this.e.atlas.ui[id]}">`;
-                    }
-                    grid.appendChild(slot);
-                }
-
-                let canCraft = true;
-                const reqList = document.getElementById('ui-req-list');
-                reqList.innerHTML = '';
-                recipe.req.forEach(req => {
-                    let reqId = req[0], reqQty = req[1];
-                    let has = 0;
-                    for(let i=0; i<36; i++) if(this.e.player.inv[i] === reqId) has += this.e.player.invCount[i];
-                    if(has < reqQty) canCraft = false;
-                    
-                    reqList.innerHTML += `
-                        <div class="xb-req-badge">
-                            <img src="${this.e.atlas.ui[reqId] || ''}">
-                            <span>${BLOCK_PROPS[reqId]?.name || ''}:</span>
-                            <span class="${has >= reqQty ? 'req-ok' : 'req-fail'}">${has}/${reqQty}</span>
-                        </div>
-                    `;
-                });
-
-                const btn = document.getElementById('ui-btn-craft');
-                btn.className = `btn-craft ${canCraft ? '' : 'disabled'}`;
-                btn.onclick = canCraft ? () => {
-                    recipe.req.forEach(req => { 
-                        let left = req[1]; 
-                        for(let i=35; i>=0; i--) { 
-                            if(this.e.player.inv[i] === req[0] && left > 0) { 
-                                let take = Math.min(this.e.player.invCount[i], left); 
-                                this.e.player.invCount[i] -= take; left -= take; 
-                                if(this.e.player.invCount[i] <= 0) { this.e.player.inv[i] = 0; } 
-                            } 
-                        } 
-                    });
-                    
-                    this.e.player.giveItem(recipe.res, recipe.count);
-                    this.e.audio.playCraft();
-                    this.renderCraftingMenu();
-                    this.updateHotbar();
-                    this.e.player.updArm();
-                    
-                    if(recipe.res === BLOCKS.PLANKS) {
-                        this.e.tutorial.completeStep(3);
-                    }
-                    if(recipe.res === BLOCKS.CRAFTING_TABLE) {
-                        XboxAchv.unlock('Benchmarking');
-                        this.e.tutorial.completeStep(3);
-                        this.e.tutorial.completeStep(4);
-                    }
-                    if(recipe.res === BLOCKS.PICKAXE || recipe.res === BLOCKS.SWORD || recipe.res === BLOCKS.AXE) {
-                        XboxAchv.unlock('Time to Strike');
-                        this.e.tutorial.completeStep(5);
-                    }
-                } : null;
-            }
-
-            renderInventoryGrid() {
-                const mainGrid = document.getElementById('ui-inv-main');
-                const hotGrid = document.getElementById('ui-inv-hotbar');
-                if(!mainGrid || !hotGrid) return;
-                
-                mainGrid.innerHTML = ''; hotGrid.innerHTML = '';
-                
-                const createCell = (i) => {
-                    let cell = document.createElement('div');
-                    cell.className = `inv-cell ${i === this.e.player.slot ? 'selected' : ''}`;
-                    let id = this.e.player.inv[i];
-                    if(id && id !== 0 && this.e.atlas.ui[id]) {
-                        let cnt = this.e.player.invCount[i] > 1 ? `<div style="position:absolute; bottom:2px; right:4px; color:white; font-size:12px; font-weight:bold; text-shadow:1px 1px 0 #000;">${this.e.player.invCount[i]}</div>` : '';
-                        cell.innerHTML = `<img src="${this.e.atlas.ui[id]}">${cnt}`;
-                    }
-                    cell.onclick = () => {
-                        if (i >= 9) {
-                            let tmpId = this.e.player.inv[this.e.player.slot];
-                            let tmpCnt = this.e.player.invCount[this.e.player.slot];
-                            this.e.player.inv[this.e.player.slot] = this.e.player.inv[i];
-                            this.e.player.invCount[this.e.player.slot] = this.e.player.invCount[i];
-                            this.e.player.inv[i] = tmpId;
-                            this.e.player.invCount[i] = tmpCnt;
-                        } else {
-                            this.e.player.slot = i;
-                        }
-                        this.updateHotbar();
-                        this.renderCraftingMenu();
-                        this.e.player.updArm();
-                        this.e.audio.playUI();
-                    };
-                    return cell;
-                };
-
-                for(let i=9; i<36; i++) mainGrid.appendChild(createCell(i));
-                for(let i=0; i<9; i++) hotGrid.appendChild(createCell(i));
-            }
-
-            updateHotbar() {
-                let hc = document.getElementById('hotbar-wrap');
-                if(!hc) return; hc.innerHTML = '';
-                for(let i=0; i<9; i++) {
-                    let id = this.e.player.inv[i];
-                    let d = document.createElement('div'); 
-                    d.className = `hotbar-slot ${i === this.e.player.slot ? 'active' : ''}`;
-                    if(id && id !== 0 && this.e.atlas.ui[id]) {
-                        let cnt = this.e.player.invCount[i] > 1 ? `<div class="slot-qty">${this.e.player.invCount[i]}</div>` : '';
-                        d.innerHTML = `<img src="${this.e.atlas.ui[id]}">${cnt}`;
-                    }
-                    d.innerHTML += `<div class="slot-num">${i+1}</div>`;
-                    d.onclick = () => {
-                        this.e.player.slot = i;
-                        this.updateHotbar();
-                        this.e.player.updArm();
-                    };
-                    hc.appendChild(d);
-                }
-
-                let curId = this.e.player.inv[this.e.player.slot];
-                let banner = document.getElementById('item-name-banner');
-                if(banner) {
-                    if(curId && BLOCK_PROPS[curId]) {
-                        banner.innerText = BLOCK_PROPS[curId].name;
-                        banner.style.opacity = '1';
-                        clearTimeout(this.bannerTimer);
-                        this.bannerTimer = setTimeout(() => banner.style.opacity = '0', 1800);
-                    } else {
-                        banner.style.opacity = '0';
-                    }
-                }
-            }
-        }
-
-        class Player {
-            constructor(e) {
-                this.e = e; 
-                this.pos = new THREE.Vector3(8.5, CONFIG.WATER_LEVEL + 7, 9.5); 
-                this.vel = new THREE.Vector3(); 
-                this.box = new THREE.Box3(); 
-                this.w = 0.3; this.h = 1.6; this.dead = false; this.onG = false; this.hp = 20; this.breath = 10; 
-                this.keys = {w:0, a:0, s:0, d:0, space:0, shift:0, c:0}; 
-                this.yaw = 0; this.pitch = -0.15; this.lock = false;
-                this.visitedBiomes = new Set();
-                this.chestOpened = false;
-                this.cactusTimer = 0;
-                
-                this.cam = new THREE.PerspectiveCamera(CONFIG.FOV, window.innerWidth/window.innerHeight, 0.1, 1000); 
-                this.cam.rotation.order = 'YXZ';
-                
-                this.fpArm = new THREE.Group(); 
-                const sleeveGeo = new THREE.BoxGeometry(0.16, 0.2, 0.16); const skinGeo = new THREE.BoxGeometry(0.14, 0.4, 0.14); 
-                const skinMat = new THREE.MeshStandardMaterial({ color: 0xcca482, roughness: 0.8 }); const sleeveMat = new THREE.MeshStandardMaterial({ color: 0x00aaff, roughness: 0.9 }); 
-                const sleeve = new THREE.Mesh(sleeveGeo, sleeveMat); sleeve.position.y = 0.2; const skin = new THREE.Mesh(skinGeo, skinMat); skin.position.y = -0.1; 
-                this.fpArm.add(sleeve); this.fpArm.add(skin);
-                this.aO = new THREE.Vector3(0.5, -0.4, -0.6); this.fpArm.position.copy(this.aO); this.fpArm.rotation.set(Math.PI/4, -Math.PI/6, 0); 
-                this.cam.add(this.fpArm); this.e.scene.add(this.cam);
-                
-                this.sTime = 0; 
-                this.inv = new Array(36).fill(0);
-                this.invCount = new Array(36).fill(0);
-                this.inv[0] = BLOCKS.SWORD; this.invCount[0] = 1;
-                this.inv[1] = BLOCKS.COBBLESTONE; this.invCount[1] = 16;
-                this.inv[2] = BLOCKS.DIRT; this.invCount[2] = 16;
-                this.inv[3] = BLOCKS.TORCH; this.invCount[3] = 8;
-
-                this.slot = 0; this.isM = false; this.mTime = 0; this.stepSoundTimer = 0;
-                
-                this.hl = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.006,1.006,1.006)), new THREE.LineBasicMaterial({color:0x000000, linewidth:2})); 
-                this.hl.visible=false; this.e.scene.add(this.hl);
-
-                this.setup(); this.updArm(); this.updHp();
-            }
-
-            giveItem(id, count = 1) {
-                for(let i=0; i<36; i++) {
-                    if(this.inv[i] === id && this.invCount[i] + count <= 64 && !(BLOCK_PROPS[id]?.toolType)) {
-                        this.invCount[i] += count;
-                        if(this.e.ui) this.e.ui.updateHotbar();
-                        this.updArm();
-                        return true;
-                    }
-                }
-                for(let i=0; i<36; i++) {
-                    if(!this.inv[i] || this.inv[i] === 0) {
-                        this.inv[i] = id;
-                        this.invCount[i] = count;
-                        if(this.e.ui) this.e.ui.updateHotbar();
-                        this.updArm();
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            openStarterChest() {
-                this.e.audio.playChestOpen();
-                XboxAchv.unlock('Chest Hunter');
-                this.e.tutorial.completeStep(1);
-                if (!this.chestOpened) {
-                    this.chestOpened = true;
-                    this.giveItem(BLOCKS.APPLE, 5);
-                    this.giveItem(BLOCKS.WOOD, 2);
-                    this.giveItem(BLOCKS.GLASS, 8);
-                    this.giveItem(BLOCKS.TORCH, 8);
-                    showToast("🎁 Baú Inicial Aberto: +5 Maçãs, +2 Troncos, +8 Vidros e +8 Tochas!");
-                } else {
-                    showToast("📦 O Baú Inicial já foi recolhido! Agora extrai uma árvore lá fora.");
-                }
-            }
-
-            updHp() { 
-                let hc=document.getElementById('health-bar'); if(!hc)return; hc.innerHTML=''; 
-                for(let i=0;i<10;i++){ 
-                    let h=document.createElement('div'); h.className='heart'; 
-                    if(this.hp>=(i+1)*2)h.innerHTML='❤️'; else if(this.hp===(i+1)*2-1)h.innerHTML='💔'; else h.innerHTML='🖤'; 
-                    hc.appendChild(h); 
-                } 
-            }
-            
-            dmg(a) { 
-                if(this.dead) return; this.hp-=a; this.e.audio.playHit(); 
-                let o=document.getElementById('damage-flash'); if(o){ o.style.opacity='1'; setTimeout(()=>o.style.opacity='0',200); } 
-                this.pitch-=0.12; this.updHp(); if(this.hp<=0) this.die(); 
-            }
-
-            lockF() { 
-                try{document.body.requestPointerLock();}catch(e){} 
-                this.lock=true; 
-                document.querySelectorAll('.menu-overlay').forEach(m=>m.style.display='none'); 
-                let inv=document.getElementById('ui-crafting'); if(inv) inv.style.display='none'; 
-                if(!this.dead) { let hud=document.getElementById('hud'); if(hud) hud.style.display='block'; } 
-            }
-
-            die() { this.dead=true; try{document.exitPointerLock();}catch(e){} let d=document.getElementById('death-screen'); if(d)d.style.display='flex'; this.isM=false; }
-            respawn() { this.dead=false; this.hp=20; this.breath=10; this.updHp(); this.pos.set(8.5,CONFIG.WATER_LEVEL+8,9.5); this.vel.set(0,0,0); this.pitch=0; let d=document.getElementById('death-screen'); if(d)d.style.display='none'; this.lockF(); }
-            
-            raycast(origin, direction, maxDistance) {
-                let x = Math.floor(origin.x);
-                let y = Math.floor(origin.y);
-                let z = Math.floor(origin.z);
-
-                const dx = direction.x; const dy = direction.y; const dz = direction.z;
-                const stepX = Math.sign(dx); const stepY = Math.sign(dy); const stepZ = Math.sign(dz);
-
-                const tDeltaX = stepX !== 0 ? Math.abs(1 / dx) : Infinity;
-                const tDeltaY = stepY !== 0 ? Math.abs(1 / dy) : Infinity;
-                const tDeltaZ = stepZ !== 0 ? Math.abs(1 / dz) : Infinity;
-
-                let tMaxX = stepX !== 0 ? (stepX > 0 ? (Math.floor(origin.x) + 1 - origin.x) : (origin.x - Math.floor(origin.x))) * tDeltaX : Infinity;
-                let tMaxY = stepY !== 0 ? (stepY > 0 ? (Math.floor(origin.y) + 1 - origin.y) : (origin.y - Math.floor(origin.y))) * tDeltaY : Infinity;
-                let tMaxZ = stepZ !== 0 ? (stepZ > 0 ? (Math.floor(origin.z) + 1 - origin.z) : (origin.z - Math.floor(origin.z))) * tDeltaZ : Infinity;
-
-                let steppedAxis = -1; 
-                let t = 0;
-
-                while (t <= maxDistance) {
-                    let voxel = this.e.world.getG(x, y, z);
-                    
-                    if (voxel !== 0 && voxel !== 8 && BLOCK_PROPS[voxel]) {
-                        let normal = new THREE.Vector3(0, 0, 0);
-                        if (steppedAxis === 0) normal.x = -stepX;
-                        if (steppedAxis === 1) normal.y = -stepY;
-                        if (steppedAxis === 2) normal.z = -stepZ;
-                        return { pos: new THREE.Vector3(x, y, z), norm: normal, block: voxel };
-                    }
-
-                    if (tMaxX < tMaxY) {
-                        if (tMaxX < tMaxZ) {
-                            x += stepX; t = tMaxX; tMaxX += tDeltaX; steppedAxis = 0;
-                        } else {
-                            z += stepZ; t = tMaxZ; tMaxZ += tDeltaZ; steppedAxis = 2;
-                        }
-                    } else {
-                        if (tMaxY < tMaxZ) {
-                            y += stepY; t = tMaxY; tMaxY += tDeltaY; steppedAxis = 1;
-                        } else {
-                            z += stepZ; t = tMaxZ; tMaxZ += tDeltaZ; steppedAxis = 2;
-                        }
-                    }
-                }
-                return null;
-            }
-
-            performAction(button) {
-                let cd=new THREE.Vector3(); this.cam.getWorldDirection(cd);
-                let lk = this.raycast(this.cam.position, cd, 6);
-                this.lk = lk;
-                this.sTime=1.0; 
-
-                if (button === 0) {
-                    if(this.e.mobs) {
-                        let ray = new THREE.Raycaster(this.cam.position, cd, 0, 4.2);
-                        let hits = ray.intersectObjects(this.e.mobs.list.map(m => m.group), true);
-                        if(hits.length > 0) { 
-                            let g = hits[0].object.parent; let mob = this.e.mobs.list.find(m => m.group === g); 
-                            if(mob) { mob.dmg(BLOCK_PROPS[this.inv[this.slot]]?.dmg || 2); return; } 
-                        }
-                    }
-                    if(lk) { this.isM=true; this.mTime=0; }
-                } else if (button === 2) {
-                    let id = this.inv[this.slot];
-                    if(lk && lk.block === BLOCKS.CHEST) {
-                        this.openStarterChest();
-                        return;
-                    }
-                    if(lk && lk.block === BLOCKS.CRAFTING_TABLE) { 
-                        this.lock=false; try{document.exitPointerLock();}catch(err){} 
-                        let hud=document.getElementById('hud'); if(hud) hud.style.display='none'; 
-                        let inv=document.getElementById('ui-crafting');
-                        if(inv) { inv.style.display='flex'; this.e.ui.renderCraftingMenu(); XboxAchv.unlock('Taking Inventory'); } 
-                        return; 
-                    }
-                    if(id === BLOCKS.APPLE && this.hp < 20) {
-                        this.e.audio.playEat();
-                        this.hp = Math.min(20, this.hp + 4);
-                        this.updHp();
-                        this.invCount[this.slot]--;
-                        if(this.invCount[this.slot]<=0){this.inv[this.slot]=0;}
-                        this.e.ui.updateHotbar();
-                        this.updArm();
-                        return;
-                    }
-                    
-                    if(lk && id && BLOCK_PROPS[id] && !BLOCK_PROPS[id].isItem) {
-                        let bx = lk.pos.x+lk.norm.x, by = lk.pos.y+lk.norm.y, bz = lk.pos.z+lk.norm.z;
-                        
-                        let pb = new THREE.Box3(
-                            new THREE.Vector3(this.pos.x - this.w + 0.05, this.pos.y - this.h + 0.05, this.pos.z - this.w + 0.05), 
-                            new THREE.Vector3(this.pos.x + this.w - 0.05, this.pos.y - 0.05, this.pos.z + this.w - 0.05)
-                        );
-                        let blockBox = new THREE.Box3(new THREE.Vector3(bx,by,bz), new THREE.Vector3(bx+1,by+1,bz+1));
-                        
-                        if(pb.intersectsBox(blockBox)) {
-                            this.pos.y = by + 1.01 + this.h;
-                            this.vel.y = 0;
-                            this.placeBlock(bx, by, bz, id);
-                        } else {
-                            this.placeBlock(bx, by, bz, id);
-                        }
-                    }
-                }
-            }
-
-            placeBlock(x, y, z, id) {
-                this.e.world.setG(x, y, z, id); 
-                this.e.audio.playPlace(BLOCK_PROPS[id].sound); 
-                this.invCount[this.slot]--; 
-                if(this.invCount[this.slot]<=0) { this.inv[this.slot]=0; this.invCount[this.slot]=0; } 
-                this.e.ui.updateHotbar(); this.updArm();
-            }
-
-            setup() {
-                const startFn = () => { this.e.audio.playUI(); this.lockF(); };
-                const btnStart = document.getElementById('btn-start');
-                if(btnStart) btnStart.onclick = startFn;
-                const hintPlay = document.getElementById('hint-play');
-                if(hintPlay) hintPlay.onclick = startFn;
-
-                const btnResume = document.getElementById('btn-resume');
-                if(btnResume) btnResume.onclick = () => { this.e.audio.playUI(); this.lockF(); };
-
-                const btnRespawn = document.getElementById('btn-respawn');
-                if(btnRespawn) btnRespawn.onclick = () => { this.e.audio.playUI(); this.respawn(); };
-
-                const openAchv = () => {
-                    this.e.audio.playUI();
-                    XboxAchv.updateUI();
-                    document.getElementById('achv-modal').style.display = 'flex';
-                };
-                document.getElementById('btn-open-achv').onclick = openAchv;
-                document.getElementById('hint-achv').onclick = openAchv;
-                document.getElementById('btn-pause-achv').onclick = openAchv;
-                document.getElementById('btn-close-achv').onclick = () => {
-                    this.e.audio.playUI();
-                    document.getElementById('achv-modal').style.display = 'none';
-                };
-
-                const openHelp = () => {
-                    this.e.audio.playUI();
-                    document.getElementById('help-modal').style.display = 'flex';
-                };
-                document.getElementById('btn-how-to').onclick = openHelp;
-                document.getElementById('hint-help').onclick = openHelp;
-                document.getElementById('btn-close-help').onclick = () => {
-                    this.e.audio.playUI();
-                    document.getElementById('help-modal').style.display = 'none';
-                };
-
-                document.getElementById('btn-toggle-time').onclick = () => {
-                    this.e.audio.playUI();
-                    this.e.time += 75;
-                    showToast("🌗 Ciclo Dia/Noite Alternado!");
-                    this.lockF();
-                };
-
-                document.getElementById('btn-spawn-creeper').onclick = () => {
-                    this.e.audio.playUI();
-                    this.e.mobs.spawn(true);
-                    showToast("💥 Creeper e Zombie invocados nas redondezas!");
-                    this.lockF();
-                };
-
-                document.getElementById('btn-main-menu').onclick = () => {
-                    this.e.audio.playUI();
-                    document.getElementById('pause-menu').style.display = 'none';
-                    document.getElementById('main-menu').style.display = 'flex';
-                };
-                
-                document.addEventListener('pointerlockchange', ()=>{ 
-                    if(document.pointerLockElement===document.body) { this.lock=true; } 
-                    else if(this.lock){ 
-                        this.lock=false; 
-                        let hud=document.getElementById('hud'); if(hud) hud.style.display='none'; 
-                        let inv=document.getElementById('ui-crafting');
-                        if(!this.dead && (!inv || inv.style.display!=='flex')) { let pause=document.getElementById('pause-menu'); if(pause) pause.style.display='flex'; }
-                        this.isM=false; let m=document.getElementById('mining-bar-container'); if(m) m.style.display='none'; 
-                    } 
-                });
-                
-                document.addEventListener('contextmenu', e => e.preventDefault()); 
-                
-                document.addEventListener('mousedown', e=>{
-                    if(!this.lock) return; 
-                    if(e.target.closest('.menu-overlay') || e.target.closest('.xb-window')) return;
-                    this.performAction(e.button);
-                });
-                document.addEventListener('mouseup', e=>{ if(e.button===0){ this.isM=false; this.mTime=0; let m=document.getElementById('mining-bar-container'); if(m) m.style.display='none'; } });
-                document.addEventListener('mousemove', e=>{ if(!this.lock||this.dead)return; this.yaw-=e.movementX*0.0022; this.pitch-=e.movementY*0.0022; this.pitch=Math.max(-1.52,Math.min(1.52,this.pitch)); });
-                
-                const sk = (c,v)=>{ 
-                    if(c==='KeyW')this.keys.w=v; if(c==='KeyS')this.keys.s=v; if(c==='KeyA')this.keys.a=v; if(c==='KeyD')this.keys.d=v; if(c==='Space')this.keys.space=v; if(c==='ShiftLeft')this.keys.shift=v; if(c==='KeyC')this.keys.c=v; 
-                    if(v===1) { 
-                        if(c==='Escape') { 
-                            let inv=document.getElementById('ui-crafting'); 
-                            if(inv && inv.style.display==='flex') { inv.style.display='none'; this.lockF(); }
-                            else if(this.lock){ 
-                                this.lock=false; try{document.exitPointerLock();}catch(e){} 
-                                let hud=document.getElementById('hud'); if(hud) hud.style.display='none'; 
-                                let pause=document.getElementById('pause-menu'); if(pause) pause.style.display='flex'; 
-                            } 
-                        } 
-                        if(c==='KeyE') { 
-                            let inv=document.getElementById('ui-crafting'); 
-                            if(this.lock){ 
-                                this.lock=false; try{document.exitPointerLock();}catch(e){} 
-                                let hud=document.getElementById('hud'); if(hud) hud.style.display='none'; 
-                                if(inv) {
-                                    inv.style.display='flex';
-                                    this.e.audio.playUI();
-                                    this.e.ui.renderCraftingMenu();
-                                    XboxAchv.unlock('Taking Inventory');
-                                }
-                            } else if(inv && inv.style.display==='flex') {
-                                this.e.audio.playUI();
-                                inv.style.display='none';
-                                this.lockF();
-                            } 
-                        } 
-                        if(c.startsWith('Digit')) { let n=parseInt(c.replace('Digit','')); if(n>=1&&n<=9){ this.slot=n-1; this.e.ui.updateHotbar(); this.updArm(); } } 
-                    } 
-                };
-                document.addEventListener('keydown', e=>{ sk(e.code,1); }); document.addEventListener('keyup', e=>sk(e.code,0));
-                document.addEventListener('wheel', e=>{ if(!this.lock)return; if(e.deltaY>0)this.slot=(this.slot+1)%9; else this.slot=(this.slot-1+9)%9; this.e.ui.updateHotbar(); this.updArm(); }, {passive:true});
-            }
-
-            chkCol(box) { 
-                let mx=Math.floor(box.min.x), mX=Math.floor(box.max.x), my=Math.floor(box.min.y), mY=Math.floor(box.max.y), mz=Math.floor(box.min.z), mZ=Math.floor(box.max.z); 
-                for(let y=my;y<=mY;y++) for(let z=mz;z<=mZ;z++) for(let x=mx;x<=mX;x++){
-                    let v=this.e.world.getG(x,y,z);
-                    if(v === BLOCKS.CACTUS && this.cactusTimer <= 0) {
-                        this.dmg(1);
-                        this.cactusTimer = 0.8;
-                    }
-                    if(v!==0 && v!==8 && BLOCK_PROPS[v] && BLOCK_PROPS[v].solid) return true;
-                }
-                return false; 
-            }
-
-            update(dt) {
-                if(!this.lock&&!this.dead) return; 
-                if(this.cactusTimer > 0) this.cactusTimer -= dt;
-                if(this.dead) { this.vel.y-=40*dt; this.pos.y+=this.vel.y*dt; if(this.pos.y<0)this.pos.y=0; this.cam.position.copy(this.pos); this.cam.rotation.set(this.pitch,this.yaw,0,'YXZ'); return; }
-                
-                this.vel.x-=this.vel.x*12*dt; this.vel.z-=this.vel.z*12*dt; 
-                let d=new THREE.Vector3(0,0,-1).applyAxisAngle(new THREE.Vector3(0,1,0),this.yaw).normalize(), r=new THREE.Vector3(1,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),this.yaw).normalize(), m=new THREE.Vector3(); 
-                if(this.keys.w)m.add(d); if(this.keys.s)m.sub(d); if(this.keys.a)m.sub(r); if(this.keys.d)m.add(r);
-                
-                let isSneak = this.keys.shift;
-                let inW = this.e.world.getG(Math.floor(this.pos.x), Math.floor(this.pos.y+0.5), Math.floor(this.pos.z)) === 8; let wo = document.getElementById('underwater-overlay');
-                if(inW) { if(wo) wo.style.opacity = '1'; this.breath -= dt; if(this.breath <= 0) { this.dmg(2); this.breath = 2; } } else { if(wo) wo.style.opacity = '0'; this.breath = 10; }
-                
-                if(m.lengthSq()>0) { m.normalize(); let sp=isSneak?4:(inW?4:10); this.vel.x+=m.x*sp*10*dt; this.vel.z+=m.z*sp*10*dt; }
-                this.vel.y -= inW ? 15*dt : 40*dt; 
-                if(this.keys.space) { if(this.onG){this.vel.y=13;this.onG=false;} else if(inW) {this.vel.y += 20*dt; } }
-                
-                let pVY = this.vel.y; 
-                const rA=(ax)=>{ 
-                    this.pos[ax]+=this.vel[ax]*dt; 
-                    this.box.set(new THREE.Vector3(this.pos.x-this.w,this.pos.y-this.h,this.pos.z-this.w), new THREE.Vector3(this.pos.x+this.w,this.pos.y+0.1,this.pos.z+this.w)); 
-                    if(this.chkCol(this.box)){ 
-                        this.pos[ax]-=this.vel[ax]*dt; 
-                        if(ax==='y'&&this.vel.y<0){ if(pVY < -23 && !inW) { let dg = Math.floor((-pVY-21)/2); if(dg>0) this.dmg(dg); } this.onG=true; } 
-                        this.vel[ax]=0; 
-                    } 
-                };
-                this.onG=false; rA('x');rA('z');rA('y'); if(this.pos.y<-10) this.die();
-                
-                let bob=0; if(this.onG&&m.lengthSq()>0){ bob=Math.sin(this.e.time*(isSneak?10:14))*0.12; }
-                
-                this.cam.position.set(this.pos.x,this.pos.y+bob+(isSneak?-0.3:0),this.pos.z); 
-                this.cam.rotation.set(this.pitch,this.yaw,0,'YXZ'); 
-                this.cam.fov += ((this.keys.c?CONFIG.FOV/3.5:CONFIG.FOV) - this.cam.fov)*8*dt; this.cam.updateProjectionMatrix();
-                
-                if(this.sTime>0){ this.sTime-=dt*8; let sw=Math.sin(this.sTime*Math.PI); this.fpArm.position.z=this.aO.z-(sw*0.6); this.fpArm.position.y=this.aO.y-(sw*0.4); this.fpArm.rotation.x=(Math.PI/4)-(sw*1.8); } 
-                else { this.sTime=0; this.fpArm.position.z=this.aO.z; this.fpArm.rotation.x=Math.PI/4; } 
-                this.fpArm.position.y+=(bob*0.6)+(Math.sin(this.e.time*2)*0.02); this.fpArm.position.x+=(Math.cos(this.e.time*1.5)*0.015);
-                
-                let cd=new THREE.Vector3(); this.cam.getWorldDirection(cd);
-                this.lk = this.raycast(this.cam.position, cd, 6);
-                
-                if(this.lk) { this.hl.position.copy(this.lk.pos).addScalar(0.5); this.hl.visible=true; } else { this.hl.visible=false; }
-                
-                if(this.isM) {
-                    let c=document.getElementById('mining-bar-container'), b=document.getElementById('mining-bar-fill'); 
-                    if(this.lk && this.lk.block!==13 && BLOCK_PROPS[this.lk.block]) { 
-                        let pr=BLOCK_PROPS[this.lk.block], hd=pr.hardness||1, sp=1, hid=this.inv[this.slot], hp=BLOCK_PROPS[hid]; 
-                        if(hp&&hp.isItem){ if(hp.toolType===pr.tool)sp=hp.multiplier; else if(hp.toolType==='sword')sp=1.5; } 
-                        this.mTime+=dt*sp; this.sTime=0.5; 
-
-                        this.stepSoundTimer += dt;
-                        if(this.stepSoundTimer >= 0.22) {
-                            this.stepSoundTimer = 0;
-                            this.e.audio.playMineStep(pr.sound);
-                        }
-
-                        if(b) b.style.width=`${Math.min((this.mTime/hd)*100,100)}%`; if(c) c.style.display='block'; 
-                        if(this.mTime>=hd) { 
-                            let minedBlock = this.lk.block;
-                            this.e.audio.playDig(pr.sound); 
-                            if(this.e.parts) this.e.parts.spawn(this.lk.pos, minedBlock);
-                            this.e.world.setG(this.lk.pos.x,this.lk.pos.y,this.lk.pos.z,0); 
-
-                            if(minedBlock === BLOCKS.CHEST) {
-                                this.openStarterChest();
-                            } else if(this.e.drops) {
-                                this.e.drops.spawn(this.lk.pos, minedBlock);
-                            }
-
-                            if(minedBlock === BLOCKS.WOOD) {
-                                XboxAchv.unlock('Getting Wood');
-                                this.e.tutorial.completeStep(2);
-                            }
-
-                            this.mTime=0; if(c) c.style.display='none'; 
-                        } 
-                    } else { this.mTime=0; if(c) c.style.display='none'; }
-                }
-            }
-
-            updArm() {
-                let id=this.inv[this.slot]; if(this.heldItem) { this.fpArm.remove(this.heldItem); this.heldItem = null; }
-                if(!id||id===0) return; 
-                let tMap = this.e.atlas.getMap(id);
-                let ti=tMap[0], ts=1/16, tu=(ti%16)*ts, tv=1-(Math.floor(ti/16)*ts)-ts; 
-                let isItem = Boolean(BLOCK_PROPS[id]&&BLOCK_PROPS[id].isItem);
-                let geo = isItem ? new THREE.PlaneGeometry(0.5,0.5) : new THREE.BoxGeometry(0.24,0.24,0.24); 
-                this.heldItem = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({map:this.e.atlas.tex, transparent:true, alphaTest:0.1, side:THREE.DoubleSide}));
-                if(isItem) { this.heldItem.position.set(-0.1, 0.3, -0.1); this.heldItem.rotation.set(0, Math.PI/4, 0); } else { this.heldItem.position.set(-0.1, 0.2, -0.1); }
-                let uH=this.heldItem.geometry.attributes.uv; for(let i=0;i<uH.count;i++)uH.setXY(i,tu+(uH.getX(i)*ts),tv+(uH.getY(i)*ts)); uH.needsUpdate=true; this.fpArm.add(this.heldItem);
-            }
-        }
-
-        class Engine {
-            constructor() {
-                this.time = 15; 
-                this.clock = new THREE.Clock(); 
-                this.skyC = { d: new THREE.Color(0x78A7FF), s: new THREE.Color(0xd97757), n: new THREE.Color(0x050716) };
-                this.scene = new THREE.Scene(); 
-                this.scene.background = this.skyC.d.clone(); 
-                this.scene.fog = new THREE.FogExp2(0x78A7FF, 0.014);
-                
-                this.renderer = new THREE.WebGLRenderer({ antialias: false }); 
-                this.renderer.setSize(window.innerWidth, window.innerHeight); 
-                this.renderer.shadowMap.enabled = true; 
-                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
-                document.body.appendChild(this.renderer.domElement);
-                
-                this.ambLight = new THREE.AmbientLight(0xffffff, 0.52);
-                this.scene.add(this.ambLight); 
-                
-                this.sun = new THREE.DirectionalLight(0xfff4e0, 1.15); 
-                this.sun.castShadow=true; this.sun.shadow.mapSize.width=1024; this.sun.shadow.mapSize.height=1024; 
-                this.sun.shadow.camera.near=0.5; this.sun.shadow.camera.far=110; this.sun.shadow.camera.left=-35; 
-                this.sun.shadow.camera.right=35; this.sun.shadow.camera.top=35; this.sun.shadow.camera.bottom=-35; 
-                this.scene.add(this.sun); this.scene.add(this.sun.target); 
-                
-                this.cloudsGeo = new THREE.PlaneGeometry(800, 800); 
-                this.cloudsMat = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.78, side: THREE.DoubleSide}); 
-                this.clouds = new THREE.Mesh(this.cloudsGeo, this.cloudsMat); 
-                this.clouds.rotation.x = Math.PI / 2; this.clouds.position.y = 95; 
-                this.scene.add(this.clouds);
-
-                const starGeo = new THREE.BufferGeometry();
-                const starVerts = [];
-                for(let i=0; i<350; i++) {
-                    let theta = Math.random() * Math.PI * 2;
-                    let phi = Math.acos(Math.random() * 0.85 + 0.15);
-                    let r = 260;
-                    starVerts.push(r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
-                }
-                starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
-                this.stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 2.2, transparent: true, opacity: 0 }));
-                this.scene.add(this.stars);
-                
-                this.torchLight = new THREE.PointLight(0xffaa33, 0, 16); 
-                this.scene.add(this.torchLight);
-
-                window.App = this;
-                updateLoading(25, "A Sintetizar Texturas 16x16 e Sons...");
-                this.tutorial = new TutorialManager();
-                this.audio = new AudioManager(); 
-                this.atlas = new AtlasGen(); 
-                XboxAchv.updateUI();
-
-                let sp = document.getElementById('splash-text');
-                if(sp) sp.innerText = SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)];
-                
-                this.matS = new THREE.MeshStandardMaterial({ map: this.atlas.tex, vertexColors: true, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide, roughness: 0.85 });
-                this.matW = new THREE.MeshStandardMaterial({ map: this.atlas.tex, vertexColors: true, color: 0x3399ff, transparent: true, opacity: 0.82, roughness: 0.1, metalness: 0.6 });
-
-                updateLoading(60, "A Construir Forte Inicial e Biomas...");
-                this.world = new WorldManager(this); 
-                this.player = new Player(this);
-                this.ui = new UIManager(this);
-                this.mobs = new MobManager(this);
-                this.drops = new DroppedItems(this);
-                this.parts = new Particles(this);
-                
-                for(let cx=-1; cx<=1; cx++) {
-                    for(let cz=-1; cz<=1; cz++) {
-                        let k = this.world.k(cx, cz);
-                        let nc = new Chunk(cx, cz, this);
-                        nc.generate();
-                        this.world.chunks.set(k, nc);
-                    }
-                }
-                this.world.procTrees();
-                this.initClouds();
-
-                window.addEventListener('resize', ()=>{ 
-                    this.player.cam.aspect=window.innerWidth/window.innerHeight; 
-                    this.player.cam.updateProjectionMatrix(); 
-                    this.renderer.setSize(window.innerWidth,window.innerHeight); 
-                });
-                
-                updateLoading(100, "MUNDO XBOX 360 PRONTO!"); 
-                setTimeout(()=>{ 
-                    let ls=document.getElementById('loading-screen'); 
-                    if(ls){ 
-                        ls.style.opacity='0'; 
-                        setTimeout(()=>{ 
-                            ls.style.display='none'; 
-                            let mm=document.getElementById('main-menu'); 
-                            if(mm) mm.style.display='flex'; 
-                        }, 550); 
-                    } 
-                }, 450);
-                
-                this.renderer.setAnimationLoop(() => this.loop());
-            }
-
-            initClouds() {
-                let cv = document.createElement('canvas'); cv.width=128; cv.height=128; let ctx=cv.getContext('2d'); ctx.fillStyle='rgba(255,255,255,0)'; ctx.fillRect(0,0,128,128); ctx.fillStyle='rgba(255,255,255,1)';
-                for(let i=0;i<90;i++){ let cx=Math.random()*128, cy=Math.random()*128, w=Math.random()*22+10, h=Math.random()*12+5; ctx.fillRect(cx,cy,w,h); }
-                let tex = new THREE.CanvasTexture(cv); tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping; tex.magFilter = THREE.NearestFilter; this.cloudsMat.map = tex; this.cloudsMat.needsUpdate = true;
-            }
-
-            loop() {
-                let dt = Math.min(this.clock.getDelta(), 0.05); 
-                this.time += dt; 
-                let dC = (this.time * 0.02) % (Math.PI * 2);
-
-                const mainMenuEl = document.getElementById('main-menu');
-                if (!this.player.lock && mainMenuEl && mainMenuEl.style.display === 'flex') {
-                    this.player.cam.position.set(8.5 + Math.cos(this.time * 0.15) * 14, CONFIG.WATER_LEVEL + 14, 8.5 + Math.sin(this.time * 0.15) * 14);
-                    this.player.cam.lookAt(8.5, CONFIG.WATER_LEVEL + 5, 6.5);
-                } else {
-                    this.player.update(dt);
-                }
-
-                this.world.update(this.player.pos); 
-                this.mobs.update(dt); 
-                this.drops.update(dt); 
-                this.parts.update(dt);
-                
-                if(this.cloudsMat.map) { 
-                    this.cloudsMat.map.offset.x += dt * 0.004; 
-                    this.cloudsMat.map.offset.y += dt * 0.002; 
-                    this.clouds.position.set(this.player.pos.x, 95, this.player.pos.z); 
-                }
-                this.stars.position.set(this.player.pos.x, 0, this.player.pos.z);
-                
-                let sH = Math.sin(dC); 
-                this.isDay = sH > -0.05;
-                if(this.sun) { 
-                    this.sun.position.set(this.player.pos.x+Math.cos(dC)*100, sH*100, this.player.pos.z+Math.sin(dC)*100); 
-                    this.sun.target.position.copy(this.player.pos); 
-                    this.sun.target.updateMatrixWorld(); 
-                }
-                if(this.isDay) { 
-                    let t=Math.min(Math.max(sH*3,0),1); 
-                    this.scene.background.lerpColors(this.skyC.s,this.skyC.d,t); 
-                    if(this.sun) this.sun.intensity=Math.max(0.2,sH*1.3); 
-                    this.ambLight.intensity = 0.52;
-                    this.scene.fog.color.copy(this.scene.background); 
-                    this.cloudsMat.color.setHex(0xffffff); 
-                    this.stars.material.opacity = 0;
-                } else { 
-                    let t=Math.max((sH+0.35)*3,0); 
-                    this.scene.background.lerpColors(this.skyC.n,this.skyC.s,t); 
-                    if(this.sun) this.sun.intensity=0.05; 
-                    this.ambLight.intensity = 0.25;
-                    this.scene.fog.color.copy(this.scene.background); 
-                    this.cloudsMat.color.setHex(0x444455); 
-                    this.stars.material.opacity = Math.min(1, -sH * 1.5);
-                }
-                
-                if (this.player.inv[this.player.slot] === BLOCKS.TORCH) { 
-                    this.torchLight.intensity = 1.4; 
-                    this.torchLight.position.copy(this.player.pos); 
-                } else { 
-                    this.torchLight.intensity = 0; 
-                }
-
-                if(Math.floor(this.time*10)%3===0 && this.player.lock) { 
-                    let fE=document.getElementById('fps-counter'); if(fE)fE.innerText=`FPS: ${Math.round(1/Math.max(dt,0.001))}`; 
-                    let pE=document.getElementById('pos-counter'); if(pE)pE.innerText=`XYZ: ${this.player.pos.x.toFixed(0)} / ${this.player.pos.y.toFixed(0)} / ${this.player.pos.z.toFixed(0)}`; 
-                    
-                    let curBiome = Chunk.getBiomeAt(Math.floor(this.player.pos.x), Math.floor(this.player.pos.z));
-                    let bE=document.getElementById('biome-counter'); if(bE) bE.innerText = `Bioma: ${curBiome}`;
-                    let tE=document.getElementById('time-counter'); if(tE) tE.innerText = `Hora: ${this.isDay ? 'Dia ☀️' : 'Noite 🌙'} | [E] Crafting`;
-
-                    this.player.visitedBiomes.add(curBiome);
-                    if(this.player.visitedBiomes.size >= 3) {
-                        XboxAchv.unlock('Adventurer');
-                    }
-                }
-                
-                let vig = document.getElementById('vignette'); 
-                if(vig) vig.style.display = (this.player.pos.y < CONFIG.WATER_LEVEL || !this.isDay) ? 'block' : 'none';
-                
-                this.renderer.render(this.scene, this.player.cam);
-            }
-        }
-
-        window.onload = function () {
-            new Engine();
-        };
-    </script>
-</body>
-</html>
+                this.group.children.forEach(c => c.material.color.setHex(0xff777
