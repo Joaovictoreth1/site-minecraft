@@ -1679,7 +1679,7 @@ class Player {
         }
         if(this.hp <= 0) {
             document.exitPointerLock();
-            document.getElementById('death-screen').style.display = 'flex';
+            document.getElementById('death-screen').showModal();
         }
     }
 
@@ -1695,7 +1695,7 @@ class Player {
         this.vel.set(0, 0, 0);
         this.renderHealth();
         this.renderHunger();
-        document.getElementById('death-screen').style.display = 'none';
+        document.getElementById('death-screen').close();
         this.e.requestLock();
     }
 
@@ -2031,17 +2031,24 @@ class CraftingUI {
     setupEvents() {
         document.getElementById('btn-close-inv').onclick = () => this.toggle(false);
         document.getElementById('ui-btn-craft').onclick = () => this.craftSelected();
+        this.el.addEventListener('cancel', (event) => {
+            event.preventDefault();
+            this.toggle(false);
+        });
     }
 
     toggle(forceState = null) {
-        this.open = forceState !== null ? forceState : !this.open;
+        const next = forceState ?? !this.open;
+        if (next === this.open) return;
+        this.open = next;
         if(this.open) {
             XboxAchv.unlock('Taking Inventory');
             document.exitPointerLock();
-            this.el.style.display = 'flex';
             this.render();
+            this.el.showModal();
+            document.getElementById('btn-close-inv').focus();
         } else {
-            this.el.style.display = 'none';
+            this.el.close();
             if(this.e.started && !this.e.paused) this.e.requestLock();
         }
     }
@@ -2077,14 +2084,26 @@ class CraftingUI {
     }
 
     render() {
+        const activeControl = document.activeElement.dataset.craftControl;
+        const controls = new Map();
+        const makeButton = (key, label) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.dataset.craftControl = key;
+            button.setAttribute('aria-label', label);
+            controls.set(key, button);
+            return button;
+        };
+
         // Abas
         const tabsEl = document.getElementById('ui-tabs');
         tabsEl.innerHTML = '';
         RECIPE_CATEGORIES.forEach(cat => {
-            const tab = document.createElement('div');
+            const tab = makeButton(`category-${cat.id}`, cat.name);
             tab.className = `xb-tab ${cat.id === this.currentCat ? 'active' : ''}`;
+            tab.setAttribute('aria-pressed', cat.id === this.currentCat);
             tab.title = cat.name;
-            tab.innerHTML = `<img src="${this.e.atlas.ui[cat.icon]}" alt="${cat.name}">`;
+            tab.innerHTML = `<img src="${this.e.atlas.ui[cat.icon]}" alt="">`;
             tab.onclick = () => {
                 this.currentCat = cat.id;
                 this.selectedRecipeIdx = 0;
@@ -2099,11 +2118,12 @@ class CraftingUI {
         const carEl = document.getElementById('ui-carousel');
         carEl.innerHTML = '';
         catRecipes.forEach((rec, idx) => {
-            const item = document.createElement('div');
+            const item = makeButton(`recipe-${idx}`, rec.name);
             const ok = this.canCraft(rec);
             item.className = `xb-carousel-item ${idx === this.selectedRecipeIdx ? 'selected' : ''}`;
             item.style.opacity = ok ? '1' : '0.55';
-            item.innerHTML = `<img src="${this.e.atlas.ui[rec.res]}"><span class="slot-qty">${rec.count > 1 ? rec.count : ''}</span>`;
+            item.setAttribute('aria-pressed', idx === this.selectedRecipeIdx);
+            item.innerHTML = `<img src="${this.e.atlas.ui[rec.res]}" alt=""><span class="slot-qty">${rec.count > 1 ? rec.count : ''}</span>`;
             item.onclick = () => {
                 this.selectedRecipeIdx = idx;
                 this.e.audio.playUI();
@@ -2142,6 +2162,7 @@ class CraftingUI {
         const craftable = this.canCraft(activeRec);
         btnCraft.className = `btn-craft ${craftable ? '' : 'disabled'}`;
         btnCraft.innerText = craftable ? `FABRICAR ${activeRec.name.toUpperCase()} (A)` : 'MATERIAIS INSUFICIENTES';
+        btnCraft.setAttribute('aria-disabled', !craftable);
 
         // Inventário Principal & Hotbar
         const mainInvEl = document.getElementById('ui-inv-main');
@@ -2150,11 +2171,12 @@ class CraftingUI {
         hotbarInvEl.innerHTML = '';
 
         const createCell = (slotIdx) => {
-            const cell = document.createElement('div');
-            cell.className = 'inv-cell';
             const it = this.e.player.inv[slotIdx];
+            const itemName = BLOCK_PROPS[it?.id]?.name;
+            const cell = makeButton(`slot-${slotIdx}`, `Espaço ${slotIdx + 1}: ${itemName ? `${itemName} (${it.count})` : 'vazio'}`);
+            cell.className = 'inv-cell';
             if(it && this.e.atlas.ui[it.id]) {
-                cell.innerHTML = `<img src="${this.e.atlas.ui[it.id]}">${it.count > 1 ? `<span class="slot-qty">${it.count}</span>` : ''}`;
+                cell.innerHTML = `<img src="${this.e.atlas.ui[it.id]}" alt="">${it.count > 1 ? `<span class="slot-qty">${it.count}</span>` : ''}`;
                 cell.title = BLOCK_PROPS[it.id]?.name || '';
             }
             cell.onclick = () => {
@@ -2174,6 +2196,7 @@ class CraftingUI {
 
         for(let i = 9; i < 36; i++) mainInvEl.appendChild(createCell(i));
         for(let i = 0; i < 9; i++) hotbarInvEl.appendChild(createCell(i));
+        controls.get(activeControl)?.focus();
     }
 }
 
@@ -2183,6 +2206,8 @@ export class GameEngine {
         this.paused = false;
         this.isNight = false;
         this.dayTime = 0.25;
+        this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        this.touchControls = window.matchMedia('(pointer: coarse)');
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x78a7ff);
@@ -2193,6 +2218,8 @@ export class GameEngine {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.BasicShadowMap;
+        this.renderer.domElement.tabIndex = -1;
+        this.renderer.domElement.setAttribute('aria-label', 'Mundo de voxels');
         document.body.appendChild(this.renderer.domElement);
 
         this.ambientLight = new THREE.AmbientLight(0xffffff, 0.68);
@@ -2273,10 +2300,20 @@ export class GameEngine {
         this.loop(this.lastTime);
     }
 
-    requestLock() {
+    async requestLock() {
+        if (this.touchControls.matches) return;
         try {
-            this.renderer.domElement.requestPointerLock();
-        } catch (err) {}
+            await this.renderer.domElement.requestPointerLock();
+        } catch {
+            this.updatePointerLockBanner();
+        }
+    }
+
+    updatePointerLockBanner() {
+        const locked = document.pointerLockElement === this.renderer.domElement;
+        const show = this.started && !this.paused && !this.craftingUI.open && this.player.hp > 0 && !this.touchControls.matches && !locked;
+        document.getElementById('pointer-lock-banner').style.display = show ? 'block' : 'none';
+        if (!locked) this.player.mining.active = false;
     }
 
     startGame() {
@@ -2286,6 +2323,8 @@ export class GameEngine {
         this.paused = false;
         document.getElementById('main-menu').style.display = 'none';
         document.getElementById('hud').style.display = 'block';
+        document.getElementById('mobile-controls').hidden = false;
+        this.renderer.domElement.focus();
         this.requestLock();
     }
 
@@ -2294,9 +2333,9 @@ export class GameEngine {
         const pm = document.getElementById('pause-menu');
         if(state) {
             document.exitPointerLock();
-            pm.style.display = 'flex';
+            if (!pm.open) pm.showModal();
         } else {
-            pm.style.display = 'none';
+            pm.close();
             this.requestLock();
         }
     }
@@ -2314,6 +2353,15 @@ export class GameEngine {
     }
 
     bindEvents() {
+        const achievements = document.getElementById('achv-modal');
+        const help = document.getElementById('help-modal');
+        const pause = document.getElementById('pause-menu');
+        pause.addEventListener('cancel', (event) => {
+            event.preventDefault();
+            this.setPaused(false);
+        });
+        document.getElementById('death-screen').addEventListener('cancel', (event) => event.preventDefault());
+
         window.addEventListener('resize', () => {
             this.player.cam.aspect = window.innerWidth / window.innerHeight;
             this.player.cam.updateProjectionMatrix();
@@ -2325,27 +2373,27 @@ export class GameEngine {
 
         document.getElementById('btn-open-achv').onclick = () => {
             this.audio.playUI();
-            document.getElementById('achv-modal').style.display = 'flex';
+            achievements.showModal();
         };
         document.getElementById('hint-achv').onclick = () => document.getElementById('btn-open-achv').click();
         document.getElementById('btn-close-achv').onclick = () => {
             this.audio.playUI();
-            document.getElementById('achv-modal').style.display = 'none';
+            achievements.close();
         };
 
         document.getElementById('btn-how-to').onclick = () => {
             this.audio.playUI();
-            document.getElementById('help-modal').style.display = 'flex';
+            help.showModal();
         };
         document.getElementById('hint-help').onclick = () => document.getElementById('btn-how-to').click();
         document.getElementById('btn-close-help').onclick = () => {
             this.audio.playUI();
-            document.getElementById('help-modal').style.display = 'none';
+            help.close();
         };
 
         document.getElementById('btn-resume').onclick = () => this.setPaused(false);
         document.getElementById('btn-pause-achv').onclick = () => {
-            document.getElementById('achv-modal').style.display = 'flex';
+            achievements.showModal();
         };
         document.getElementById('btn-toggle-time').onclick = () => {
             this.toggleDayNight();
@@ -2362,22 +2410,18 @@ export class GameEngine {
         document.getElementById('btn-main-menu').onclick = () => {
             this.started = false;
             this.paused = false;
-            document.getElementById('pause-menu').style.display = 'none';
+            pause.close();
             document.getElementById('hud').style.display = 'none';
+            document.getElementById('mobile-controls').hidden = true;
             document.getElementById('main-menu').style.display = 'flex';
+            document.getElementById('btn-start').focus();
         };
 
         document.getElementById('btn-respawn').onclick = () => this.player.respawn();
         document.getElementById('pointer-lock-banner').onclick = () => this.requestLock();
 
-        document.addEventListener('pointerlockchange', () => {
-            const locked = document.pointerLockElement === this.renderer.domElement;
-            const banner = document.getElementById('pointer-lock-banner');
-            if(banner) {
-                banner.style.display = (this.started && !this.paused && !this.craftingUI.open && this.player.hp > 0 && !locked) ? 'block' : 'none';
-            }
-            if(!locked) this.player.mining.active = false;
-        });
+        document.addEventListener('pointerlockchange', () => this.updatePointerLockBanner());
+        document.addEventListener('pointerlockerror', () => this.updatePointerLockBanner());
 
         document.addEventListener('mousemove', (e) => {
             if(document.pointerLockElement === this.renderer.domElement && this.started && !this.paused && !this.craftingUI.open) {
@@ -2388,6 +2432,7 @@ export class GameEngine {
 
         document.addEventListener('mousedown', (e) => {
             if(!this.started || this.paused || this.craftingUI.open || this.player.hp <= 0) return;
+            if(e.target.closest('button')) return;
             if(document.pointerLockElement !== this.renderer.domElement) {
                 this.requestLock();
                 return;
@@ -2412,6 +2457,15 @@ export class GameEngine {
         });
 
         window.addEventListener('keydown', (e) => {
+            if (achievements.open || help.open) return;
+            if (this.craftingUI.open || pause.open) {
+                if (!e.repeat && /^(KeyE|KeyP)$/.test(e.code)) {
+                    if (this.craftingUI.open) this.craftingUI.toggle(false);
+                    else if (e.code === 'KeyP') this.setPaused(false);
+                }
+                return;
+            }
+            if (!this.started || this.player.hp <= 0) return;
             this.player.keys[e.code] = true;
 
             if(e.code.startsWith('Digit')) {
@@ -2419,16 +2473,13 @@ export class GameEngine {
                 if(num >= 1 && num <= 9) this.player.selectSlot(num - 1);
             }
 
-            if(e.code === 'KeyE' && this.started && !this.paused && this.player.hp > 0) {
+            if(e.code === 'KeyE' && !e.repeat) {
                 this.craftingUI.toggle();
             }
 
-            if((e.code === 'KeyP' || e.code === 'Escape') && this.started && this.player.hp > 0) {
-                if(this.craftingUI.open) {
-                    this.craftingUI.toggle(false);
-                } else {
-                    this.setPaused(!this.paused);
-                }
+            if((e.code === 'KeyP' || e.code === 'Escape') && !e.repeat) {
+                if (e.code === 'Escape') e.preventDefault();
+                this.setPaused(true);
             }
         });
 
@@ -2447,6 +2498,14 @@ export class GameEngine {
                 e.preventDefault();
                 this.player.keys[key] = false;
             });
+            btn.addEventListener('touchcancel', () => { this.player.keys[key] = false; });
+            btn.addEventListener('keydown', (event) => {
+                if (event.code !== 'Space' && event.code !== 'Enter') return;
+                event.preventDefault();
+                this.player.keys[key] = true;
+            });
+            btn.addEventListener('keyup', () => { this.player.keys[key] = false; });
+            btn.addEventListener('blur', () => { this.player.keys[key] = false; });
         });
 
         const mobMine = document.getElementById('mob-btn-mine');
@@ -2460,6 +2519,8 @@ export class GameEngine {
                 e.preventDefault();
                 this.player.mining.active = false;
             });
+            mobMine.addEventListener('touchcancel', () => { this.player.mining.active = false; });
+            mobMine.addEventListener('click', () => this.player.attackLeftClick());
         }
 
         const mobUse = document.getElementById('mob-btn-use');
@@ -2468,6 +2529,7 @@ export class GameEngine {
                 e.preventDefault();
                 this.player.interactRightClick();
             });
+            mobUse.addEventListener('click', () => this.player.interactRightClick());
         }
 
         const mobCraft = document.getElementById('mob-btn-craft');
@@ -2476,6 +2538,7 @@ export class GameEngine {
                 e.preventDefault();
                 this.craftingUI.toggle();
             });
+            mobCraft.addEventListener('click', () => this.craftingUI.toggle());
         }
 
         let touchLookId = null, lastTouchX = 0, lastTouchY = 0;
@@ -2515,7 +2578,7 @@ export class GameEngine {
         }
 
         // Animar nuvens 3D no céu
-        if(this.cloudsGroup) {
+        if(this.cloudsGroup && !this.reducedMotion.matches) {
             this.cloudsGroup.children.forEach(c => {
                 c.position.x += dt * 1.4;
                 if(c.position.x > this.player.pos.x + 110) c.position.x = this.player.pos.x - 110;
@@ -2524,7 +2587,7 @@ export class GameEngine {
 
         if(!this.started) {
             // Câmara orbital panorâmica no menu principal
-            const t = now * 0.00025;
+            const t = this.reducedMotion.matches ? 0 : now * 0.00025;
             this.player.cam.position.set(8 + Math.cos(t) * 22, 34, 8 + Math.sin(t) * 22);
             this.player.cam.lookAt(8, 22, 8);
         } else if(!this.paused && !this.craftingUI.open && this.player.hp > 0) {
