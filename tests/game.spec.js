@@ -21,6 +21,10 @@ async function boot(page, url) {
   ).toBeVisible();
   await expect(page.locator('canvas')).toBeVisible();
   await expect(page.locator('#loading-screen')).toBeHidden();
+  const icon = await page.locator('link[rel="icon"]').getAttribute('href');
+  const iconResponse = await page.request.get(new URL(icon, url).href);
+  expect(iconResponse.ok()).toBe(true);
+  expect(iconResponse.headers()['content-type']).toContain('image/svg+xml');
   return { errors, external };
 }
 
