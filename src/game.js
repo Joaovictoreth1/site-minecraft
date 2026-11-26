@@ -3523,9 +3523,7 @@ class Player {
 
   update(dt) {
     // Câmara
-    this.cam.rotation.order = 'YXZ';
-    this.cam.rotation.y = this.yaw;
-    this.cam.rotation.x = this.pitch;
+    this.cam.rotation.set(this.pitch, this.yaw, 0, 'YXZ');
 
     // Verificar água
     const feetBlock = this.e.world.getG(

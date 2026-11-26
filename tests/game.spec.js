@@ -76,6 +76,13 @@ test('boots below a project subpath and enters the game', async ({ page }) => {
   );
   await page.getByRole('button', { name: /Jogar Tutorial/ }).click();
   await expect(page.locator('#hud')).toBeVisible();
+  const roll = await page.evaluate(
+    () =>
+      new Promise((resolve) => {
+        requestAnimationFrame(() => resolve(window.App.player.cam.rotation.z));
+      }),
+  );
+  expect(roll).toBeCloseTo(0, 6);
   await page.keyboard.press('e');
   const crafting = page.getByRole('dialog', { name: 'Menu de fabricação' });
   await expect(crafting).toBeVisible();
