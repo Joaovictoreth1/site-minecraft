@@ -1,9 +1,3 @@
-import '@fontsource/inter/latin-400.css';
-import '@fontsource/inter/latin-600.css';
-import '@fontsource/inter/latin-800.css';
-import '@fontsource/inter/latin-900.css';
-import '@fontsource/press-start-2p/latin-400.css';
-import './game.css';
 import { formatGameError } from './startup.js';
 
 window.onerror = function (message, source, line) {
@@ -16,6 +10,7 @@ try {
   const { GameEngine } = await import('./game.js');
   const game = new GameEngine();
   await game.initWorld();
+  window.App = game;
 } catch (error) {
   console.error('Behemoth Engine:', error);
   document.querySelector('.loader-bar-container').hidden = true;

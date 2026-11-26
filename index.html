@@ -1,203 +1,370 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explora, constrói e sobrevive num mundo de voxels inspirado na edição Xbox 360 de Minecraft. Projeto não oficial.">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora, constrói e sobrevive num mundo de voxels inspirado na edição Xbox 360 de Minecraft. Projeto não oficial."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'"
+    />
     <title>Behemoth Engine - Minecraft Xbox 360 Edition</title>
-    
-
-</head>
-<body>
-
+    <link rel="stylesheet" href="./src/game.css" />
+  </head>
+  <body>
     <div id="loading-screen">
-        <div class="mc-logo-wrap">
-            <div class="mc-logo-main">MINECRAFT</div>
-            <div class="mc-logo-sub">XBOX 360 EDITION</div>
-        </div>
-        <div class="loader-bar-container"><div id="loader-fill"></div></div>
-        <p id="loader-text" class="mt-5 text-gray-300 font-bold uppercase tracking-wider text-sm" role="status">A Gerar Mundo e Biomas...</p>
-        <section id="startup-error" class="startup-error" hidden>
-            <h1 id="startup-error-heading" tabindex="-1">Não foi possível iniciar o jogo</h1>
-            <p>Confirma que o teu navegador suporta WebGL e tem a aceleração gráfica ativa. Depois, atualiza a página.</p>
-        </section>
-        <pre id="error-log" hidden></pre>
+      <div class="mc-logo-wrap">
+        <div class="mc-logo-main">MINECRAFT</div>
+        <div class="mc-logo-sub">XBOX 360 EDITION</div>
+      </div>
+      <div class="loader-bar-container"><div id="loader-fill"></div></div>
+      <p
+        id="loader-text"
+        class="mt-5 text-gray-300 font-bold uppercase tracking-wider text-sm"
+        role="status"
+      >
+        A Gerar Mundo e Biomas...
+      </p>
+      <section id="startup-error" class="startup-error" hidden>
+        <h1 id="startup-error-heading" tabindex="-1">
+          Não foi possível iniciar o jogo
+        </h1>
+        <p>
+          Confirma que o teu navegador suporta WebGL e tem a aceleração gráfica
+          ativa. Depois, atualiza a página.
+        </p>
+      </section>
+      <pre id="error-log" hidden></pre>
     </div>
-    <noscript><p class="no-script">Ativa o JavaScript e atualiza a página para jogar.</p></noscript>
+    <noscript
+      ><p class="no-script">
+        Ativa o JavaScript e atualiza a página para jogar.
+      </p></noscript
+    >
 
     <!-- Menu Principal Estilo Consola Xbox 360 -->
-    <div id="main-menu" class="menu-overlay" style="display: none;">
-        <div class="mc-logo-wrap">
-            <h1 class="mc-logo-main">MINECRAFT</h1>
-            <div class="mc-logo-sub">XBOX 360 EDITION</div>
-            <div class="splash-text" id="splash-text">Agora com Creepers!</div>
-        </div>
+    <div id="main-menu" class="menu-overlay">
+      <div class="mc-logo-wrap">
+        <h1 class="mc-logo-main">MINECRAFT</h1>
+        <div class="mc-logo-sub">XBOX 360 EDITION</div>
+        <div class="splash-text" id="splash-text">Agora com Creepers!</div>
+      </div>
 
-        <div class="flex flex-col items-center">
-            <button id="btn-start" class="xb-btn">Jogar Tutorial & Mundo</button>
-            <button id="btn-open-achv" class="xb-btn">Conquistas Xbox 360 (<span id="menu-gamerscore">0/100G</span>)</button>
-            <button id="btn-how-to" class="xb-btn">Como Jogar & Controlos</button>
-        </div>
+      <div class="flex flex-col items-center">
+        <button type="button" id="btn-start" class="xb-btn">
+          Jogar Tutorial &amp; Mundo
+        </button>
+        <button type="button" id="btn-open-achv" class="xb-btn">
+          Conquistas Xbox 360 (<span id="menu-gamerscore">0/100G</span>)
+        </button>
+        <button type="button" id="btn-how-to" class="xb-btn">
+          Como Jogar &amp; Controlos
+        </button>
+      </div>
 
-        <!-- Rodapé Clássico Xbox 360 -->
-        <div class="fixed bottom-0 left-0 right-0 bg-black/80 text-white px-8 py-3 flex flex-wrap gap-2 justify-between items-center border-t-2 border-zinc-700 text-sm font-bold">
-            <div class="text-emerald-400">Behemoth Voxel Engine • Projeto não oficial</div>
-            <div class="flex flex-wrap gap-6">
-                <button type="button" class="xb-hint" id="hint-play"><span class="xb-btn-icon bg-green" aria-hidden="true">A</span> Selecionar</button>
-                <button type="button" class="xb-hint" id="hint-achv"><span class="xb-btn-icon bg-yellow" aria-hidden="true">Y</span> Conquistas</button>
-                <button type="button" class="xb-hint" id="hint-help"><span class="xb-btn-icon bg-blue" aria-hidden="true">X</span> Como Jogar</button>
-            </div>
+      <!-- Rodapé Clássico Xbox 360 -->
+      <div
+        class="fixed bottom-0 left-0 right-0 bg-black/80 text-white px-8 py-3 flex flex-wrap gap-2 justify-between items-center border-t-2 border-zinc-700 text-sm font-bold"
+      >
+        <div class="text-emerald-400">
+          Behemoth Voxel Engine • Projeto não oficial
         </div>
+        <div class="flex flex-wrap gap-6">
+          <button type="button" class="xb-hint" id="hint-play">
+            <span class="xb-btn-icon bg-green" aria-hidden="true">A</span>
+            Selecionar
+          </button>
+          <button type="button" class="xb-hint" id="hint-achv">
+            <span class="xb-btn-icon bg-yellow" aria-hidden="true">Y</span>
+            Conquistas
+          </button>
+          <button type="button" class="xb-hint" id="hint-help">
+            <span class="xb-btn-icon bg-blue" aria-hidden="true">X</span> Como
+            Jogar
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Modal de Conquistas Xbox 360 -->
     <dialog id="achv-modal" class="menu-overlay" aria-labelledby="achv-title">
-        <div class="xb-panel-box w-[650px] max-w-[94vw]">
-            <div class="flex justify-between items-center border-b-2 border-zinc-600 pb-3 mb-4">
-                <h2 id="achv-title" class="font-black text-xl text-zinc-900">CONQUISTAS XBOX 360</h2>
-                <span id="modal-gamerscore" class="bg-emerald-700 text-white px-3 py-1 font-black text-sm border-2 border-emerald-400">0 / 100 G</span>
-            </div>
-            <div id="achv-list-container" class="flex flex-col gap-2 max-h-[55vh] overflow-y-auto pr-1"></div>
-            <div class="mt-4 flex justify-end">
-                <button id="btn-close-achv" class="xb-btn !w-auto !mb-0 !py-2 !px-8">Voltar (B)</button>
-            </div>
+      <div class="xb-panel-box w-[650px] max-w-[94vw]">
+        <div
+          class="flex justify-between items-center border-b-2 border-zinc-600 pb-3 mb-4"
+        >
+          <h2 id="achv-title" class="font-black text-xl text-zinc-900">
+            CONQUISTAS XBOX 360
+          </h2>
+          <span
+            id="modal-gamerscore"
+            class="bg-emerald-700 text-white px-3 py-1 font-black text-sm border-2 border-emerald-400"
+            >0 / 100 G</span
+          >
         </div>
+        <div
+          id="achv-list-container"
+          class="flex flex-col gap-2 max-h-[55vh] overflow-y-auto pr-1"
+        ></div>
+        <div class="mt-4 flex justify-end">
+          <button
+            type="button"
+            id="btn-close-achv"
+            class="xb-btn !w-auto !mb-0 !py-2 !px-8"
+          >
+            Voltar (B)
+          </button>
+        </div>
+      </div>
     </dialog>
 
     <!-- Modal Como Jogar -->
     <dialog id="help-modal" class="menu-overlay" aria-labelledby="help-title">
-        <div class="xb-panel-box w-[650px] max-w-[94vw]">
-            <h2 id="help-title" class="font-black text-xl text-zinc-900 border-b-2 border-zinc-600 pb-2 mb-3">COMO JOGAR - EDIÇÃO XBOX 360</h2>
-            <div class="space-y-2 text-sm font-semibold text-zinc-800 leading-relaxed">
-                <p>🎮 <b>Movimento:</b> Usa <b>[W, A, S, D]</b> para caminhar, <b>[Espaço]</b> para saltar e nadar, e <b>[Shift]</b> para agachar.</p>
-                <p>📦 <b>Baú Inicial & Interação (Botão Direito):</b> Clica com o Botão Direito no <b>Baú Inicial</b> à tua frente no forte para receberes os teus itens de sobrevivência, ou clica na Bancada de Trabalho.</p>
-                <p>⛏️ <b>Extrair & Atacar (Botão Esquerdo):</b> Segura para partir árvores, pedras e minérios com som característico de cada bloco, ou clica para atacar Zombies, Porcos e Creepers.</p>
-                <p>🛠️ <b>Menu de Fabricação Xbox 360 [Tecla E]:</b> Abre o menu clássico por abas da Xbox 360 para criar Tábuas, Bancada de Trabalho, Picareta, Machado, Espada e Tochas.</p>
-                <p>💥 <b>Mobs & Biomas:</b> Explora Planícies, Deserto com Cactos, Tundra Nevada e Montanhas Rochosas. Tem cuidado com o fusível (<i>ssssss</i>) dos Creepers!</p>
-            </div>
-            <div class="mt-5 flex justify-end">
-                <button id="btn-close-help" class="xb-btn !w-auto !mb-0 !py-2 !px-8">Entendido (A)</button>
-            </div>
+      <div class="xb-panel-box w-[650px] max-w-[94vw]">
+        <h2
+          id="help-title"
+          class="font-black text-xl text-zinc-900 border-b-2 border-zinc-600 pb-2 mb-3"
+        >
+          COMO JOGAR - EDIÇÃO XBOX 360
+        </h2>
+        <div
+          class="space-y-2 text-sm font-semibold text-zinc-800 leading-relaxed"
+        >
+          <p>
+            🎮 <b>Movimento:</b> Usa <b>[W, A, S, D]</b> para caminhar,
+            <b>[Espaço]</b> para saltar e nadar, e <b>[Shift]</b> para agachar.
+          </p>
+          <p>
+            📦 <b>Baú Inicial &amp; Interação (Botão Direito):</b> Clica com o
+            Botão Direito no <b>Baú Inicial</b> à tua frente no forte para
+            receberes os teus itens de sobrevivência, ou clica na Bancada de
+            Trabalho.
+          </p>
+          <p>
+            ⛏️ <b>Extrair &amp; Atacar (Botão Esquerdo):</b> Segura para partir
+            árvores, pedras e minérios com som característico de cada bloco, ou
+            clica para atacar Zombies, Porcos e Creepers.
+          </p>
+          <p>
+            🛠️ <b>Menu de Fabricação Xbox 360 [Tecla E]:</b> Abre o menu
+            clássico por abas da Xbox 360 para criar Tábuas, Bancada de
+            Trabalho, Picareta, Machado, Espada e Tochas.
+          </p>
+          <p>
+            💥 <b>Mobs &amp; Biomas:</b> Explora Planícies, Deserto com Cactos,
+            Tundra Nevada e Montanhas Rochosas. Tem cuidado com o fusível
+            (<i>ssssss</i>) dos Creepers!
+          </p>
         </div>
+        <div class="mt-5 flex justify-end">
+          <button
+            type="button"
+            id="btn-close-help"
+            class="xb-btn !w-auto !mb-0 !py-2 !px-8"
+          >
+            Entendido (A)
+          </button>
+        </div>
+      </div>
     </dialog>
 
     <!-- Menu de Pausa Estilo Xbox 360 -->
     <dialog id="pause-menu" class="menu-overlay" aria-labelledby="pause-title">
-        <div class="mc-logo-wrap !mb-6">
-            <h2 id="pause-title" class="mc-logo-main !text-4xl">JOGO EM PAUSA</h2>
-        </div>
-        <button id="btn-resume" class="xb-btn">Continuar Jogo</button>
-        <button id="btn-pause-achv" class="xb-btn">Ver Conquistas Xbox 360</button>
-        <button id="btn-toggle-time" class="xb-btn">Alternar Dia / Noite</button>
-        <button id="btn-spawn-creeper" class="xb-btn">Invocar Creeper & Zombie Perto</button>
-        <button id="btn-main-menu" class="xb-btn">Sair para o Menu Principal</button>
+      <div class="mc-logo-wrap !mb-6">
+        <h2 id="pause-title" class="mc-logo-main !text-4xl">JOGO EM PAUSA</h2>
+      </div>
+      <button type="button" id="btn-resume" class="xb-btn">
+        Continuar Jogo
+      </button>
+      <button type="button" id="btn-pause-achv" class="xb-btn">
+        Ver Conquistas Xbox 360
+      </button>
+      <button type="button" id="btn-toggle-time" class="xb-btn">
+        Alternar Dia / Noite
+      </button>
+      <button type="button" id="btn-spawn-creeper" class="xb-btn">
+        Invocar Creeper &amp; Zombie Perto
+      </button>
+      <button type="button" id="btn-main-menu" class="xb-btn">
+        Sair para o Menu Principal
+      </button>
     </dialog>
 
-    <dialog id="death-screen" class="menu-overlay" aria-labelledby="death-title" style="background: rgba(140,0,0,0.85);">
-        <h2 id="death-title" class="pixel-text text-red-400 mb-6 text-center" style="font-size: clamp(2.2rem, 5vw, 4rem); text-shadow: 4px 4px 0 #000;">MORRESTE!</h2>
-        <p class="text-white font-bold mb-6 text-lg drop-shadow">Os monstros ou alturas levaram a melhor.</p>
-        <button id="btn-respawn" class="xb-btn">Renascer no Forte Inicial</button>
+    <dialog
+      id="death-screen"
+      class="menu-overlay"
+      aria-labelledby="death-title"
+    >
+      <h2 id="death-title" class="pixel-text text-red-400 mb-6 text-center">
+        MORRESTE!
+      </h2>
+      <p class="text-white font-bold mb-6 text-lg drop-shadow">
+        Os monstros ou alturas levaram a melhor.
+      </p>
+      <button type="button" id="btn-respawn" class="xb-btn">
+        Renascer no Forte Inicial
+      </button>
     </dialog>
 
-    <button type="button" id="pointer-lock-banner">Clica aqui para controlar a câmara no mundo 3D</button>
+    <button type="button" id="pointer-lock-banner">
+      Clica aqui para controlar a câmara no mundo 3D
+    </button>
 
     <div id="hud">
-        <div id="vignette"></div>
-        <div id="underwater-overlay"></div>
-        <div id="damage-flash"></div>
-        <div id="crosshair"></div>
-        <div id="mining-bar-container"><div id="mining-bar-fill"></div></div>
-        
-        <div id="debug-info">
-            <div style="color: #4ade80; font-size: 14px; margin-bottom: 4px; font-family: var(--font-ui); font-weight:900;">MINECRAFT XBOX 360 TU1</div>
-            <div id="fps-counter">FPS: 60</div>
-            <div id="pos-counter" style="color: #e4e4e7;">XYZ: 8 / 25 / 8</div>
-            <div id="biome-counter" style="color: #fde047; font-weight: bold; margin-top: 2px;">Bioma: Planície & Floresta</div>
-            <div id="time-counter" style="color: #93c5fd; font-size: 11px; margin-top: 2px;">Hora: Dia ☀️ | [E] Crafting | [P] Pausa</div>
-        </div>
+      <div id="vignette"></div>
+      <div id="underwater-overlay"></div>
+      <div id="damage-flash"></div>
+      <div id="crosshair"></div>
+      <div id="mining-bar-container"><div id="mining-bar-fill"></div></div>
 
-        <!-- Caixa de Tutorial Guiado Xbox 360 -->
-        <div id="tutorial-box">
-            <div class="tut-header">
-                <span>🎯 Tutorial Xbox 360</span>
-                <span id="tut-step-badge">Passo 1/5</span>
-            </div>
-            <div class="tut-step-text" id="tut-text">
-                Olha para o <b>Baú Inicial</b> à tua frente no forte e clica com o <b>Botão Direito</b> (ou parte-o) para recolher os teus suprimentos!
-            </div>
-            <div class="tut-progress"><div id="tut-progress-bar"></div></div>
-        </div>
+      <div id="debug-info">
+        <div id="debug-title">MINECRAFT XBOX 360 TU1</div>
+        <div id="fps-counter">FPS: 60</div>
+        <div id="pos-counter">XYZ: 8 / 25 / 8</div>
+        <div id="biome-counter">Bioma: Planície &amp; Floresta</div>
+        <div id="time-counter">Hora: Dia ☀️ | [E] Crafting | [P] Pausa</div>
+      </div>
 
-        <div id="item-name-banner">Espada de Madeira</div>
-        <div id="status-bars-wrap">
-            <div id="health-bar"></div>
-            <div id="hunger-bar"></div>
+      <!-- Caixa de Tutorial Guiado Xbox 360 -->
+      <div id="tutorial-box">
+        <div class="tut-header">
+          <span>🎯 Tutorial Xbox 360</span>
+          <span id="tut-step-badge">Passo 1/5</span>
         </div>
-        <div id="hotbar-wrap"></div>
+        <div class="tut-step-text" id="tut-text">
+          Olha para o <b>Baú Inicial</b> à tua frente no forte e clica com o
+          <b>Botão Direito</b> (ou parte-o) para recolher os teus suprimentos!
+        </div>
+        <div class="tut-progress"><div id="tut-progress-bar"></div></div>
+      </div>
+
+      <div id="item-name-banner">Espada de Madeira</div>
+      <div id="status-bars-wrap">
+        <div id="health-bar"></div>
+        <div id="hunger-bar"></div>
+      </div>
+      <div id="hotbar-wrap"></div>
     </div>
 
     <!-- Controlos Táteis Responsivos -->
     <div id="mobile-controls" hidden>
-        <div class="touch-dpad">
-            <button type="button" class="touch-btn" style="top:0; left:45px;" data-key="KeyW" aria-label="Andar para a frente">▲</button>
-            <button type="button" class="touch-btn" style="bottom:0; left:45px;" data-key="KeyS" aria-label="Andar para trás">▼</button>
-            <button type="button" class="touch-btn" style="top:45px; left:0;" data-key="KeyA" aria-label="Andar para a esquerda">◀</button>
-            <button type="button" class="touch-btn" style="top:45px; right:0;" data-key="KeyD" aria-label="Andar para a direita">▶</button>
-            <button type="button" class="touch-btn" style="top:45px; left:45px; font-size:10px;" data-key="Space" aria-label="Saltar">⬆</button>
-        </div>
-        <div class="touch-actions">
-            <button type="button" class="touch-act-btn" id="mob-btn-mine">⛏️ Extrair / Atacar</button>
-            <button type="button" class="touch-act-btn" id="mob-btn-use">📦 Usar / Colocar</button>
-            <button type="button" class="touch-act-btn" id="mob-btn-craft">🛠️ Crafting [E]</button>
-        </div>
+      <div class="touch-dpad">
+        <button
+          type="button"
+          class="touch-btn"
+          data-key="KeyW"
+          aria-label="Andar para a frente"
+        >
+          ▲
+        </button>
+        <button
+          type="button"
+          class="touch-btn"
+          data-key="KeyS"
+          aria-label="Andar para trás"
+        >
+          ▼
+        </button>
+        <button
+          type="button"
+          class="touch-btn"
+          data-key="KeyA"
+          aria-label="Andar para a esquerda"
+        >
+          ◀
+        </button>
+        <button
+          type="button"
+          class="touch-btn"
+          data-key="KeyD"
+          aria-label="Andar para a direita"
+        >
+          ▶
+        </button>
+        <button
+          type="button"
+          class="touch-btn"
+          data-key="Space"
+          aria-label="Saltar"
+        >
+          ⬆
+        </button>
+      </div>
+      <div class="touch-actions">
+        <button type="button" class="touch-act-btn" id="mob-btn-mine">
+          ⛏️ Extrair / Atacar
+        </button>
+        <button type="button" class="touch-act-btn" id="mob-btn-use">
+          📦 Usar / Colocar
+        </button>
+        <button type="button" class="touch-act-btn" id="mob-btn-craft">
+          🛠️ Crafting [E]
+        </button>
+      </div>
     </div>
 
     <div id="toast-container"></div>
 
     <!-- Popup de Conquista Xbox 360 -->
     <div id="achiev-popup">
-        <div class="achiev-logo"></div>
-        <div class="achiev-texts">
-            <div class="achiev-t1">Conquista Desbloqueada</div>
-            <div class="achiev-t2" id="achiev-name">10G - Getting Wood</div>
-        </div>
+      <div class="achiev-logo"></div>
+      <div class="achiev-texts">
+        <div class="achiev-t1">Conquista Desbloqueada</div>
+        <div class="achiev-t2" id="achiev-name">10G - Getting Wood</div>
+      </div>
     </div>
 
     <!-- UI de Fabricação Original Xbox 360 -->
     <dialog id="ui-crafting" aria-label="Menu de fabricação">
-        <div class="xb-window">
-            <div class="xb-tabs" id="ui-tabs"></div>
-            
-            <div class="xb-content">
-                <div class="xb-carousel-wrap" id="ui-carousel"></div>
-                
-                <div class="xb-split">
-                    <div class="xb-panel-left">
-                        <div class="xb-panel-title" id="ui-recipe-name">Tábuas de Carvalho</div>
-                        <div class="xb-3x3-grid" id="ui-grid-3x3"></div>
-                        <div class="xb-reqs" id="ui-req-list"></div>
-                        <button id="ui-btn-craft" class="btn-craft">FABRICAR (A)</button>
-                    </div>
-                    
-                    <div class="xb-panel-right">
-                        <div class="xb-panel-title text-left" style="color:#222;">Inventário do Jogador (Clica para equipar na Hotbar)</div>
-                        <div class="inv-grid-wrapper" id="ui-inv-main"></div>
-                        <div class="inv-grid-wrapper hotbar" id="ui-inv-hotbar"></div>
-                    </div>
-                </div>
+      <div class="xb-window">
+        <div class="xb-tabs" id="ui-tabs"></div>
+
+        <div class="xb-content">
+          <div class="xb-carousel-wrap" id="ui-carousel"></div>
+
+          <div class="xb-split">
+            <div class="xb-panel-left">
+              <div class="xb-panel-title" id="ui-recipe-name">
+                Tábuas de Carvalho
+              </div>
+              <div class="xb-3x3-grid" id="ui-grid-3x3"></div>
+              <div class="xb-reqs" id="ui-req-list"></div>
+              <button type="button" id="ui-btn-craft" class="btn-craft">
+                FABRICAR (A)
+              </button>
             </div>
-            
-            <div class="xb-footer">
-                <div class="text-zinc-300">Dica: Extrai Troncos de Árvore para fazer Tábuas, Bancada e Ferramentas!</div>
-                <div class="flex gap-5">
-                    <div class="xb-hint"><div class="xb-btn-icon bg-green">A</div> Criar / Selecionar</div>
-                    <button type="button" class="xb-hint" id="btn-close-inv"><span class="xb-btn-icon bg-red" aria-hidden="true">B</span> Sair (E / ESC)</button>
-                </div>
+
+            <div class="xb-panel-right">
+              <div class="xb-panel-title text-left">
+                Inventário do Jogador (Clica para equipar na Hotbar)
+              </div>
+              <div class="inv-grid-wrapper" id="ui-inv-main"></div>
+              <div class="inv-grid-wrapper hotbar" id="ui-inv-hotbar"></div>
             </div>
+          </div>
         </div>
+
+        <div class="xb-footer">
+          <div class="text-zinc-300">
+            Dica: Extrai Troncos de Árvore para fazer Tábuas, Bancada e
+            Ferramentas!
+          </div>
+          <div class="flex gap-5">
+            <div class="xb-hint">
+              <div class="xb-btn-icon bg-green">A</div>
+              Criar / Selecionar
+            </div>
+            <button type="button" class="xb-hint" id="btn-close-inv">
+              <span class="xb-btn-icon bg-red" aria-hidden="true">B</span> Sair
+              (E / ESC)
+            </button>
+          </div>
+        </div>
+      </div>
     </dialog>
 
     <script type="module" src="./src/main.js"></script>
-</body>
+  </body>
 </html>
