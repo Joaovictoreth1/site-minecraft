@@ -59,6 +59,81 @@
             flex-direction: column; justify-content: center; align-items: center; 
         }
 
+        #help-modal {
+            position: fixed;
+            inset: 0;
+            width: min(42rem, calc(100% - 2rem));
+            max-height: calc(100dvh - 2rem);
+            margin: auto;
+            overflow: auto;
+            color: #18181b;
+            background: #f4f4f5;
+            border: 2px solid #a1a1aa;
+            padding: clamp(1rem, 4vw, 1.75rem);
+        }
+
+        #help-modal::backdrop {
+            background: #000a;
+        }
+
+        #help-modal h3 {
+            font-size: 1rem;
+            margin-top: .85rem;
+            font-weight: 900;
+        }
+
+        #help-modal dl {
+            display: grid;
+            gap: .4rem;
+            margin-top: .5rem;
+        }
+
+        #help-modal dl div {
+            border-bottom: 1px solid #a1a1aa;
+            padding: .35rem 0;
+        }
+
+        #help-modal dt {
+            font-weight: 800;
+        }
+
+        #help-modal kbd {
+            padding: .1rem .3rem;
+            border-radius: .25rem;
+            background: #e4e4e7;
+            font-weight: 800;
+        }
+
+        .camera-options {
+            margin-top: 1rem;
+            padding: .75rem;
+            border: 1px solid #a1a1aa;
+            background: #fff;
+        }
+
+        .camera-options label {
+            display: block;
+            font-weight: 800;
+        }
+
+        .camera-options input[type="range"] {
+            display: block;
+            width: 100%;
+            min-height: 2rem;
+            accent-color: #047857;
+        }
+
+        #help-modal :focus-visible, #pointer-lock-banner:focus-visible {
+            outline: 3px solid #047857;
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #loader-fill, .menu-overlay .xb-btn {
+                transition: none;
+            }
+        }
+
         /* Menu Principal Autêntico Minecraft Xbox 360 */
         #main-menu { 
             background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.78) 100%);
@@ -388,21 +463,40 @@
     </div>
 
     <!-- Modal Como Jogar -->
-    <div id="help-modal" class="menu-overlay" style="display: none;">
-        <div class="xb-panel-box w-[650px] max-w-[94vw]">
-            <h2 class="font-black text-xl text-zinc-900 border-b-2 border-zinc-600 pb-2 mb-3">COMO JOGAR - EDIÇÃO XBOX 360</h2>
-            <div class="space-y-2 text-sm font-semibold text-zinc-800 leading-relaxed">
-                <p>🎮 <b>Movimento:</b> Usa <b>[W, A, S, D]</b> para caminhar, <b>[Espaço]</b> para saltar e nadar, e <b>[Shift]</b> para agachar.</p>
-                <p>📦 <b>Baú Inicial & Interação (Botão Direito):</b> Clica com o Botão Direito no <b>Baú Inicial</b> à tua frente no forte para receberes os teus itens de sobrevivência, ou clica na Bancada de Trabalho.</p>
-                <p>⛏️ <b>Extrair & Atacar (Botão Esquerdo):</b> Segura para partir árvores, pedras e minérios com som característico de cada bloco, ou clica para atacar Zombies, Porcos e Creepers.</p>
-                <p>🛠️ <b>Menu de Fabricação Xbox 360 [Tecla E]:</b> Abre o menu clássico por abas da Xbox 360 para criar Tábuas, Bancada de Trabalho, Picareta, Machado, Espada e Tochas.</p>
-                <p>💥 <b>Mobs & Biomas:</b> Explora Planícies, Deserto com Cactos, Tundra Nevada e Montanhas Rochosas. Tem cuidado com o fusível (<i>ssssss</i>) dos Creepers!</p>
-            </div>
-            <div class="mt-5 flex justify-end">
-                <button id="btn-close-help" class="xb-btn !w-auto !mb-0 !py-2 !px-8">Entendido (A)</button>
-            </div>
+    <dialog id="help-modal" aria-labelledby="game-help-title">
+        <h2 id="game-help-title" class="border-b-2 border-zinc-600 pb-2 text-xl font-black">Como jogar</h2>
+        <p class="mt-3 text-sm">Abre o baú no forte para receber os itens iniciais antes de explorar.</p>
+        <h3>Teclado e rato</h3>
+        <dl class="text-sm">
+            <div><dt>Caminhar</dt><dd><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd></dd></div>
+            <div><dt>Saltar / nadar</dt><dd><kbd>Espaço</kbd></dd></div>
+            <div><dt>Agachar</dt><dd><kbd>Shift</kbd></dd></div>
+            <div><dt>Extrair e atacar</dt><dd>Usa o botão esquerdo. Mantém premido para extrair blocos.</dd></div>
+            <div><dt>Interagir</dt><dd>Usa o botão direito para abrir o baú ou usar a bancada.</dd></div>
+            <div><dt>Fabricar / selecionar item</dt><dd><kbd>E</kbd> abre a fabricação; <kbd>1</kbd> a <kbd>9</kbd> escolhem um espaço da barra.</dd></div>
+            <div><dt>Fazer pausa</dt><dd><kbd>P</kbd> ou <kbd>Esc</kbd></dd></div>
+        </dl>
+        <h3>Ecrã tátil</h3>
+        <ul class="ml-5 list-disc text-sm">
+            <li>Usa as setas para caminhar e arrasta sobre o cenário para rodar a câmara.</li>
+            <li>Usa os botões Extrair / Atacar, Usar / Colocar e Crafting para interagir.</li>
+        </ul>
+        <p class="mt-3 text-sm">A opção de ajuda no menu de pausa preserva o estado da partida.</p>
+        <div class="camera-options">
+            <label for="camera-sensitivity">Sensibilidade da câmara</label>
+            <input type="range" id="camera-sensitivity" min="50" max="200" step="25" value="100"
+                   aria-describedby="camera-sensitivity-help">
+            <p id="camera-sensitivity-help" class="text-sm">
+                Ajusta a rotação pelo rato e pelo toque. Padrão: 100%.
+            </p>
+            <output id="camera-sensitivity-value" for="camera-sensitivity">100%</output>
+            <button type="button" id="reset-camera" class="ml-2 rounded border border-zinc-500 px-2 py-1 text-sm">Repor padrão</button>
+            <p id="camera-sensitivity-status" role="status" class="mt-2 text-sm"></p>
         </div>
-    </div>
+        <form method="dialog" class="mt-5 flex justify-end">
+            <button type="submit" id="btn-close-help" class="xb-btn !w-auto !mb-0 !py-2 !px-8" autofocus>Fechar ajuda</button>
+        </form>
+    </dialog>
 
     <!-- Menu de Pausa Estilo Xbox 360 -->
     <div id="pause-menu" class="menu-overlay">
@@ -410,6 +504,7 @@
             <div class="mc-logo-main !text-4xl">JOGO EM PAUSA</div>
         </div>
         <button id="btn-resume" class="xb-btn">Continuar Jogo</button>
+        <button type="button" id="btn-pause-help" class="xb-btn" aria-haspopup="dialog">Como jogar</button>
         <button id="btn-pause-achv" class="xb-btn">Ver Conquistas Xbox 360</button>
         <button id="btn-toggle-time" class="xb-btn">Alternar Dia / Noite</button>
         <button id="btn-spawn-creeper" class="xb-btn">Invocar Creeper & Zombie Perto</button>
@@ -422,7 +517,7 @@
         <button id="btn-respawn" class="xb-btn">Renascer no Forte Inicial</button>
     </div>
 
-    <div id="pointer-lock-banner">Clica aqui para controlar a câmara no mundo 3D</div>
+    <button type="button" id="pointer-lock-banner">Controlar a câmara no mundo 3D</button>
 
     <div id="hud">
         <div id="vignette"></div>
@@ -525,6 +620,7 @@
     </script>
     
     <script type="module">
+        import { bindCameraSensitivity } from './camera-settings.mjs';
         import * as THREE from 'three';
         
         window.onerror = function(msg, src, lineno, colno, error) { 
@@ -2874,15 +2970,15 @@
                     document.getElementById('achv-modal').style.display = 'none';
                 };
 
-                document.getElementById('btn-how-to').onclick = () => {
+                const help = document.getElementById('help-modal');
+                const showHelp = () => {
                     this.audio.playUI();
-                    document.getElementById('help-modal').style.display = 'flex';
+                    if (!help.open) help.showModal();
                 };
-                document.getElementById('hint-help').onclick = () => document.getElementById('btn-how-to').click();
-                document.getElementById('btn-close-help').onclick = () => {
-                    this.audio.playUI();
-                    document.getElementById('help-modal').style.display = 'none';
-                };
+                document.getElementById('btn-how-to').onclick = showHelp;
+                document.getElementById('hint-help').onclick = showHelp;
+                document.getElementById('btn-pause-help').onclick = showHelp;
+                help.addEventListener('close', () => this.audio.playUI());
 
                 document.getElementById('btn-resume').onclick = () => this.setPaused(false);
                 document.getElementById('btn-pause-achv').onclick = () => {
@@ -2922,8 +3018,9 @@
 
                 document.addEventListener('mousemove', (e) => {
                     if(document.pointerLockElement === this.renderer.domElement && this.started && !this.paused && !this.craftingUI.open) {
-                        this.player.yaw -= e.movementX * 0.0024;
-                        this.player.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, this.player.pitch - e.movementY * 0.0024));
+                        const sensitivity = 0.0024 * cameraMultiplier();
+                        this.player.yaw -= e.movementX * sensitivity;
+                        this.player.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, this.player.pitch - e.movementY * sensitivity));
                     }
                 });
 
@@ -2953,6 +3050,7 @@
                 });
 
                 window.addEventListener('keydown', (e) => {
+                    if(help.open) return;
                     if(e.repeat && ['KeyE', 'KeyP', 'Escape'].includes(e.code)) return;
                     this.player.keys[e.code] = true;
 
@@ -3037,8 +3135,9 @@
                             const dy = t.clientY - lastTouchY;
                             lastTouchX = t.clientX;
                             lastTouchY = t.clientY;
-                            this.player.yaw -= dx * 0.005;
-                            this.player.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, this.player.pitch - dy * 0.005));
+                            const sensitivity = 0.005 * cameraMultiplier();
+                            this.player.yaw -= dx * sensitivity;
+                            this.player.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, this.player.pitch - dy * sensitivity));
                         }
                     }
                 });
@@ -3068,7 +3167,7 @@
 
                 if(!this.started) {
                     // Câmara orbital panorâmica no menu principal
-                    const t = now * 0.00025;
+                    const t = menuMotion.matches ? 0 : now * 0.00025;
                     this.player.cam.position.set(8 + Math.cos(t) * 22, 34, 8 + Math.sin(t) * 22);
                     this.player.cam.lookAt(8, 22, 8);
                 } else if(!this.paused && !this.craftingUI.open && this.player.hp > 0) {
@@ -3091,6 +3190,11 @@
             }
         }
 
+        const menuMotion = matchMedia('(prefers-reduced-motion: reduce)');
+        const cameraMultiplier = bindCameraSensitivity(document, {
+            getItem: key => localStorage.getItem(key),
+            setItem: (key, value) => localStorage.setItem(key, value),
+        });
         window.onload = () => {
             window.App = new GameEngine();
         };
