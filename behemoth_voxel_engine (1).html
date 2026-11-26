@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Behemoth Engine - Minecraft Xbox 360 Edition</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <style>
@@ -2810,7 +2810,7 @@
 
             requestLock() {
                 try {
-                    this.renderer.domElement.requestPointerLock();
+                    this.renderer.domElement.requestPointerLock?.()?.catch?.(() => {});
                 } catch (err) {}
             }
 
@@ -2828,7 +2828,9 @@
                 this.paused = state;
                 const pm = document.getElementById('pause-menu');
                 if(state) {
-                    document.exitPointerLock();
+                    this.player.keys = {};
+                    this.player.mining.active = false;
+                    if(document.pointerLockElement) document.exitPointerLock();
                     pm.style.display = 'flex';
                 } else {
                     pm.style.display = 'none';
@@ -2849,6 +2851,10 @@
             }
 
             bindEvents() {
+                window.addEventListener('blur', () => {
+                    if(this.started && !this.paused && this.player.hp > 0) this.setPaused(true);
+                });
+
                 window.addEventListener('resize', () => {
                     this.player.cam.aspect = window.innerWidth / window.innerHeight;
                     this.player.cam.updateProjectionMatrix();
@@ -2947,6 +2953,7 @@
                 });
 
                 window.addEventListener('keydown', (e) => {
+                    if(e.repeat && ['KeyE', 'KeyP', 'Escape'].includes(e.code)) return;
                     this.player.keys[e.code] = true;
 
                     if(e.code.startsWith('Digit')) {
@@ -2982,6 +2989,7 @@
                         e.preventDefault();
                         this.player.keys[key] = false;
                     });
+                    btn.addEventListener('touchcancel', () => { this.player.keys[key] = false; });
                 });
 
                 const mobMine = document.getElementById('mob-btn-mine');
@@ -2995,6 +3003,7 @@
                         e.preventDefault();
                         this.player.mining.active = false;
                     });
+                    mobMine.addEventListener('touchcancel', () => { this.player.mining.active = false; });
                 }
 
                 const mobUse = document.getElementById('mob-btn-use');
